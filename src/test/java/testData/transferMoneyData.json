@@ -1,0 +1,13 @@
+[
+  {
+    "profileName": "Isagi",
+    "loginPin": "33333",
+    "accountName": "Savings Test",
+    "scheduleTypeOnceOff": "Once-off",
+    "scheduleTypeWeekly": "Weekly",
+    "scheduleTypeMonthly": "Monthly",
+    "daysToAdd": "2",
+    "amount": "100",
+    "ref": "Auto Test"
+  }
+]

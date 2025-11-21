@@ -1,0 +1,24 @@
+[
+  {
+    "name": "Actaris Electricity",
+    "provider" : "Actaris Municipality",
+    "meterNo": "01050020001",
+    "tokenNo": "0676336781",
+    "email": "Thabang+1@babnkzero.co.za",
+    "cellNo": "0676336781",
+    "amount": 20.00,
+    "ref": "Testing new acc"
+  },
+
+  {
+    "name": "Ekurhuleni Electricity",
+    "provider" : "Ekurhuleni Municipality",
+    "meterNo": "4000000000",
+    "tokenNo": "0676336781",
+    "email": "Thabang+1@babnkzero.co.za",
+    "cellNo": "0676336781",
+    "amount": 20.00,
+    "ref": "Testing new acc"
+  }
+
+]

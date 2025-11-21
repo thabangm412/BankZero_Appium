@@ -1,0 +1,27 @@
+[
+  {
+    "name": "Certification",
+    "profileName": "Isagi",
+    "loginPin": "33333",
+    "id": "1002283154081",
+    "phoneNumber": "0864033146",
+    "recoveryNumber": "0676446781",
+    "email": "thabang.Mon@bankzero.co.za",
+    "recoveryEmail": "thabang.Mon@bankzero.co.za",
+    "surname": "Test",
+    "allNames":"Certification Jr",
+    "nationality": "South Africa",
+    "idType" : "sa passport",
+    "childPin": "11111"
+
+  },
+  {
+    "name": "Passport child",
+    "profileName": "Isagi",
+    "loginPin": "33333",
+    "id": "1011294755083",
+    "allNames": "Passport Jr",
+    "nationality": "South Africa",
+    "idType" : "certification"
+  }
+]

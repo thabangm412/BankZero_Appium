@@ -1,0 +1,14 @@
+[
+  {
+    "profileName": "Isagi",
+    "loginPin": "33333",
+    "recipientName": "Thabang",
+    "recipientPhone": "0676336481",
+    "amount": "200",
+    "redoAmount": "100",
+    "ref": "Auto Test",
+    "updateRecipientName": "UpdatedName2",
+    "updateRecipientPhone": "0832536839"
+
+  }
+]

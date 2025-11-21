@@ -1,0 +1,25 @@
+[
+  {
+    "cellNumber": "0868024152",
+    "alNumber": "0676336781",
+    "idNumber": "8709243091087",
+    "prefName": "Reo",
+    "loginPin": "11111",
+    "safeModeMsg": "Access restricted - Safe mode active until biometrics is verified. We'll let you know soon."
+  },
+  {
+    "cellNumber": "0860539646",
+    "alNumber": "0865436234",
+    "idNumber": "8305138999086",
+    "InvalidcellNumber": "0860539666",
+    "InvalidalNumber": "0865436264",
+    "InvalididNumber": "8305138999886",
+    "prefName": "Isagi",
+    "loginPin": "33333",
+    "InvalidloginPin": "55555",
+    "errMsg": "Your details could not be verified. Please check and try again.",
+    "safeModeMsg": "Access restricted - Safe mode active until biometrics is verified. We'll let you know soon.",
+    "negativeSafeModeMsg": "Access - Safe mode active until biometrics is verified. We'll let you know soon."
+
+  }
+]

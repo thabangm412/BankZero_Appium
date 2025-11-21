@@ -1,0 +1,17 @@
+[
+  {
+    "profileName": "Reo",
+    "loginPin": "11111",
+    "cardPin": "11111",
+    "businessType": "Pty (Ltd)",
+    "tradingName": "AutoProfile Business",
+    "registeredName": "AutoProfile2 Business (Pty) Ltd",
+    "registrationNo": "2025/123406/07",
+    "sicGroup": "Construction",
+    "sicIndustry": "Civil engineering",
+    "notifyEmail": "testBusiness0@bankzero.co.za",
+    "street": "4 Georgian Crescent West",
+    "city": "Bryanston, Sandton",
+    "successMsg": "Account and card successfully added.  You can access this account from your canvas."
+  }
+]

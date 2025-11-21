@@ -1,0 +1,21 @@
+[
+  {
+    "profileName": "Isagi",
+    "loginPin": "33333",
+    "recipientName": "Absa savings",
+    "group": "Finance",
+    "bank": "Absa Bank Limited",
+    "account": "Savings Account",
+    "accountNo": "9050517604",
+    "popEmail": "Thabang.monoane@gmail.com",
+    "popPhone": "0676336781",
+    "amount": "200",
+    "ref": "Paymany Test",
+    "updateRecipientName": "Business Check Account",
+    "updateGroup": "Business",
+    "updateAccNo": "82000086197",
+    "updateAcc": "Current Account",
+    "updateBank": "Bank Zero Mutual Bank"
+
+  }
+]

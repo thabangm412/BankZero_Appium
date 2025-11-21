@@ -1,0 +1,84 @@
+<!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd" >
+
+<suite name="Regression" verbose="1" >
+<listeners>
+    <listener class-name="utils.Listeners"/>
+</listeners>
+<!--    <test name="Registration Tests">-->
+<!--        <classes>-->
+<!--            <class name="tests.Registration.GreenBookRegistrationTest" />-->
+<!--            <class name="tests.Registration.SAPassportRegistrationTest"/>-->
+<!--            <class name="tests.Registration.SADrivingLicenceRegistrationTest"/>-->
+<!--            <class name="tests.Registration.SAIdCardRegistrationTest"/>-->
+<!--        </classes>-->
+<!--    </test>-->
+<!--    <test name="Device Pair Test">-->
+<!--        <classes>-->
+<!--            <class name="tests.DevicePair.DevicePairTests" />-->
+<!--        </classes>-->
+<!--    </test>-->
+<!--    <test name="Login Test">-->
+<!--        <classes>-->
+<!--            <class name="tests.Login.LoginTests" />-->
+<!--        </classes>-->
+<!--    </test>-->
+<!--    <test name="Transfer Tests">-->
+<!--        <classes>-->
+<!--            <class name="tests.Transfer.TransferMoneyTests" />-->
+<!--        </classes>-->
+<!--    </test>-->
+<!--    <test name="Account Menu Actions Tests">-->
+<!--        <classes>-->
+<!--            <class name="tests.AccountMenuActions.PageVerificationTests" />-->
+<!--        </classes>-->
+<!--    </test>-->
+
+    <!--    Adding new accounts Tests below-->
+<!--    <test name="Accounts Registration Tests">-->
+<!--        <classes>-->
+<!--&lt;!&ndash;            <class name="tests.Child.ChildAccountRegistrationTest"/>&ndash;&gt;-->
+<!--&lt;!&ndash;            <class name="tests.AddAccount.CheckAccountRegistrationTest"/>&ndash;&gt;-->
+<!--            <class name="tests.AddAccount.SavingsAccountRegistrationTest"/>-->
+<!--            <class name="tests.AddAccount.SevenDayNoticeAccountTest"/>-->
+<!--            <class name="tests.AddAccount.ThirtyTwoDayNoticeAccountTest"/>-->
+<!--&lt;!&ndash;            <class name="tests.AddAccount.FortyFiveDayNoticeAccountTest "/>&ndash;&gt;-->
+<!--        </classes>-->
+<!--    </test>-->
+<!--    Buy Tests below-->
+<!--    <test name="Electricity Purchase Tests">-->
+<!--        <classes>-->
+<!--            <class name="tests.Buy.BuyElectricity.NewElectricityAccTest"/>-->
+<!--            <class name="tests.Buy.BuyElectricity.ExistingElectricityAccTests"/>-->
+<!--        </classes>-->
+<!--    </test>-->
+<!--    <test name="Airtime Purchase Tests">-->
+<!--        <classes>-->
+<!--            <class name="tests.Buy.BuyAirtime.NewAirtimeAccTests"/>-->
+<!--&lt;!&ndash;            <class name="tests.Buy.BuyAirtime.ExistingAirtimeAccTests"/>&ndash;&gt;-->
+<!--        </classes>-->
+<!--    </test>-->
+<!--    <test name="Bundles Purchase Tests">-->
+<!--        <classes>-->
+<!--            <class name="tests.Buy.BuyBundles.NewBundlesAccTests"/>-->
+<!--&lt;!&ndash;            <class name="tests.Buy.BuyBundles.ExistingBundlesAccTests "/>&ndash;&gt;-->
+<!--        </classes>-->
+<!--    </test>-->
+<!--    <test name="Data Purchase Tests">-->
+<!--        <classes>-->
+<!--            <class name="tests.Buy.BuyData.NewDataAccTests "/>-->
+<!--&lt;!&ndash;                <class name="tests.Buy.BuyData.ExistingDataAccTests  "/>&ndash;&gt;-->
+<!--        </classes>-->
+<!--    </test>-->
+<!--    <test name="SMS Purchase Tests">-->
+<!--        <classes>-->
+<!--            <class name="tests.Buy.BuySMS.NewSMSAccTests"/>-->
+<!--&lt;!&ndash;            <class name="tests.Buy.BuySMS.ExistingSMSTests"/>&ndash;&gt;-->
+<!--        </classes>-->
+<!--    </test>-->
+    <test name="Card Tests">
+        <classes>
+            <class name="tests.Card.ViewCardTests" />
+            <class name="tests.Card.CardSettingsTests"/>
+        </classes>
+    </test>
+</suite>

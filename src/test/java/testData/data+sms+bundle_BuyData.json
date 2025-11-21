@@ -1,0 +1,59 @@
+[
+  {
+    "AirtimeName": "Mtn Airtime",
+    "DataName": "Mtn Data",
+    "SMSName": "Mtn SmS",
+    "provider": "MTN",
+    "productData": "Daily 100MB (Daily Data)",
+    "productSMS": "30 SMS",
+    "productBundle": "",
+    "recipientNo": "0780746435",
+    "amount": "40",
+    "popEmail": "Test1@bankzero.co.za",
+    "popCellNumber": "",
+    "ref": "001"
+  },
+  {
+    "AirtimeName": "Telkom Airtime",
+    "DataName": "Telkom Data",
+    "SMSName": "Telkom SmS",
+    "provider": "Telkom",
+    "productData": "300MB (Daily Data)",
+    "productSMS": "50 SMS",
+    "productBundle": "",
+    "recipientNo": "0676336781",
+    "amount": "40",
+    "popEmail": "Test2@bankzero.co.za",
+    "popCellNumber": "",
+    "ref": "001"
+  },
+  {
+    "AirtimeName": "Vodacom Airtime",
+    "DataName": "Vodacom Data",
+    "SMSName": "Vodacom SmS",
+    "provider": "Vodacom",
+    "productData": "375MB (7 Day Data)",
+    "productSMS": "20 SMS",
+    "productBundle": "",
+    "recipientNo": "0829806555",
+    "amount": "40",
+    "popEmail": "Test2@bankzero.co.za",
+    "popCellNumber": "",
+    "ref": "001"
+  },
+  {
+    "AirtimeName": "Cell C Airtime",
+    "DataName": "Cell C Data",
+    "SMSName": "Cell C SmS",
+    "provider": "Cell C",
+    "productData": "150MB (Daily Data)",
+    "productSMS": "25 SMS 30 Day",
+    "productBundle": "",
+    "recipientNo": "0740033902",
+    "amount": "40",
+    "popEmail": "Test2@bankzero.co.za",
+    "popCellNumber": "",
+    "ref": "001"
+  }
+
+]

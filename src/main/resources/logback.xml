@@ -1,0 +1,57 @@
+<!-- http://dev.cs.ovgu.de/java/logback/manual/layouts.html -->
+<configuration>
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %cyan(%logger{36}) - %msg%n</pattern>
+        </encoder>
+    </appender>
+    <!--    <appender name="FILE" class="ch.qos.logback.core.FileAppender">-->
+    <!--        <file>test.log</file>-->
+    <!--        <append>true</append>-->
+    <!--        &lt;!&ndash; set immediateFlush to false for much higher logging throughput &ndash;&gt;-->
+    <!--        <immediateFlush>true</immediateFlush>-->
+    <!--        <encoder>-->
+    <!--            <pattern>%-4relative [%thread] %-5level %logger{35} -%kvp- %msg%n</pattern>-->
+    <!--        </encoder>-->
+    <!--    </appender>-->
+    <logger name="org.asynchttpclient.netty.handler.WebSocketHandler" level="INFO"/>
+    <logger name="org.asynchttpclient.netty.handler.WebSocketHandler" level="WARN"/>
+    <root level="DEBUG">
+        <appender-ref ref="STDOUT" />
+    </root>
+</configuration>
+
+<!--<configuration>-->
+
+<!--    &lt;!&ndash; Console appender for your test logs &ndash;&gt;-->
+<!--    <appender name="TEST_CONSOLE" class="ch.qos.logback.core.ConsoleAppender">-->
+<!--        <encoder>-->
+<!--            <pattern>%d{HH:mm:ss.SSS} [%thread] %highlight(%-5level) %cyan(%logger{36}) - %msg%n</pattern>-->
+<!--        </encoder>-->
+<!--    </appender>-->
+
+<!--    &lt;!&ndash; File appender for Appium logs &ndash;&gt;-->
+<!--    <appender name="APPIUM_FILE" class="ch.qos.logback.core.FileAppender">-->
+<!--        <file>logs/appium.log</file>-->
+<!--        <append>true</append>-->
+<!--        <encoder>-->
+<!--            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>-->
+<!--        </encoder>-->
+<!--    </appender>-->
+
+<!--    &lt;!&ndash; Logger for Appium classes (adjust package if needed) &ndash;&gt;-->
+<!--    <logger name="io.appium" level="INFO" additivity="false">-->
+<!--        <appender-ref ref="APPIUM_FILE" />-->
+<!--    </logger>-->
+
+<!--    &lt;!&ndash; Example: exclude Selenium logs from STDOUT &ndash;&gt;-->
+<!--    <logger name="org.openqa.selenium" level="WARN" additivity="false">-->
+<!--        <appender-ref ref="APPIUM_FILE" />-->
+<!--    </logger>-->
+
+<!--    &lt;!&ndash; Default root logger for test logs &ndash;&gt;-->
+<!--    <root level="DEBUG">-->
+<!--        <appender-ref ref="TEST_CONSOLE" />-->
+<!--    </root>-->
+
+<!--</configuration>-->

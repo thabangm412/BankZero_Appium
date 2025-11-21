@@ -1,0 +1,42 @@
+[
+  {
+    "accName": "Savings",
+    "accType": "Savings",
+    "goalAmount": 1000,
+    "amount": 200,
+    "profileName": "Reo",
+    "appLogin": "11111"
+  },
+  {
+    "accName": "7 Day Notice",
+    "accType": "7 Day Notice",
+    "goalAmount": 1000,
+    "amount": 200,
+    "profileName": "Reo",
+    "appLogin": "11111"
+  },
+  {
+    "accName": "32 Day Notice",
+    "accType": "32 Day Notice",
+    "goalAmount": 1000,
+    "amount": 200,
+    "profileName": "Reo",
+    "appLogin": "11111"
+  },
+  {
+    "accName": "45 Day Notice",
+    "accType": "45 Day Notice",
+    "goalAmount": 1000,
+    "amount": 200,
+    "profileName": "Reo",
+    "appLogin": "11111"
+  },
+  {
+    "accName": "Current",
+    "accType": "Current",
+    "goalAmount": 1000,
+    "amount": 200,
+    "profileName": "Reo",
+    "appLogin": "11111"
+  }
+]
