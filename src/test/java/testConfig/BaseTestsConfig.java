@@ -26,7 +26,7 @@ public class BaseTestsConfig extends AppiumUtils {
         service = new AppiumServiceBuilder()
                 .withAppiumJS(new File("C:\\Users\\ThabangMonoane\\AppData\\Roaming\\npm\\node_modules\\appium\\build\\lib\\main.js"))
                 .withIPAddress("127.0.0.1")
-                .usingPort(4723) // Match this port with driver URL below
+                .usingPort(4725) // Match this port with driver URL below
                 .withTimeout(Duration.ofSeconds(30))
                 .build();
         service.start();
@@ -35,7 +35,7 @@ public class BaseTestsConfig extends AppiumUtils {
         UiAutomator2Options options = new UiAutomator2Options();
         options.setDeviceName("Samsung SM-A566B");
         options.setUdid("R5CY60MB6KK");
-        options.setApp("C:\\Users\\ThabangMonoane\\IdeaProjects\\BzAppiumAutomation\\src\\test\\java\\resources\\apps\\app-dev-0.9.9.52-rc02.apk");
+        options.setApp("C:\\Users\\ThabangMonoane\\IdeaProjects\\untitled\\src\\test\\java\\resources\\apps\\app-dev-0.9.9.52-rc02.apk");
         options.setAutoGrantPermissions(true);
         options.setPlatformName("Android");
         options.setAppPackage("za.co.neolabs.bankzero");
@@ -51,7 +51,7 @@ public class BaseTestsConfig extends AppiumUtils {
 
         // Start driver
         //driver = new AndroidDriver(new URL("http://127.0.0.1:4723"), options);
-        driver = new AndroidDriver(new URL(URI.create("http://127.0.0.1:4723").toString()), options);
+        driver = new AndroidDriver(new URL(URI.create("http://127.0.0.1:4725").toString()), options);
         driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
 
        //AndroidActions.copyAttachmentsToDevice(driver);
