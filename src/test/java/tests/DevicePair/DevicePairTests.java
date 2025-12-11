@@ -30,7 +30,7 @@ public class DevicePairTests extends BaseTestsConfig {
     private PairOnDevicePage pairOnDevicePage;
     private RegisterOTP registerOTP;
     private LoginPage loginPage;
-    private  HomePage homePage;
+    private HomePage homePage;
 
     @BeforeMethod
     public void preSetUp() {
@@ -110,10 +110,9 @@ public class DevicePairTests extends BaseTestsConfig {
     @Test(dataProvider = "getSingleDataSet", priority = 3)
     public void SafeModeCheckTest(HashMap<String, String> input) throws InterruptedException
     {
-        LoginPage loginPage = new LoginPage(driver);
-        HomePage homePage = new HomePage(driver);
         AddAccountPage addAccountPage = new AddAccountPage(driver);
-        AndroidActions androidActions = new AndroidActions(driver);
+        validateInput(input,
+                "prefName", "loginPin","safeModeMsg");
 
         try {
             loginPage.loginAccount(input.get("prefName"));
