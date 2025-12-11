@@ -30,6 +30,7 @@ public class DevicePairTests extends BaseTestsConfig {
     private PairOnDevicePage pairOnDevicePage;
     private RegisterOTP registerOTP;
     private LoginPage loginPage;
+    private  HomePage homePage;
 
     @BeforeMethod
     public void preSetUp() {
@@ -40,6 +41,7 @@ public class DevicePairTests extends BaseTestsConfig {
         pairOnDevicePage = new PairOnDevicePage(driver);
         registerOTP = new RegisterOTP(driver);
         loginPage = new LoginPage(driver);
+        homePage = new HomePage(driver);
 
         log.debug("Page objects and androidActions initialized");
     }
@@ -74,10 +76,8 @@ public class DevicePairTests extends BaseTestsConfig {
     @Test(dataProvider = "getSingleDataSet", priority = 1)
     public void DevicePairLoginTest(HashMap<String, String> input) throws InterruptedException
     {
-        LoginPage loginPage = new LoginPage(driver);
-        HomePage homePage = new HomePage(driver);
-        AndroidActions androidActions = new AndroidActions(driver);
-        androidActions.environmentChange();
+        validateInput(input,
+                  "prefName", "loginPin");
 
         try {
             loginPage.loginAccount(input.get("prefName"));
