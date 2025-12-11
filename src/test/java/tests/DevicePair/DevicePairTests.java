@@ -32,6 +32,8 @@ public class DevicePairTests extends BaseTestsConfig {
     private LoginPage loginPage;
     private HomePage homePage;
 
+    private AddAccountPage addAccountPage;
+
     @BeforeMethod
     public void preSetUp() {
         androidActions  = new AndroidActions(driver);
@@ -42,6 +44,7 @@ public class DevicePairTests extends BaseTestsConfig {
         registerOTP = new RegisterOTP(driver);
         loginPage = new LoginPage(driver);
         homePage = new HomePage(driver);
+        addAccountPage = new AddAccountPage(driver);
 
         log.debug("Page objects and androidActions initialized");
     }
@@ -110,7 +113,6 @@ public class DevicePairTests extends BaseTestsConfig {
     @Test(dataProvider = "getSingleDataSet", priority = 3)
     public void SafeModeCheckTest(HashMap<String, String> input) throws InterruptedException
     {
-        AddAccountPage addAccountPage = new AddAccountPage(driver);
         validateInput(input,
                 "prefName", "loginPin","safeModeMsg");
 
@@ -143,11 +145,6 @@ public class DevicePairTests extends BaseTestsConfig {
     @Test(dataProvider = "getSingleDataSet", priority = 3)
     public void NegativeSafeModeCheckTest(HashMap<String, String> input) throws InterruptedException
     {
-        LoginPage loginPage = new LoginPage(driver);
-        HomePage homePage = new HomePage(driver);
-        AddAccountPage addAccountPage = new AddAccountPage(driver);
-        AndroidActions androidActions = new AndroidActions(driver);
-
         try {
             loginPage.loginAccount(input.get("prefName"));
             loginPage.enterLoginPin(Integer.parseInt(input.get("loginPin")));
@@ -177,11 +174,9 @@ public class DevicePairTests extends BaseTestsConfig {
     @Test(dataProvider = "getSingleDataSet", priority = 4)
     public void SafeModeLiftTest(HashMap<String, String> input) throws InterruptedException
     {
-        LoginPage loginPage = new LoginPage(driver);
-        HomePage homePage = new HomePage(driver);
-        AddAccountPage addAccountPage = new AddAccountPage(driver);
-        AndroidActions androidActions = new AndroidActions(driver);
         AccountMenuActions accountMenuActions = new AccountMenuActions(driver);
+        validateInput(input,
+                "prefName", "loginPin","safeModeMsg");
 
         String sshUser = System.getenv("SSH_USER");
         String sshPassword = System.getenv("SSH_PASSWORD");
