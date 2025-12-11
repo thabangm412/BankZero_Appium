@@ -5,10 +5,13 @@ import org.openqa.selenium.TimeoutException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.testng.Assert;
+import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 import pageObjects.app.Registration.RegisterOTP;
+import pageObjects.app.Registration.WhoAmIRegistration;
 import pageObjects.app.accountsActionMenu.AccountMenuActions;
+import pageObjects.app.accountsActionMenu.card.MyCardPage;
 import pageObjects.app.accountsHome.HomePage;
 import pageObjects.app.addAccount.AddAccountPage;
 import pageObjects.app.login.LoginPage;
@@ -25,14 +28,29 @@ public class DevicePairTests extends BaseTestsConfig {
 
     private static final Logger log = LoggerFactory.getLogger(DevicePairTests.class);
 
+    private AndroidActions androidActions;
+    private PairOnDevicePage pairOnDevicePage;
+    private RegisterOTP registerOTP;
+    private LoginPage loginPage;
 
+    @BeforeMethod
+    public void preSetUp() {
+        androidActions  = new AndroidActions(driver);
+        //androidActions.environmentChange();
+
+        // initialize page objects once per test
+        pairOnDevicePage = new PairOnDevicePage(driver);
+        registerOTP = new RegisterOTP(driver);
+        loginPage = new LoginPage(driver);
+
+        log.debug("Page objects and androidActions initialized");
+    }
     @Test(dataProvider = "getSingleDataSet", priority = 0)
     public void DevicePairTest(HashMap<String, String> input) throws InterruptedException {
 
-        AndroidActions androidActions = new AndroidActions(driver);
-        PairOnDevicePage pairOnDevicePage = new PairOnDevicePage(driver);
-        RegisterOTP registerOTP = new RegisterOTP(driver);
-        LoginPage loginPage = new LoginPage(driver);
+        validateInput(input,
+                "cellNumber", "idNumber", "prefName", "loginPin",
+                "alNumber");
 
         // Environment check
         androidActions.environmentChange();
@@ -53,7 +71,6 @@ public class DevicePairTests extends BaseTestsConfig {
         //Thread.sleep(3000);
 
         Assert.assertTrue(loginPage.loginPageConfirm());
-
     }
 
     @Test(dataProvider = "getSingleDataSet", priority = 1)
@@ -212,6 +229,21 @@ public class DevicePairTests extends BaseTestsConfig {
 
         List<HashMap<String, String>> data = getJsonData(System.getProperty("user.dir") + "//src//test//java//testData//devicePairData.json");
         return new Object[][]{{data.get(0)}};
+    }
+
+    private void validateInput(HashMap<String, String> input, String... required) {
+        if (input == null) throw new IllegalArgumentException("Input map is null");
+        StringBuilder missing = new StringBuilder();
+        for (String k : required) {
+            if (input.get(k) == null || input.get(k).trim().isEmpty()) {
+                if (missing.length() > 0) missing.append(", ");
+                missing.append(k);
+            }
+        }
+        if (missing.length() > 0) {
+            log.error("Missing required keys: {}", missing.toString());
+            throw new IllegalArgumentException("Missing required keys: " + missing.toString());
+        }
     }
 
 }
