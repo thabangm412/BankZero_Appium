@@ -20,6 +20,13 @@
     "errMsg": "Your details could not be verified. Please check and try again.",
     "safeModeMsg": "Access restricted - Safe mode active until biometrics is verified. We'll let you know soon.",
     "negativeSafeModeMsg": "Access - Safe mode active until biometrics is verified. We'll let you know soon."
-
+  },
+  {
+    "cellNumber": "0862961777",
+    "alNumber": "0676336789",
+    "idNumber": "9108291857086",
+    "prefName": "Rin",
+    "loginPin": "11111",
+    "safeModeMsg": "Access restricted - Safe mode active until biometrics is verified. We'll let you know soon."
   }
 ]

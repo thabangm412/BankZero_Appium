@@ -48,6 +48,7 @@ public class DevicePairTests extends BaseTestsConfig {
 
         log.debug("Page objects and androidActions initialized");
     }
+
     @Test(dataProvider = "getSingleDataSet", priority = 0)
     public void DevicePairTest(HashMap<String, String> input) throws InterruptedException {
 

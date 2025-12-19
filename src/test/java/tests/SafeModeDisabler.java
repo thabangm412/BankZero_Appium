@@ -16,28 +16,17 @@ public class SafeModeDisabler {
 
     public static void main(String[] args) {
         // 🔧 Replace these values with your actual credentials/config
-//        String sshUser = System.getenv("SSH_USER");
-//        String sshPassword = System.getenv("SSH_PASSWORD");
-//        String sshHost = System.getenv("SSH_HOST");
-//        int sshPort = Integer.parseInt(System.getenv("SSH_PORT"));
-//
-//        String dbUser = System.getenv("DB_USER");
-//        String dbPassword = System.getenv("DB_PASSWORD");
-//        String dbName = System.getenv("DB_NAME");
-//        String remoteHost = System.getenv("DB_REMOTE_HOST");
-//        int remotePort = Integer.parseInt(System.getenv("DB_REMOTE_PORT"));
-//        int localPort = Integer.parseInt(System.getenv("DB_LOCAL_PORT"));
-        String sshUser = "thabangm";
-        String sshHost = "172.0.203.5";
-        int sshPort = 22;
-        String sshPassword = "B@nkZ3r0SSH%2025";
+        String sshUser = System.getenv("SSH_USER");
+        String sshPassword = System.getenv("SSH_PASSWORD");
+        String sshHost = System.getenv("SSH_HOST");
+        int sshPort = Integer.parseInt(System.getenv("SSH_PORT"));
 
-        String dbUser = "thabangm";
-        String dbPassword = "P0stGr1s@de01";
-        String dbName = "zero";
-        String remoteHost = "localhost"; // usually localhost on the DB server
-        int remotePort = 5432;
-        int localPort = 5433;
+        String dbUser = System.getenv("DB_USER");
+        String dbPassword = System.getenv("DB_PASSWORD");
+        String dbName = System.getenv("DB_NAME");
+        String remoteHost = System.getenv("DB_REMOTE_HOST");
+        int remotePort = Integer.parseInt(System.getenv("DB_REMOTE_PORT"));
+        int localPort = Integer.parseInt(System.getenv("DB_LOCAL_PORT"));
 
         String phoneNumber = "0860539646"; // 📱 phone number to use in WHERE clause
 
