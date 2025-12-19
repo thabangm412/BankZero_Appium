@@ -375,6 +375,19 @@ public class AndroidActions extends AppiumUtils {
         }
     }
 
+    public boolean isTextNotPresentInDropDown(WebElement element,String text) {
+        try {
+            //Click to open dropdown
+            element.click();
+            log.info("Dropdown clicked to check for text");
+            driver.findElement(AppiumBy.androidUIAutomator(
+                    "new UiSelector().textContains(\"" + text + "\")"));
+            return true; // Text found
+        } catch (NoSuchElementException e) {
+            return false; // Text not found
+        }
+    }
+
 
 
 

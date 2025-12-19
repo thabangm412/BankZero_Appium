@@ -3,6 +3,7 @@ package tests.Pay;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.testng.Assert;
+import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 import org.testng.asserts.SoftAssert;
@@ -21,16 +22,33 @@ public class ExistingPaymentTests extends BaseTestsConfig {
 
     private static final Logger log = LoggerFactory.getLogger(ExistingPaymentTests.class);
 
+    private LoginPage loginPage;
+    private HomePage homePage;
+    private QuickPayPage quickPayPage;
+    private AccountMenuActions accountMenuActions;
+    private AndroidActions androidActions;
+
+    @BeforeMethod
+    public void preSetUp() {
+        loginPage = new LoginPage(driver);
+        homePage = new HomePage(driver);
+        accountMenuActions = new AccountMenuActions(driver);
+        quickPayPage = new QuickPayPage(driver);
+        androidActions = new AndroidActions(driver);
+
+        log.debug("Page objects and androidActions initialized");
+    }
+
+
     @Test(dataProvider = "getMultipleDataSet", priority = 0)
     public void PaymentRedoTest(HashMap<String, String> input)
     {
-        LoginPage loginPage = new LoginPage(driver);
-        HomePage homePage = new HomePage(driver);
-        QuickPayPage quickPayPage = new QuickPayPage(driver);
-        AccountMenuActions accountMenuActions = new AccountMenuActions(driver);
-        AndroidActions androidActions = new AndroidActions(driver);
+        validateInput(input,
+                "profileName", "loginPin",
+                "recipientName"
+        );
 
-        androidActions.environmentChange();
+        //androidActions.environmentChange();
         String name = input.get("profileName");
         String appPin = input.get("loginPin");
 
@@ -59,13 +77,12 @@ public class ExistingPaymentTests extends BaseTestsConfig {
     @Test(dataProvider = "getMultipleDataSet", priority = 1)
     public void paymentToExistingRecipient(HashMap<String, String> input)
     {
-        LoginPage loginPage = new LoginPage(driver);
-        HomePage homePage = new HomePage(driver);
-        QuickPayPage quickPayPage = new QuickPayPage(driver);
-        AccountMenuActions accountMenuActions = new AccountMenuActions(driver);
-        AndroidActions androidActions = new AndroidActions(driver);
+      validateInput(input,
+                "profileName", "loginPin",
+                "recipientName"
+        );
 
-        androidActions.environmentChange();
+        //androidActions.environmentChange();
         String name = input.get("profileName");
         String appPin = input.get("loginPin");
 
@@ -94,13 +111,13 @@ public class ExistingPaymentTests extends BaseTestsConfig {
     @Test(dataProvider = "getMultipleDataSet", priority = 2)
     public void paymentWithAttachment(HashMap<String, String> input)
     {
-        LoginPage loginPage = new LoginPage(driver);
-        HomePage homePage = new HomePage(driver);
-        QuickPayPage quickPayPage = new QuickPayPage(driver);
-        AccountMenuActions accountMenuActions = new AccountMenuActions(driver);
-        AndroidActions androidActions = new AndroidActions(driver);
+        validateInput(input,
+                "profileName", "loginPin",
+                "recipientName",
+                "amount", "ref"
+        );
 
-        androidActions.environmentChange();
+        //androidActions.environmentChange();
         String name = input.get("profileName");
         String appPin = input.get("loginPin");
 
@@ -136,13 +153,13 @@ public class ExistingPaymentTests extends BaseTestsConfig {
     @Test(dataProvider = "getMultipleDataSet", priority = 5)
     public void updateExistingRecipient(HashMap<String, String> input)
     {
-        LoginPage loginPage = new LoginPage(driver);
-        HomePage homePage = new HomePage(driver);
-        QuickPayPage quickPayPage = new QuickPayPage(driver);
-        AccountMenuActions accountMenuActions = new AccountMenuActions(driver);
-        AndroidActions androidActions = new AndroidActions(driver);
+        validateInput(input,
+                "profileName", "loginPin",
+                "recipientName",
+                "updateRecipientName", "updateGroup", "updateBank", "updateAcc"
+        );
 
-        androidActions.environmentChange();
+        //androidActions.environmentChange();
         String name = input.get("profileName");
         String appPin = input.get("loginPin");
 
@@ -150,9 +167,9 @@ public class ExistingPaymentTests extends BaseTestsConfig {
 
         accountMenuActions.clickAccountMenuActionsButtn();
         quickPayPage.clickPayButtn();
-        quickPayPage.getExistingRecipient(input.get("recipientName"));
+        quickPayPage.getExistingRecipient(input.get("updateRecipientName"));
         quickPayPage.editProfile();
-        quickPayPage.updateRecipientDetails(input.get("updateRecipientName"),input.get("updateGroup"),input.get("updateBank"),input.get("updateAcc"),input.get("updateAcc"));
+        quickPayPage.updateRecipientDetails(input.get("updateRecipientName"),input.get("updateGroup"),input.get("updateBank"),input.get("updateAcc"),input.get("updateAccNo"));
 
         try {
             String expectedAccNo =  quickPayPage.getAccNo();
@@ -167,11 +184,61 @@ public class ExistingPaymentTests extends BaseTestsConfig {
         }
     }
 
+    @Test(dataProvider = "getMultipleDataSet", priority = 6)
+    public void deleteExistingRecipientTest(HashMap<String, String> input){
+
+        validateInput(input,
+                "profileName", "loginPin",
+                "recipientName",
+                "updateRecipientName", "updateGroup", "updateBank", "updateAcc"
+        );
+
+        //androidActions.environmentChange();
+        String name = input.get("profileName");
+        String appPin = input.get("loginPin");
+
+        loginPage.loginWithRetry(name,appPin,2);
+
+        accountMenuActions.clickAccountMenuActionsButtn();
+        quickPayPage.clickPayButtn();
+        quickPayPage.getExistingRecipient(input.get("recipientName"));
+        quickPayPage.editProfile();
+        quickPayPage.clickDelete();
+
+
+        try {
+            Assert.assertTrue(quickPayPage.isRecipientDeleted(input.get("recipientName")));
+            log.info("Recipient deletion confirmed: {}", input.get("recipientName"));
+        } catch (AssertionError e) {
+            log.warn("Failed to delete payment recipient");
+            Assert.fail("Test failed due to exception: " + e.getMessage());
+            throw e;  // Let TestNG fail the test
+        }
+        driver.navigate().back();
+        quickPayPage.clickBack();
+        homePage.clickLogoutButtn();
+    }
+
     @DataProvider
     public Object[] [] getMultipleDataSet() throws IOException {
 
         List<HashMap<String, String>> data = getJsonData(System.getProperty("user.dir") + "//src//test//java//testData//payData.json");
-        return new Object[][]{{data.get(1)}};
+        return new Object[][]{{data.get(0)}};
+    }
+
+    private void validateInput(HashMap<String, String> input, String... required) {
+        if (input == null) throw new IllegalArgumentException("Input map is null");
+        StringBuilder missing = new StringBuilder();
+        for (String k : required) {
+            if (input.get(k) == null || input.get(k).trim().isEmpty()) {
+                if (missing.length() > 0) missing.append(", ");
+                missing.append(k);
+            }
+        }
+        if (missing.length() > 0) {
+            log.error("Missing required keys: {}", missing.toString());
+            throw new IllegalArgumentException("Missing required keys: " + missing.toString());
+        }
     }
 
 }
