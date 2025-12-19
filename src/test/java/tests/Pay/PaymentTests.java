@@ -26,10 +26,7 @@ public class PaymentTests extends BaseTestsConfig {
     private static final Logger log = LoggerFactory.getLogger(PaymentTests.class);
     private LoginPage loginPage;
     private HomePage homePage;
-
     private AccountMenuActions accountMenuActions;
-
-
     private QuickPayPage quickPayPage;
 
     @BeforeMethod
@@ -105,7 +102,7 @@ public class PaymentTests extends BaseTestsConfig {
     public Object[] [] getMultipleDataSet() throws IOException {
 
         List<HashMap<String, String>> data = getJsonData(System.getProperty("user.dir") + "//src//test//java//testData//payData.json");
-        return new Object[][]{{data.get(1)}};
+        return new Object[][]{{data.get(0)}};
     }
 
     private void validateInput(HashMap<String, String> input, String... required) {

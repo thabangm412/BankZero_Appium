@@ -201,14 +201,14 @@ public class ExistingPaymentTests extends BaseTestsConfig {
 
         accountMenuActions.clickAccountMenuActionsButtn();
         quickPayPage.clickPayButtn();
-        quickPayPage.getExistingRecipient(input.get("recipientName"));
+        quickPayPage.getExistingRecipient(input.get("updateRecipientName"));
         quickPayPage.editProfile();
         quickPayPage.clickDelete();
 
 
         try {
-            Assert.assertTrue(quickPayPage.isRecipientDeleted(input.get("recipientName")));
-            log.info("Recipient deletion confirmed: {}", input.get("recipientName"));
+            Assert.assertTrue(quickPayPage.isRecipientDeleted(input.get("updateRecipientName")));
+            log.info("Recipient deletion confirmed: {}", input.get("updateRecipientName"));
         } catch (AssertionError e) {
             log.warn("Failed to delete payment recipient");
             Assert.fail("Test failed due to exception: " + e.getMessage());
