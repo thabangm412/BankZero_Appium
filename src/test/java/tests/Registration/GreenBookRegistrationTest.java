@@ -16,7 +16,6 @@ import pageObjects.app.login.PairOnDevicePage;
 import testConfig.BaseTestsConfig;
 import utils.AndroidActions;
 
-import java.awt.event.WindowFocusListener;
 import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;

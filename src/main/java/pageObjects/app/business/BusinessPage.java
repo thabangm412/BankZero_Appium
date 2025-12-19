@@ -6,8 +6,6 @@ import io.appium.java_client.pagefactory.AppiumFieldDecorator;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.PageFactory;
-import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.WebDriverWait;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import utils.AndroidActions;
@@ -15,9 +13,6 @@ import utils.AppiumUtils;
 
 import java.time.Duration;
 import java.util.Locale;
-import java.util.Objects;
-
-import org.openqa.selenium.support.ui.WebDriverWait;
 
 public class BusinessPage {
     private static final Logger log = LoggerFactory.getLogger(BusinessPage.class);

@@ -219,10 +219,10 @@ public class QuickPayPage {
         androidActions.scrollToTextAndClick2(account,driver);
         log.info("Account selected: {}",account);
 
-//        accountNo.clear();
-//        log.info("Account number input field cleared");
-//        accountNo.sendKeys(accNo);
-//        log.info("Account number entered: {}",accNo);
+        accountNo.clear();
+        log.info("Account number input field cleared");
+        accountNo.sendKeys(accNo);
+        log.info("Account number entered: {}",accNo);
 
         updateButtn.click();
         log.info("Add button clicked");
@@ -349,7 +349,33 @@ public class QuickPayPage {
     {
         deleteButtn.click();
         log.info("Delete button clicked");
+
+        AppiumUtils.waitForElement(By.id("android:id/message"),driver);
+        WebElement confirmDelete = driver.findElement(By.xpath(" //android.widget.Button[@resource-id=\"android:id/button1\" and @text=\"Yes\"]"));
+        confirmDelete.click();
+        log.info("Confirm delete button clicked");
     }
+
+    public boolean isRecipientDeleted(String text)
+    {
+        AndroidActions androidActions = new AndroidActions(driver);
+        log.info("Checking if recipient is deleted");
+
+        WebElement dropDown = driver.findElement(By.id("za.co.neolabs.bankzero:id/_arrow"));
+
+        boolean isDeleted = androidActions.isTextNotPresentInDropDown(dropDown,text);
+        if(isDeleted)
+        {
+            log.info("Recipient successfully deleted");
+        }
+        else
+        {
+            log.info("Recipient still present");
+        }
+        return isDeleted;
+
+    }
+
 
     public void addPoP(String email,String phone)
     {

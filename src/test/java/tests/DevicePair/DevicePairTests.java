@@ -5,6 +5,7 @@ import org.openqa.selenium.TimeoutException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.testng.Assert;
+import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 import pageObjects.app.Registration.RegisterOTP;
@@ -25,14 +26,35 @@ public class DevicePairTests extends BaseTestsConfig {
 
     private static final Logger log = LoggerFactory.getLogger(DevicePairTests.class);
 
+    private AndroidActions androidActions;
+    private PairOnDevicePage pairOnDevicePage;
+    private RegisterOTP registerOTP;
+    private LoginPage loginPage;
+    private HomePage homePage;
+
+    private AddAccountPage addAccountPage;
+
+    @BeforeMethod
+    public void preSetUp() {
+        androidActions  = new AndroidActions(driver);
+        //androidActions.environmentChange();
+
+        // initialize page objects once per test
+        pairOnDevicePage = new PairOnDevicePage(driver);
+        registerOTP = new RegisterOTP(driver);
+        loginPage = new LoginPage(driver);
+        homePage = new HomePage(driver);
+        addAccountPage = new AddAccountPage(driver);
+
+        log.debug("Page objects and androidActions initialized");
+    }
 
     @Test(dataProvider = "getSingleDataSet", priority = 0)
     public void DevicePairTest(HashMap<String, String> input) throws InterruptedException {
 
-        AndroidActions androidActions = new AndroidActions(driver);
-        PairOnDevicePage pairOnDevicePage = new PairOnDevicePage(driver);
-        RegisterOTP registerOTP = new RegisterOTP(driver);
-        LoginPage loginPage = new LoginPage(driver);
+        validateInput(input,
+                "cellNumber", "idNumber", "prefName", "loginPin",
+                "alNumber");
 
         // Environment check
         androidActions.environmentChange();
@@ -53,16 +75,13 @@ public class DevicePairTests extends BaseTestsConfig {
         //Thread.sleep(3000);
 
         Assert.assertTrue(loginPage.loginPageConfirm());
-
     }
 
     @Test(dataProvider = "getSingleDataSet", priority = 1)
     public void DevicePairLoginTest(HashMap<String, String> input) throws InterruptedException
     {
-        LoginPage loginPage = new LoginPage(driver);
-        HomePage homePage = new HomePage(driver);
-        AndroidActions androidActions = new AndroidActions(driver);
-        androidActions.environmentChange();
+        validateInput(input,
+                  "prefName", "loginPin");
 
         try {
             loginPage.loginAccount(input.get("prefName"));
@@ -95,10 +114,8 @@ public class DevicePairTests extends BaseTestsConfig {
     @Test(dataProvider = "getSingleDataSet", priority = 3)
     public void SafeModeCheckTest(HashMap<String, String> input) throws InterruptedException
     {
-        LoginPage loginPage = new LoginPage(driver);
-        HomePage homePage = new HomePage(driver);
-        AddAccountPage addAccountPage = new AddAccountPage(driver);
-        AndroidActions androidActions = new AndroidActions(driver);
+        validateInput(input,
+                "prefName", "loginPin","safeModeMsg");
 
         try {
             loginPage.loginAccount(input.get("prefName"));
@@ -129,11 +146,6 @@ public class DevicePairTests extends BaseTestsConfig {
     @Test(dataProvider = "getSingleDataSet", priority = 3)
     public void NegativeSafeModeCheckTest(HashMap<String, String> input) throws InterruptedException
     {
-        LoginPage loginPage = new LoginPage(driver);
-        HomePage homePage = new HomePage(driver);
-        AddAccountPage addAccountPage = new AddAccountPage(driver);
-        AndroidActions androidActions = new AndroidActions(driver);
-
         try {
             loginPage.loginAccount(input.get("prefName"));
             loginPage.enterLoginPin(Integer.parseInt(input.get("loginPin")));
@@ -163,11 +175,9 @@ public class DevicePairTests extends BaseTestsConfig {
     @Test(dataProvider = "getSingleDataSet", priority = 4)
     public void SafeModeLiftTest(HashMap<String, String> input) throws InterruptedException
     {
-        LoginPage loginPage = new LoginPage(driver);
-        HomePage homePage = new HomePage(driver);
-        AddAccountPage addAccountPage = new AddAccountPage(driver);
-        AndroidActions androidActions = new AndroidActions(driver);
         AccountMenuActions accountMenuActions = new AccountMenuActions(driver);
+        validateInput(input,
+                "prefName", "loginPin","safeModeMsg");
 
         String sshUser = System.getenv("SSH_USER");
         String sshPassword = System.getenv("SSH_PASSWORD");
@@ -212,6 +222,21 @@ public class DevicePairTests extends BaseTestsConfig {
 
         List<HashMap<String, String>> data = getJsonData(System.getProperty("user.dir") + "//src//test//java//testData//devicePairData.json");
         return new Object[][]{{data.get(0)}};
+    }
+
+    private void validateInput(HashMap<String, String> input, String... required) {
+        if (input == null) throw new IllegalArgumentException("Input map is null");
+        StringBuilder missing = new StringBuilder();
+        for (String k : required) {
+            if (input.get(k) == null || input.get(k).trim().isEmpty()) {
+                if (missing.length() > 0) missing.append(", ");
+                missing.append(k);
+            }
+        }
+        if (missing.length() > 0) {
+            log.error("Missing required keys: {}", missing.toString());
+            throw new IllegalArgumentException("Missing required keys: " + missing.toString());
+        }
     }
 
 }
