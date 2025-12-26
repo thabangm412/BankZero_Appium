@@ -4,6 +4,7 @@ import org.openqa.selenium.NoSuchElementException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.testng.Assert;
+import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 import pageObjects.app.accountsActionMenu.AccountMenuActions;
@@ -21,14 +22,33 @@ import java.util.List;
 public class NewRecipientTests extends BaseTestsConfig {
     private static final Logger log = LoggerFactory.getLogger(NewRecipientTests.class);
 
+    private LoginPage loginPage;
+    private HomePage homePage;
+    private AccountMenuActions accountMenuActions;
+    private QuickPayPage quickPayPage;
+    private AndroidActions androidActions;
+    private PayManyPage payManyPage;
+
+    @BeforeMethod
+    public void preSetUp() {
+        loginPage = new LoginPage(driver);
+        homePage = new HomePage(driver);
+        accountMenuActions = new AccountMenuActions(driver);
+        quickPayPage = new QuickPayPage(driver);
+        androidActions = new AndroidActions(driver);
+        payManyPage = new PayManyPage(driver);
+
+        log.debug("Page objects and androidActions initialized");
+    }
+
     @Test(dataProvider = "getMultipleDataSet",priority = 0)
     public void addNewRecipient(HashMap<String, String> input)
     {
-        LoginPage loginPage = new LoginPage(driver);
-        QuickPayPage quickPayPage = new QuickPayPage(driver);
-        PayManyPage payManyPage = new PayManyPage(driver);
-        AccountMenuActions accountMenuActions = new AccountMenuActions(driver);
-        AndroidActions androidActions = new AndroidActions(driver);
+        validateInput(input,
+                "profileName", "loginPin",
+                "recipientName", "group", "bank", "account", "accountNo",
+                "popEmail", "popPhone"
+        );
 
        // androidActions.environmentChange();
         String name = input.get("profileName");
@@ -61,8 +81,12 @@ public class NewRecipientTests extends BaseTestsConfig {
     @Test(dataProvider = "getMultipleDataSet",priority = 1)
     public void makePaymentToRecipient(HashMap<String, String> input)
     {
-        PayManyPage payManyPage = new PayManyPage(driver);
-        HomePage homePage = new HomePage(driver);
+        validateInput(input,
+                "profileName", "loginPin",
+                "recipientName",
+                "amount"
+        );
+
         payManyPage.clickNewPayment(input.get("recipientName"));
         payManyPage.clickAttachments();
         payManyPage.addAttachments();
@@ -90,5 +114,20 @@ public class NewRecipientTests extends BaseTestsConfig {
 
         List<HashMap<String, String>> data = getJsonData(System.getProperty("user.dir") + "//src//test//java//testData//payManyData.json");
         return new Object[][]{{data.getFirst()}};
+    }
+
+    private void validateInput(HashMap<String, String> input, String... required) {
+        if (input == null) throw new IllegalArgumentException("Input map is null");
+        StringBuilder missing = new StringBuilder();
+        for (String k : required) {
+            if (input.get(k) == null || input.get(k).trim().isEmpty()) {
+                if (missing.length() > 0) missing.append(", ");
+                missing.append(k);
+            }
+        }
+        if (missing.length() > 0) {
+            log.error("Missing required keys: {}", missing.toString());
+            throw new IllegalArgumentException("Missing required keys: " + missing.toString());
+        }
     }
 }
