@@ -3,6 +3,7 @@ package tests.Pay;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.testng.Assert;
+import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 import pageObjects.app.accountsActionMenu.AccountMenuActions;
@@ -19,15 +20,33 @@ import java.util.List;
 public class RtcPaymentTests extends BaseTestsConfig {
 
     private static final Logger log = LoggerFactory.getLogger(RtcPaymentTests.class);
+    private LoginPage loginPage;
+    private HomePage homePage;
+    private AccountMenuActions accountMenuActions;
+    private QuickPayPage quickPayPage;
+    private AndroidActions androidActions;
+
+    @BeforeMethod
+    public void preSetUp() {
+        loginPage = new LoginPage(driver);
+        homePage = new HomePage(driver);
+        accountMenuActions = new AccountMenuActions(driver);
+        quickPayPage = new QuickPayPage(driver);
+        androidActions = new AndroidActions(driver);
+
+        log.debug("Page objects and androidActions initialized");
+    }
+
 
     @Test(dataProvider = "getMultipleDataSet",priority = 0)
     public void AddRtcRecipientTestWithPoP(HashMap<String, String> input) throws InterruptedException {
-        LoginPage loginPage = new LoginPage(driver);
-        QuickPayPage quickPayPage = new QuickPayPage(driver);
-        AccountMenuActions accountMenuActions = new AccountMenuActions(driver);
-        AndroidActions androidActions = new AndroidActions(driver);
 
-        androidActions.environmentChange();
+        validateInput(input,
+                "profileName", "loginPin",
+                "recipientName", "group", "bank", "account", "accountNo",
+                "popEmail", "popPhone"
+        );
+        //androidActions.environmentChange();
         String name = input.get("profileName");
         String appPin = input.get("loginPin");
 
@@ -56,9 +75,9 @@ public class RtcPaymentTests extends BaseTestsConfig {
     @Test(dataProvider = "getMultipleDataSet", priority = 1)
     public void RtCPaymentTest(HashMap<String, String> input)
     {
-        QuickPayPage quickPayPage = new QuickPayPage(driver);
-        HomePage homePage = new HomePage(driver);
-
+        validateInput(input,
+                "amount", "ref"
+        );
         quickPayPage.enterPaymentDetails(input.get("amount"),input.get("ref"));
         quickPayPage.clickPayImmediatelyButtn();
         quickPayPage.clickPay2Buttn();
@@ -82,5 +101,19 @@ public class RtcPaymentTests extends BaseTestsConfig {
 
         List<HashMap<String, String>> data = getJsonData(System.getProperty("user.dir") + "//src//test//java//testData//payData.json");
         return new Object[][]{{data.get(1)}};
+    }
+    private void validateInput(HashMap<String, String> input, String... required) {
+        if (input == null) throw new IllegalArgumentException("Input map is null");
+        StringBuilder missing = new StringBuilder();
+        for (String k : required) {
+            if (input.get(k) == null || input.get(k).trim().isEmpty()) {
+                if (missing.length() > 0) missing.append(", ");
+                missing.append(k);
+            }
+        }
+        if (missing.length() > 0) {
+            log.error("Missing required keys: {}", missing.toString());
+            throw new IllegalArgumentException("Missing required keys: " + missing.toString());
+        }
     }
 }
