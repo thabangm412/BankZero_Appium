@@ -74,6 +74,127 @@ public class BusinessPage {
     @AndroidFindBy(id = "za.co.neolabs.bankzero:id/tnc_checkbox")
     private WebElement termsAndConditionsButtn;
 
+    @AndroidFindBy(xpath = "//android.widget.TextView[@resource-id=\"za.co.neolabs.bankzero:id/account_name\"]")
+    private WebElement ownerNameInputField;
+
+    @AndroidFindBy(xpath = "(//android.widget.ImageView[@resource-id=\"za.co.neolabs.bankzero:id/addremove_image\"])[5]")
+    private WebElement addRemoveButtn;
+
+    @AndroidFindBy(xpath = "//android.widget.RelativeLayout[@resource-id=\"za.co.neolabs.bankzero:id/country_layout\"]")
+    private WebElement ownerNationalityButtn;
+
+    @AndroidFindBy(xpath = "//android.widget.EditText[@resource-id=\"za.co.neolabs.bankzero:id/owner_phone\"]")
+    private WebElement ownerCellPhoneInputField;
+
+    @AndroidFindBy(id = "za.co.neolabs.bankzero:id/btnConfirm")
+    private WebElement addButtn;
+
+    @AndroidFindBy(xpath = "//android.widget.TextView[@resource-id=\"za.co.neolabs.bankzero:id/menuItemText\" and @text=\"Owners/Officials\"]")
+    private WebElement menuActionOwnersAndAuthorisersButtn;
+
+    public void clickBusinessMenuActionButtn()
+    {
+        try {
+            WebElement accountMenuTitle = driver.findElement(By.xpath("(//android.widget.ImageView[@resource-id=\"za.co.neolabs.bankzero:id/tileMenu\"])[5]"));
+            accountMenuTitle.click();
+            log.info("Business account menu clicked");
+        } catch (Exception e) {
+            log.error("Account menu page did not appear as expected", e);
+            throw e;
+        }
+    }
+
+    public  void clickOwnersAndAuthorisers()
+    {
+        try {
+            menuActionOwnersAndAuthorisersButtn.click();
+            log.info("Owners and authorisers menu action button clicked");
+            try {
+                AppiumUtils.waitForTextToAppear(By.xpath("//android.widget.TextView[@resource-id=\"za.co.neolabs.bankzero:id/toolbarTitle\"]"), "Owners & Authorisers", driver);
+                // landing on the owners & officials page and clicking add/remove button
+                addRemoveButtn.click();
+                log.info("Owners and officials add/remove button clicked");
+            } catch (Exception e) {
+                log.error("Owners & officials page did not appear as expected", e);
+                throw e;
+            }
+        } catch (Exception e) {
+            log.error("Owners and authorisers menu action button not clickable", e);
+            throw e;
+        }
+
+    }
+
+    public void addOwnersAndOfficials(String role, String nationality,  String cellNumber, String ownerName)
+    {
+        try {
+            AppiumUtils.waitForTextToAppear(By.xpath("//android.widget.TextView[@resource-id=\"za.co.neolabs.bankzero:id/toolbarTitle\"]"), "Owners & Authorisers", driver);
+            // landing on the owners & officials page and clicking add/remove button
+            addRemoveButtn.click();
+            log.info("Owners and officials add/remove button clicked");
+
+            //landing on the owners & officials page and selecting options
+            try {
+                AppiumUtils.waitForTextToAppear(By.xpath("//android.widget.TextView[@resource-id=\"za.co.neolabs.bankzero:id/toolbar_title\"]"),"Owner/Official/Authoriser",driver);
+                //enter owner preferred name
+                safeClear(ownerNameInputField,"Owner's preferred name");
+                safeSendKeys(ownerNameInputField,"Owner's preferred name",ownerName,true);
+
+                //selecting the required roles
+                switch (role.toUpperCase())
+                {
+                    case "AUTHORISER":
+                        WebElement authoriserButtn = driver.findElement(By.xpath("(//android.widget.CheckBox[@resource-id=\"za.co.neolabs.bankzero:id/chk_selected\"])[1]"));
+                        authoriserButtn.click();
+                        log.info("Authoriser option selected");
+                        break;
+                    case "BENEFICIAL OWNER":
+                        WebElement beneficialButtn = driver.findElement(By.xpath("(//android.widget.CheckBox[@resource-id=\"za.co.neolabs.bankzero:id/chk_selected\"])[2]"));
+                        beneficialButtn.click();
+                        log.info("Beneficial Owner option selected");
+                        break;
+                    case "DIRECTOR":
+                        WebElement directorButtn = driver.findElement(By.xpath("(//android.widget.CheckBox[@resource-id=\"za.co.neolabs.bankzero:id/chk_selected\"])[3]"));
+                        directorButtn.click();
+                        log.info("Director option selected");
+                        break;
+                    case "MANDATED OFFICIAL":
+                        WebElement mandatedButtn = driver.findElement(By.xpath("(//android.widget.CheckBox[@resource-id=\"za.co.neolabs.bankzero:id/chk_selected\"])[4]"));
+                        mandatedButtn.click();
+                        log.info("Mandated Official option selected");
+                        break;
+                    case "SHAREHOLDER":
+                        WebElement shareholderButtn = driver.findElement(By.xpath("(//android.widget.CheckBox[@resource-id=\"za.co.neolabs.bankzero:id/chk_selected\"])[5]"));
+                        shareholderButtn.click();
+                        log.info("Shareholder option selected");
+                        break;
+                    default:
+                        log.warn("Unknown role: {} - no action taken", role);
+                }
+
+                //selecting nationality and entering cell number
+                ownerNationalityButtn.click();
+                log.info("Owner's nationality dropdown clicked");
+                androidActions.scrollToTextAndClick2(nationality, driver);
+                log.info("Owner's nationality selected:{}",nationality);
+                safeClear(ownerCellPhoneInputField,"Owner's cell phone number");
+                safeSendKeys(ownerCellPhoneInputField,"Owner's cell phone number",cellNumber,true);
+
+                //clicking add button to add owner/official
+                addButtn.click();
+                log.info("Owner/official add Button clicked");
+
+            } catch (Exception e) {
+                log.error("Error selecting owners and officials options", e);
+                throw e;
+            }
+
+        } catch (Exception e) {
+            log.error("Owners & officials page did not appear as expected", e);
+            throw e;
+        }
+    }
+
     public void verifyTermsAndConditions()
     {
         try {
@@ -98,8 +219,7 @@ public class BusinessPage {
             log.info("Shareholder option selected");
             BOButtn.click();
             log.info("BO option selected");
-//            MOButtn.click();
-//            log.info("MO option selected");
+//   e
         } catch (Exception e) {
             log.error("Owners & officials page did not appear as expected", e);
             throw e;
