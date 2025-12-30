@@ -94,6 +94,9 @@ public class BusinessPage {
     @AndroidFindBy(xpath = "//android.widget.TextView[@resource-id=\"za.co.neolabs.bankzero:id/menuItemText\" and @text=\"Owners/Officials\"]")
     private WebElement menuActionOwnersAndAuthorisersButtn;
 
+
+
+
     public void confirmDuplication()
     {
         AppiumUtils.waitForElement(By.xpath("//android.widget.TextView[@resource-id=\"za.co.neolabs.bankzero:id/alertTitle\"]"),driver);
@@ -251,6 +254,22 @@ public class BusinessPage {
         } catch (Exception e) {
             log.error("Owners & officials page did not appear as expected", e);
             throw e;
+        }
+    }
+
+    public void addOwnerForAuthChain()
+    {
+        try {
+            AppiumUtils.waitForTextToAppear(By.xpath("//android.widget.TextView[@resource-id=\"za.co.neolabs.bankzero:id/toolbarTitle\"]"), "Owners & Auth chain", driver);
+            log.info("Adding owner for authorisation chain");
+            //enter owner preferred name
+            WebElement addOwnerButtn = driver.findElement(By.xpath("//android.widget.ImageButton[@resource-id=\"za.co.neolabs.bankzero:id/add_ownersBtn\"]"));
+            addOwnerButtn.click();
+            log.info("Add owner button clicked");
+
+        } catch (Exception e) {
+            log.error("Error clicking add new owners and officials options", e);
+            throw new RuntimeException(e);
         }
     }
 

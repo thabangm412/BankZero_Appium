@@ -1,6 +1,5 @@
 package tests.Business.AuthChain;
 
-import io.appium.java_client.AppiumBy;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.testng.annotations.AfterMethod;
@@ -12,7 +11,6 @@ import pageObjects.app.business.BusinessAuthChainPage;
 import pageObjects.app.business.BusinessPage;
 import pageObjects.app.login.LoginPage;
 import testConfig.BaseTestsConfig;
-import tests.Business.OwnersAndAuthorisers.AddOwnersAndAuthorisersTests;
 import utils.AndroidActions;
 
 import java.io.File;
