@@ -74,6 +74,27 @@ public class AddOwnersAndAuthorisersTests extends BaseTestsConfig {
     }
 
     @Test(dataProvider = "getMultipleDataSet")
+    public void duplicateOwnersAndAuthorisersValidation(HashMap<String, String> input) throws InterruptedException {
+        log.info("Starting duplicateOwnersAndAuthorisersValidation test");
+        androidActions.validateInputKeys(input, "profileName", "loginPin", "ownerName", "cellNumber","role","nationality");
+
+        String profileName = input.get("profileName");
+        String loginPin = input.get("loginPin");
+        log.info("Logging in with profile: {}", profileName);
+        // do not log sensitive values such as PIN
+        loginPage.loginWithRetry(profileName, loginPin, 2);
+
+        businessPage.clickBusinessMenuActionButtn();
+        businessPage.clickOwnersAndAuthorisers();
+        businessPage.addNewOwnersAndAuthorisersButtn();
+        businessPage.addOwnersAndOfficials(input.get("role"),input.get("nationality"),input.get("cellNumber"),input.get("ownerName"));
+        assertOwnerAlreadyExistsMessagePresent(input.get("ownerName"), input.get("cellNumber"));
+        businessPage.confirmDuplication();
+        driver.navigate().back();
+        log.info("duplicateOwnersAndAuthorisersValidation test completed successfully.");
+    }
+
+    @Test(dataProvider = "getMultipleDataSet")
     public void deleteOwnersAndAuthorisers(HashMap<String, String> input) throws InterruptedException {
         log.info("Starting deleteOwnersAndAuthorisers test");
 
