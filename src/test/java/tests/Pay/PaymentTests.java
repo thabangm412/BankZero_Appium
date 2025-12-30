@@ -1,21 +1,16 @@
 package tests.Pay;
 
-import com.beust.ah.A;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
-import pageObjects.app.Registration.RegisterOTP;
 import pageObjects.app.accountsActionMenu.AccountMenuActions;
 import pageObjects.app.accountsActionMenu.pay.QuickPayPage;
 import pageObjects.app.accountsHome.HomePage;
-import pageObjects.app.addAccount.AddAccountPage;
 import pageObjects.app.login.LoginPage;
-import pageObjects.app.login.PairOnDevicePage;
 import testConfig.BaseTestsConfig;
-import utils.AndroidActions;
 
 import java.io.IOException;
 import java.util.HashMap;
