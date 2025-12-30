@@ -435,7 +435,7 @@ public class AndroidActions extends AppiumUtils {
         }
     }
 
-    private String maskForLog(String s) {
+    public String maskForLog(String s) {
         if (s == null) return "";
         if (s.length() <= 20) return s;
         return s.substring(0, 20) + "...";
