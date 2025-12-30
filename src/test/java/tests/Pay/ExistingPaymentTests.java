@@ -39,7 +39,6 @@ public class ExistingPaymentTests extends BaseTestsConfig {
         log.debug("Page objects and androidActions initialized");
     }
 
-
     @Test(dataProvider = "getMultipleDataSet", priority = 0)
     public void PaymentRedoTest(HashMap<String, String> input)
     {

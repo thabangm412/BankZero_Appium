@@ -4,6 +4,7 @@ import io.appium.java_client.android.AndroidDriver;
 import io.appium.java_client.pagefactory.AndroidFindBy;
 import io.appium.java_client.pagefactory.AppiumFieldDecorator;
 import org.openqa.selenium.By;
+import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.PageFactory;
 import org.slf4j.Logger;
@@ -12,6 +13,7 @@ import utils.AndroidActions;
 import utils.AppiumUtils;
 
 import java.time.Duration;
+import java.util.List;
 import java.util.Locale;
 
 public class BusinessPage {
@@ -74,6 +76,289 @@ public class BusinessPage {
     @AndroidFindBy(id = "za.co.neolabs.bankzero:id/tnc_checkbox")
     private WebElement termsAndConditionsButtn;
 
+    @AndroidFindBy(xpath = "//android.widget.EditText[@resource-id=\"za.co.neolabs.bankzero:id/_inputText\"]")
+    private WebElement ownerNameInputField;
+
+    @AndroidFindBy(xpath = "(//android.widget.ImageView[@resource-id=\"za.co.neolabs.bankzero:id/addremove_image\"])[5]")
+    private WebElement addRemoveButtn;
+
+    @AndroidFindBy(xpath = "//android.widget.ImageView[@resource-id=\"za.co.neolabs.bankzero:id/countryof_dd_arrow\"]")
+    private WebElement ownerNationalityButtn;
+
+    @AndroidFindBy(xpath = "//android.widget.EditText[@resource-id=\"za.co.neolabs.bankzero:id/owner_phone\"]")
+    private WebElement ownerCellPhoneInputField;
+
+    @AndroidFindBy(id = "za.co.neolabs.bankzero:id/btnConfirm")
+    private WebElement addButtn;
+
+    @AndroidFindBy(xpath = "//android.widget.TextView[@resource-id=\"za.co.neolabs.bankzero:id/menuItemText\" and @text=\"Owners/Officials\"]")
+    private WebElement menuActionOwnersAndAuthorisersButtn;
+
+    public void confirmDuplication()
+    {
+        AppiumUtils.waitForElement(By.xpath("//android.widget.TextView[@resource-id=\"za.co.neolabs.bankzero:id/alertTitle\"]"),driver);
+
+        WebElement oKButtn= driver.findElement(By.xpath("//android.widget.Button[@resource-id=\"android:id/button2\"]"));
+        oKButtn.click();
+            log.info("Ok button clicked");
+    }
+    public void addNewOwnersAndAuthorisersButtn() {
+
+        try {
+            String titleXpath = "//android.widget.TextView[@resource-id='za.co.neolabs.bankzero:id/title']";
+            String buttonXpathBase = "//android.widget.ImageView[@resource-id='za.co.neolabs.bankzero:id/addremove_image']";
+
+            // Wait for titles
+            AppiumUtils.waitForElement(By.xpath(titleXpath), driver);
+
+            List<WebElement> titles = driver.findElements(By.xpath(titleXpath));
+            if (titles == null || titles.isEmpty()) {
+                throw new NoSuchElementException("No owners/authorisers found");
+            }
+
+            // last index + 1 (XPath is 1-based)
+            int indexToClick = titles.size() - 1;
+
+            // Validate button count to avoid invalid XPath index
+            List<WebElement> buttons = driver.findElements(By.xpath(buttonXpathBase));
+            if (buttons.size() < indexToClick) {
+                throw new NoSuchElementException(
+                        "Add/Remove button at index " + indexToClick + " does not exist. Buttons found: " + buttons.size()
+                );
+            }
+
+            String finalButtonXpath = "(" + buttonXpathBase + ")[" + indexToClick + "]";
+
+            AppiumUtils.waitForElement(By.xpath(finalButtonXpath), driver);
+            driver.findElement(By.xpath(finalButtonXpath)).click();
+
+            log.info("Clicked add/remove button at last index + 1 (xpath index={})", indexToClick);
+
+        } catch (Exception e) {
+            log.error("Error clicking add/remove owner/authoriser button", e);
+            throw e;
+        }
+    }
+
+//    public void AddNewOwnersAndAuthorisersButtn() {
+//
+//        try {
+//            String titleXpath = "//android.widget.TextView[@resource-id='za.co.neolabs.bankzero:id/title']";
+//            // wait for at least one title to be present
+//            AppiumUtils.waitForElement(By.xpath(titleXpath), driver);
+//
+//            List<WebElement> titles = driver.findElements(By.xpath(titleXpath));
+//            if (titles == null || titles.isEmpty()) {
+//                throw new NoSuchElementException("No owners/authorisers found");
+//            }
+//
+//
+//            int foundIndex = -1; // 1-based index for XPath
+//            for (int i = 0; i < titles.size(); i++) {
+//                String text = "";
+//                try {
+//                    text = titles.get(i).getText();
+//                } catch (Exception ignore) {
+//                }
+//                if (text != null && text.trim().equalsIgnoreCase(target)) {
+//                    foundIndex = i ;
+//                    log.info("Matched owner/authoriser '{}' at list index {}", target, foundIndex);
+//                    break;
+//                }
+//            }
+//
+//            if (foundIndex == -1) {
+//                throw new NoSuchElementException("Owner/authoriser '" + target + "' not found");
+//            }
+//
+//            String buttonXpath = String.format("(//android.widget.ImageView[@resource-id='za.co.neolabs.bankzero:id/addremove_image'])[%d]", foundIndex);
+//            AppiumUtils.waitForElement(By.xpath(buttonXpath), driver);
+//            WebElement btn = driver.findElement(By.xpath(buttonXpath));
+//            btn.click();
+//            log.info("Clicked add/remove button for '{}' (xpath index={})", target, foundIndex);
+//
+//        } catch (Exception e) {
+//            log.error("Error deleting owner/authoriser '{}'", name, e);
+//            throw e;
+//        }
+//    }
+
+
+
+    public void deleteOwnersAndAuthorisers(String name) {
+        if (name == null || name.trim().isEmpty()) {
+            throw new IllegalArgumentException("Owner/authoriser name must be provided");
+        }
+        String target = name.trim();
+        try {
+            String titleXpath = "//android.widget.TextView[@resource-id='za.co.neolabs.bankzero:id/title']";
+            // wait for at least one title to be present
+            AppiumUtils.waitForElement(By.xpath(titleXpath), driver);
+
+            List<WebElement> titles = driver.findElements(By.xpath(titleXpath));
+            if (titles == null || titles.isEmpty()) {
+                throw new NoSuchElementException("No owners/authorisers found");
+            }
+
+
+            int foundIndex = -1; // 1-based index for XPath
+            for (int i = 0; i < titles.size(); i++) {
+                String text = "";
+                try {
+                    text = titles.get(i).getText();
+                } catch (Exception ignore) {
+                }
+                if (text != null && text.trim().equalsIgnoreCase(target)) {
+                    foundIndex = i ;
+                    log.info("Matched owner/authoriser '{}' at list index {}", target, foundIndex);
+                    break;
+                }
+            }
+
+            if (foundIndex == -1) {
+                throw new NoSuchElementException("Owner/authoriser '" + target + "' not found");
+            }
+
+            String buttonXpath = String.format("(//android.widget.ImageView[@resource-id='za.co.neolabs.bankzero:id/addremove_image'])[%d]", foundIndex);
+            AppiumUtils.waitForElement(By.xpath(buttonXpath), driver);
+            WebElement btn = driver.findElement(By.xpath(buttonXpath));
+            btn.click();
+            log.info("Clicked add/remove button for '{}' (xpath index={})", target, foundIndex);
+
+        } catch (Exception e) {
+            log.error("Error deleting owner/authoriser '{}'", name, e);
+            throw e;
+        }
+    }
+
+    public void confirmRemove()
+    {
+        AppiumUtils.waitForElement(By.xpath("//android.widget.TextView[@resource-id=\"za.co.neolabs.bankzero:id/alertTitle\"]"),driver);
+
+        WebElement removeButtn= driver.findElement(By.xpath("//android.widget.Button[@resource-id=\"android:id/button1\"]"));
+        removeButtn.click();
+        log.info("Remove button clicked");
+
+
+    }
+    public void saveChanges(){
+
+
+        WebElement updateButtn= driver.findElement(By.xpath("//android.widget.Button[@resource-id=\"za.co.neolabs.bankzero:id/submit_btn\"]"));
+        WebElement confirmButtn= driver.findElement(By.xpath("//android.widget.Button[@resource-id=\"za.co.neolabs.bankzero:id/submit_btn\"]"));
+
+        updateButtn.click();
+        log.info("Update button clicked");
+        confirmButtn.click();
+        log.info("Confirm button clicked");
+
+    }
+
+    public void clickFinish()
+    {
+        WebElement finishButtn= driver.findElement(By.xpath("//android.widget.Button[@resource-id=\"za.co.neolabs.bankzero:id/submit_btn\"]"));
+        finishButtn.click();
+        log.info("Finish button clicked");
+    }
+
+    public void clickBusinessMenuActionButtn()
+    {
+        try {
+            WebElement accountMenuTitle = driver.findElement(By.xpath("(//android.widget.ImageView[@resource-id=\"za.co.neolabs.bankzero:id/tileMenu\"])[5]"));
+            accountMenuTitle.click();
+            log.info("Business account menu clicked");
+        } catch (Exception e) {
+            log.error("Account menu page did not appear as expected", e);
+            throw e;
+        }
+    }
+
+    public  void clickOwnersAndAuthorisers()
+    {
+        try {
+            menuActionOwnersAndAuthorisersButtn.click();
+            log.info("Owners and authorisers menu action button clicked");
+
+        } catch (Exception e) {
+            log.error("Owners and authorisers menu action button not clickable", e);
+            throw e;
+        }
+
+    }
+
+    public void clickAddOrRemoveButtn()
+    {
+        try {
+            AppiumUtils.waitForTextToAppear(By.xpath("//android.widget.TextView[@resource-id=\"za.co.neolabs.bankzero:id/toolbarTitle\"]"), "Owners & Authorisers", driver);
+            // landing on the owners & officials page and clicking add/remove button
+            addRemoveButtn.click();
+            log.info("Owners and officials add/remove button clicked");
+        } catch (Exception e) {
+            log.error("Owners & officials page did not appear as expected", e);
+            throw e;
+        }
+    }
+
+    public void addOwnersAndOfficials(String role, String nationality,  String cellNumber, String ownerName)
+    {
+        //landing on the owners & officials page and selecting options
+        try {
+            AppiumUtils.waitForTextToAppear(By.xpath("//android.widget.TextView[@resource-id=\"za.co.neolabs.bankzero:id/toolbar_title\"]"),"Owner/Official/Authoriser",driver);
+            //enter owner preferred name
+            safeClear(ownerNameInputField,"Owner's preferred name");
+            safeSendKeys(ownerNameInputField,"Owner's preferred name",ownerName,true);
+
+            //selecting the required roles
+            switch (role.toUpperCase())
+            {
+                case "AUTHORISER":
+                    WebElement authoriserButtn = driver.findElement(By.xpath("(//android.widget.CheckBox[@resource-id=\"za.co.neolabs.bankzero:id/chk_selected\"])[1]"));
+                    authoriserButtn.click();
+                    log.info("Authoriser option selected");
+                    break;
+                case "BENEFICIAL OWNER":
+                    WebElement beneficialButtn = driver.findElement(By.xpath("(//android.widget.CheckBox[@resource-id=\"za.co.neolabs.bankzero:id/chk_selected\"])[2]"));
+                    beneficialButtn.click();
+                    log.info("Beneficial Owner option selected");
+                    break;
+                case "DIRECTOR":
+                    WebElement directorButtn = driver.findElement(By.xpath("(//android.widget.CheckBox[@resource-id=\"za.co.neolabs.bankzero:id/chk_selected\"])[3]"));
+                    directorButtn.click();
+                    log.info("Director option selected");
+                    break;
+                case "MANDATED OFFICIAL":
+                    WebElement mandatedButtn = driver.findElement(By.xpath("(//android.widget.CheckBox[@resource-id=\"za.co.neolabs.bankzero:id/chk_selected\"])[4]"));
+                    mandatedButtn.click();
+                    log.info("Mandated Official option selected");
+                    break;
+                case "SHAREHOLDER":
+                    WebElement shareholderButtn = driver.findElement(By.xpath("(//android.widget.CheckBox[@resource-id=\"za.co.neolabs.bankzero:id/chk_selected\"])[5]"));
+                    shareholderButtn.click();
+                    log.info("Shareholder option selected");
+                    break;
+                default:
+                    log.warn("Unknown role: {} - no action taken", role);
+            }
+
+            //selecting nationality and entering cell number
+            ownerNationalityButtn.click();
+            log.info("Owner's nationality dropdown clicked");
+            androidActions.scrollToTextAndClick2(nationality, driver);
+            log.info("Owner's nationality selected:{}",nationality);
+            safeClear(ownerCellPhoneInputField,"Owner's cell phone number");
+            safeSendKeys(ownerCellPhoneInputField,"Owner's cell phone number",cellNumber,true);
+
+            //clicking add button to add owner/official
+            addButtn.click();
+            log.info("Owner/official add Button clicked");
+
+        } catch (Exception e) {
+            log.error("Error selecting owners and officials options", e);
+            throw e;
+        }
+
+    }
+
     public void verifyTermsAndConditions()
     {
         try {
@@ -98,8 +383,7 @@ public class BusinessPage {
             log.info("Shareholder option selected");
             BOButtn.click();
             log.info("BO option selected");
-//            MOButtn.click();
-//            log.info("MO option selected");
+//   e
         } catch (Exception e) {
             log.error("Owners & officials page did not appear as expected", e);
             throw e;
