@@ -16,8 +16,6 @@ import java.time.Duration;
 import java.util.List;
 import java.util.Locale;
 
-import static java.lang.Thread.sleep;
-
 public class BusinessPage {
     private static final Logger log = LoggerFactory.getLogger(BusinessPage.class);
 

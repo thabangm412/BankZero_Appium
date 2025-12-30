@@ -13,20 +13,16 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 import pageObjects.app.accountsHome.HomePage;
-import pageObjects.app.addAccount.AddAccountPage;
 import pageObjects.app.business.BusinessPage;
 import pageObjects.app.login.LoginPage;
 import testConfig.BaseTestsConfig;
-import tests.Business.Registration.BusinessPtyTest;
 import utils.AndroidActions;
 
 import java.io.File;
 import java.io.IOException;
 import java.time.Duration;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class AddOwnersAndAuthorisersTests extends BaseTestsConfig {
 
@@ -61,20 +57,22 @@ public class AddOwnersAndAuthorisersTests extends BaseTestsConfig {
 
         businessPage.clickBusinessMenuActionButtn();
         businessPage.clickOwnersAndAuthorisers();
-        businessPage.clickAddOrRemoveButtn();
+        businessPage.addNewOwnersAndAuthorisersButtn();
+        //businessPage.clickAddOrRemoveButtn();
         businessPage.addOwnersAndOfficials(input.get("role"),input.get("nationality"),input.get("cellNumber"),input.get("ownerName"));
         businessPage.saveChanges();
-        Thread.sleep(5000);
+        Thread.sleep(300);
         businessPage.clickFinish();
         businessPage.clickBusinessMenuActionButtn();
         businessPage.clickOwnersAndAuthorisers();
+        Thread.sleep(3000);
         androidActions.assertTextPresentExact(input.get("ownerName"));
         driver.navigate().back();
         log.info("addingOwnersAndAuthorisers test completed successfully.");
     }
 
-    @Test(dataProvider = "getMultipleDataSet")
-    public void duplicateOwnersAndAuthorisersValidation(HashMap<String, String> input) throws InterruptedException {
+    @Test(dataProvider = "getMultipleDataSet",priority = 1)
+    public void duplicateOwnersAndAuthorisersErrorTest(HashMap<String, String> input) throws InterruptedException {
         log.info("Starting duplicateOwnersAndAuthorisersValidation test");
         androidActions.validateInputKeys(input, "profileName", "loginPin", "ownerName", "cellNumber","role","nationality");
 
@@ -86,6 +84,7 @@ public class AddOwnersAndAuthorisersTests extends BaseTestsConfig {
 
         businessPage.clickBusinessMenuActionButtn();
         businessPage.clickOwnersAndAuthorisers();
+        Thread.sleep(3000);
         businessPage.addNewOwnersAndAuthorisersButtn();
         businessPage.addOwnersAndOfficials(input.get("role"),input.get("nationality"),input.get("cellNumber"),input.get("ownerName"));
         assertOwnerAlreadyExistsMessagePresent(input.get("ownerName"), input.get("cellNumber"));
@@ -94,7 +93,7 @@ public class AddOwnersAndAuthorisersTests extends BaseTestsConfig {
         log.info("duplicateOwnersAndAuthorisersValidation test completed successfully.");
     }
 
-    @Test(dataProvider = "getMultipleDataSet")
+    @Test(dataProvider = "getMultipleDataSet",priority = 2)
     public void deleteOwnersAndAuthorisers(HashMap<String, String> input) throws InterruptedException {
         log.info("Starting deleteOwnersAndAuthorisers test");
 
@@ -108,14 +107,16 @@ public class AddOwnersAndAuthorisersTests extends BaseTestsConfig {
 
         businessPage.clickBusinessMenuActionButtn();
         businessPage.clickOwnersAndAuthorisers();
-        Thread.sleep(5000);
+        Thread.sleep(3000);
         businessPage.deleteOwnersAndAuthorisers(input.get("ownerName"));
         businessPage.confirmRemove();
         //click update/submit
         businessPage.saveChanges();
+        Thread.sleep(300);
         businessPage.clickFinish();
         businessPage.clickBusinessMenuActionButtn();
         businessPage.clickOwnersAndAuthorisers();
+        Thread.sleep(3000);
         androidActions.assertTextAbscentExtract(input.get("ownerName"));
         driver.navigate().back();
         log.info("deleteOwnersAndAuthorisers test completed successfully.");
@@ -151,55 +152,34 @@ public class AddOwnersAndAuthorisersTests extends BaseTestsConfig {
         }
     }
 
-//    private void validateInputKeys(Map<String, String> input, String... requiredKeys) {
-//        if (input == null) {
-//            log.error("Input map is null");
-//            throw new IllegalArgumentException("Input data cannot be null");
-//        }
-//        StringBuilder missing = new StringBuilder();
-//        Arrays.stream(requiredKeys).forEach(k -> {
-//            if (input.get(k) == null || input.get(k).trim().isEmpty()) {
-//                if (missing.length() > 0) missing.append(", ");
-//                missing.append(k);
-//            }
-//        });
-//        if (missing.length() > 0) {
-//            log.error("Missing required test input keys: {}", missing);
-//            throw new IllegalArgumentException("Missing required test input keys: " + missing);
-//        }
-//        log.debug("All required keys present in input");
-//    }
-//
-//
-//    private void assertTextPresentExact(String exactText) {
-//        By xpath = By.xpath("//android.widget.TextView[@text=\"" + exactText + "\"]");
-//        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(15));
-//        try {
-//            WebElement el = wait.until(ExpectedConditions.visibilityOfElementLocated(xpath));
-//            Assert.assertTrue(el.isDisplayed(), "Expected text not visible: " + exactText);
-//            log.info("Found expected text: {}", maskForLog(exactText));
-//        } catch (TimeoutException e) {
-//            log.error("Expected text not found within timeout: {}", exactText);
-//            Assert.fail("Expected text not found: " + exactText);
-//        }
-//    }
-//
-//    private void assertTextAbscentExtract(String exactText) {
-//        By xpath = By.xpath("//android.widget.TextView[@text=\"" + exactText + "\"]");
-//        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(15));
-//        try {
-//            boolean absent = wait.until(ExpectedConditions.invisibilityOfElementLocated(xpath));
-//            Assert.assertTrue(absent, "Expected text still present: " + exactText);
-//            log.info("Confirmed text absent: {}", maskForLog(exactText));
-//        } catch (TimeoutException e) {
-//            log.error("Expected text remained visible after timeout: {}", exactText);
-//            Assert.fail("Expected text still present: " + exactText);
-//        }
-//    }
-//
-//    private String maskForLog(String s) {
-//        if (s == null) return "";
-//        if (s.length() <= 20) return s;
-//        return s.substring(0, 20) + "...";
-//    }
+    private void assertOwnerAlreadyExistsMessagePresent(String name, String cellphone) {
+
+        String expectedMessage =
+                "Owner/Official " + name + " with number " + cellphone + " already exist.";
+
+        By messageXpath = By.xpath("//android.widget.TextView[@resource-id='android:id/message']");
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(15));
+
+        try {
+            WebElement messageElement =
+                    wait.until(ExpectedConditions.visibilityOfElementLocated(messageXpath));
+
+            String actualMessage = messageElement.getText().trim();
+
+            Assert.assertEquals(
+                    actualMessage,
+                    expectedMessage,
+                    "Owner already exists message does not match"
+            );
+
+            log.info("Confirmed expected message is present: {}", androidActions.maskForLog(expectedMessage));
+
+        } catch (TimeoutException e) {
+            log.error("Expected message was not displayed: {}", expectedMessage);
+            Assert.fail("Expected message was not displayed: " + expectedMessage);
+        }
+    }
+
+
+
 }
