@@ -156,7 +156,6 @@ public class AndroidActions extends AppiumUtils {
         throw new NoSuchElementException("❌ None of the provided texts were found: " + Arrays.toString(visibleTexts));
     }
 
-
     public void swipeToAction(WebElement element, String direction)
     {
         ((JavascriptExecutor)driver).executeScript("mobile: swipeGesture",
