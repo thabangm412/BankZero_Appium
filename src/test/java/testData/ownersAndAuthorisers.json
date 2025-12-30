@@ -3,8 +3,11 @@
     "profileName": "Isagi",
     "loginPin": "33333",
     "ownerName": "Isagi Authoriser",
+    "updateownerName": "Isagi Owner",
     "cellNumber": "0676336781",
+    "updateCellNumber": "0676336782",
     "role": "Authoriser",
+    "updateRole": "Beneficial owner",
     "nationality": "South Africa"
 
   }

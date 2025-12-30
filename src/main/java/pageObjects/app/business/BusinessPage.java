@@ -140,51 +140,6 @@ public class BusinessPage {
         }
     }
 
-//    public void AddNewOwnersAndAuthorisersButtn() {
-//
-//        try {
-//            String titleXpath = "//android.widget.TextView[@resource-id='za.co.neolabs.bankzero:id/title']";
-//            // wait for at least one title to be present
-//            AppiumUtils.waitForElement(By.xpath(titleXpath), driver);
-//
-//            List<WebElement> titles = driver.findElements(By.xpath(titleXpath));
-//            if (titles == null || titles.isEmpty()) {
-//                throw new NoSuchElementException("No owners/authorisers found");
-//            }
-//
-//
-//            int foundIndex = -1; // 1-based index for XPath
-//            for (int i = 0; i < titles.size(); i++) {
-//                String text = "";
-//                try {
-//                    text = titles.get(i).getText();
-//                } catch (Exception ignore) {
-//                }
-//                if (text != null && text.trim().equalsIgnoreCase(target)) {
-//                    foundIndex = i ;
-//                    log.info("Matched owner/authoriser '{}' at list index {}", target, foundIndex);
-//                    break;
-//                }
-//            }
-//
-//            if (foundIndex == -1) {
-//                throw new NoSuchElementException("Owner/authoriser '" + target + "' not found");
-//            }
-//
-//            String buttonXpath = String.format("(//android.widget.ImageView[@resource-id='za.co.neolabs.bankzero:id/addremove_image'])[%d]", foundIndex);
-//            AppiumUtils.waitForElement(By.xpath(buttonXpath), driver);
-//            WebElement btn = driver.findElement(By.xpath(buttonXpath));
-//            btn.click();
-//            log.info("Clicked add/remove button for '{}' (xpath index={})", target, foundIndex);
-//
-//        } catch (Exception e) {
-//            log.error("Error deleting owner/authoriser '{}'", name, e);
-//            throw e;
-//        }
-//    }
-
-
-
     public void deleteOwnersAndAuthorisers(String name) {
         if (name == null || name.trim().isEmpty()) {
             throw new IllegalArgumentException("Owner/authoriser name must be provided");
