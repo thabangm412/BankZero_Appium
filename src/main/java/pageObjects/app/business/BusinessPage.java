@@ -96,6 +96,14 @@ public class BusinessPage {
     @AndroidFindBy(xpath = "//android.widget.TextView[@resource-id=\"za.co.neolabs.bankzero:id/menuItemText\" and @text=\"Owners/Officials\"]")
     private WebElement menuActionOwnersAndAuthorisersButtn;
 
+    public void confirmDuplication()
+    {
+        AppiumUtils.waitForElement(By.xpath("//android.widget.TextView[@resource-id=\"za.co.neolabs.bankzero:id/alertTitle\"]"),driver);
+
+        WebElement oKButtn= driver.findElement(By.xpath("//android.widget.Button[@resource-id=\"android:id/button2\"]"));
+        oKButtn.click();
+            log.info("Ok button clicked");
+    }
     public void addNewOwnersAndAuthorisersButtn() {
 
         try {
