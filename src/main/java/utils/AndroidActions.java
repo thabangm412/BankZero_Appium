@@ -5,7 +5,10 @@ import io.appium.java_client.AppiumBy;
 import io.appium.java_client.android.AndroidDriver;
 import org.apache.commons.io.FileUtils;
 import org.openqa.selenium.*;
+import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.remote.RemoteWebElement;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.testng.Assert;
@@ -19,10 +22,7 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.time.Duration;
-import java.util.Arrays;
-import java.util.Base64;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 public class AndroidActions extends AppiumUtils {
 
@@ -386,6 +386,59 @@ public class AndroidActions extends AppiumUtils {
         } catch (NoSuchElementException e) {
             return false; // Text not found
         }
+    }
+
+
+    public void validateInputKeys(Map<String, String> input, String... requiredKeys) {
+        if (input == null) {
+            log.error("Input map is null");
+            throw new IllegalArgumentException("Input data cannot be null");
+        }
+        StringBuilder missing = new StringBuilder();
+        Arrays.stream(requiredKeys).forEach(k -> {
+            if (input.get(k) == null || input.get(k).trim().isEmpty()) {
+                if (missing.length() > 0) missing.append(", ");
+                missing.append(k);
+            }
+        });
+        if (missing.length() > 0) {
+            log.error("Missing required test input keys: {}", missing);
+            throw new IllegalArgumentException("Missing required test input keys: " + missing);
+        }
+        log.debug("All required keys present in input");
+    }
+
+
+    public void assertTextPresentExact(String exactText) {
+        By xpath = By.xpath("//android.widget.TextView[@text=\"" + exactText + "\"]");
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(15));
+        try {
+            WebElement el = wait.until(ExpectedConditions.visibilityOfElementLocated(xpath));
+            Assert.assertTrue(el.isDisplayed(), "Expected text not visible: " + exactText);
+            log.info("Found expected text: {}", maskForLog(exactText));
+        } catch (TimeoutException e) {
+            log.error("Expected text not found within timeout: {}", exactText);
+            Assert.fail("Expected text not found: " + exactText);
+        }
+    }
+
+    public void assertTextAbscentExtract(String exactText) {
+        By xpath = By.xpath("//android.widget.TextView[@text=\"" + exactText + "\"]");
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(15));
+        try {
+            boolean absent = wait.until(ExpectedConditions.invisibilityOfElementLocated(xpath));
+            Assert.assertTrue(absent, "Expected text still present: " + exactText);
+            log.info("Confirmed text absent: {}", maskForLog(exactText));
+        } catch (TimeoutException e) {
+            log.error("Expected text remained visible after timeout: {}", exactText);
+            Assert.fail("Expected text still present: " + exactText);
+        }
+    }
+
+    private String maskForLog(String s) {
+        if (s == null) return "";
+        if (s.length() <= 20) return s;
+        return s.substring(0, 20) + "...";
     }
 
 
