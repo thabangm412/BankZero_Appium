@@ -94,6 +94,34 @@ public class AddOwnersAndAuthorisersTests extends BaseTestsConfig {
     }
 
     @Test(dataProvider = "getMultipleDataSet",priority = 2)
+    public void editOwnersAndAuthorisers(HashMap<String, String> input) throws InterruptedException {
+        log.info("Starting editOwnersAndAuthorisers test");
+
+        androidActions.validateInputKeys(input, "profileName", "loginPin", "ownerName", "updateownerName", "updateRole","nationality","updateCellNumber");
+
+        String profileName = input.get("profileName");
+        String loginPin = input.get("loginPin");
+        log.info("Logging in with profile: {}", profileName);
+        // do not log sensitive values such as PIN
+        loginPage.loginWithRetry(profileName, loginPin, 2);
+
+        businessPage.clickBusinessMenuActionButtn();
+        businessPage.clickOwnersAndAuthorisers();
+        Thread.sleep(3000);
+        businessPage.editOwnersAndAuthorisers(input.get("ownerName"),input.get("updateownerName"),input.get("updateRole"),input.get("updateCellNumber"),input.get("nationality"));
+        businessPage.saveChanges();
+        Thread.sleep(300);
+        businessPage.clickFinish();
+        businessPage.clickBusinessMenuActionButtn();
+        businessPage.clickOwnersAndAuthorisers();
+        Thread.sleep(3000);
+        androidActions.assertTextPresentExact(input.get("updateownerName"));
+        driver.navigate().back();
+        log.info("Owner update test completed successfully.");
+
+    }
+
+    @Test(dataProvider = "getMultipleDataSet",priority = 3)
     public void deleteOwnersAndAuthorisers(HashMap<String, String> input) throws InterruptedException {
         log.info("Starting deleteOwnersAndAuthorisers test");
 
