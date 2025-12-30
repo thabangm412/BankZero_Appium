@@ -1,0 +1,22 @@
+<!-- xml -->
+<!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd" >
+<suite name="Business Regression" verbose="2" thread-count="2">
+
+    <listeners>
+        <listener class-name="utils.Listeners"/>
+    </listeners>
+
+    <test name="Business Owners and Authorisers Tests">
+        <classes>
+            <class name="tests.Business.OwnersAndAuthorisers.AddOwnersAndAuthorisersTests">
+                <methods>
+                    <include name="addingOwnersAndAuthorisers"/>
+                    <include name="duplicateOwnersAndAuthorisersErrorTest"/>
+                    <include name="editOwnersAndAuthorisers"/>
+                    <include name="deleteOwnersAndAuthorisers"/>
+                </methods>
+            </class>
+        </classes>
+    </test>
+
+</suite>
