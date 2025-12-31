@@ -69,4 +69,43 @@ public class BusinessAuthChainPage {
         dontSaveButtn.click();
         log.info("✅ Confirmed dont save channges");
     }
+
+    public void addAuthoriserLevel(WebElement sourceElement,WebElement target, String level)
+    {
+        log.info("Authoriser level selected: {}",level);
+    }
+
+    public void addLevelAmount(String amount,String level)
+    {
+         try {
+             switch (level.toUpperCase())
+             {
+                 case "LEVEL A":
+                     WebElement levelAInputField = driver.findElement(By.id("za.co.neolabs.bankzero:id/levelA_intput"));
+                     androidActions.safeClear(levelAInputField,"level A amount input field");
+                     levelAInputField.sendKeys(amount);
+                     log.info("Amount for level A entered: {}",amount);
+                     break;
+                 case "LEVEL B":
+                     WebElement levelBInputField = driver.findElement(By.id("za.co.neolabs.bankzero:id/levelB_intput"));
+                     androidActions.safeClear(levelBInputField,"level B amount input field");
+                     levelBInputField.sendKeys(amount);
+                     log.info("Amount for level B entered: {}",amount);
+                     break;
+                 case "LEVEL C":
+                     WebElement levelCInputField = driver.findElement(By.id("za.co.neolabs.bankzero:id/levelC_intput"));
+                     androidActions.safeClear(levelCInputField,"level C amount input field");
+                     levelCInputField.sendKeys(amount);
+                     log.info("Amount for level C entered: {}",amount);
+                     break;
+                 default:
+                     log.error("Invalid level provided: {}",level);
+                     throw new IllegalArgumentException("Invalid level: " + level);
+             }
+
+         }catch (Exception e) {
+             log.error("Amount for level {} not entered",level);
+             throw e;
+         }
+    }
 }
