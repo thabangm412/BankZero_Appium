@@ -69,6 +69,54 @@ public class AuthChainTests extends BaseTestsConfig {
 
     }
 
+    @Test(dataProvider = "getMultipleDataSet")
+    public void addAunthoriserLevelA(HashMap<String, String> input) throws InterruptedException {
+        log.info("Starting adding Authoriser Level A on auth chain test");
+        androidActions.validateInputKeys(input, "profileName", "loginPin", "ownerName", "cellNumber","role","nationality");
+
+        String profileName = input.get("profileName");
+        String loginPin = input.get("loginPin");
+        log.info("Logging in with profile: {}", profileName);
+        // do not log sensitive values such as PIN
+        loginPage.loginWithRetry(profileName, loginPin, 2);
+
+        businessPage.clickBusinessMenuActionButtn();
+        businessAuthChainPage.clickAuthorisationChain();
+        businessAuthChainPage.scrollRightToTile();
+        WebElement sourceEl = driver.findElement(By.xpath("(//android.widget.ImageView[@resource-id=\"za.co.neolabs.bankzero:id/tile_image\"])[3]"));
+        String surceElText = driver.findElement(By.xpath("(//android.widget.TextView[@resource-id=\"za.co.neolabs.bankzero:id/tile_title\"])[3]")).getText().trim();
+        log.info("Source element text: {}", surceElText);
+        String sourceFirstWord = surceElText.split("\\s+")[0];
+        log.info("Source element first word: {}", sourceFirstWord);
+        WebElement targetEl = driver.findElement(By.xpath("(//android.widget.TextView[@resource-id=\"za.co.neolabs.bankzero:id/drop_note\"])[5]"));
+//        String targetElText = driver.findElement(By.xpath("(//android.widget.TextView[@resource-id=\"za.co.neolabs.bankzero:id/tile_title\"])[9]")).getText();
+
+        androidActions.performDragAndDrop(driver,sourceEl,targetEl);
+        Thread.sleep(3000);
+        businessAuthChainPage.addLevelAmount(input.get("amount"),"Level B");
+        businessPage.saveChanges();
+        Thread.sleep(3000);
+        businessPage.clickFinish();
+        businessPage.clickBusinessMenuActionButtn();
+        businessAuthChainPage.clickAuthorisationChain();
+        try {
+            String targetElText = driver.findElement(
+                    By.xpath("(//android.widget.TextView[@resource-id=\"za.co.neolabs.bankzero:id/tile_title\"])[9]")
+            ).getText().trim();
+
+            String targetFirstWord = targetElText.split("\\s+")[0];
+            Assert.assertEquals(targetFirstWord, sourceFirstWord);
+            log.info("Authoriser Level A added successfully: {}", surceElText);
+        } catch (AssertionError e) {
+            log.warn("Failed to add Authoriser Level A");
+            Assert.fail("Test failed due to exception: " + e.getMessage());
+            throw e;  // Let TestNG fail the test
+        }finally {
+            driver.navigate().back();
+            businessAuthChainPage.confirmAbort();}
+
+    }
+
     @DataProvider
     public Object[] [] getMultipleDataSet() throws IOException {
 
