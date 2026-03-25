@@ -2,10 +2,16 @@ package utils;
 
 import com.google.common.collect.ImmutableMap;
 import io.appium.java_client.AppiumBy;
+import io.appium.java_client.AppiumDriver;
+import io.appium.java_client.TouchAction;
 import io.appium.java_client.android.AndroidDriver;
+import io.appium.java_client.touch.LongPressOptions;
+import io.appium.java_client.touch.offset.ElementOption;
 import org.apache.commons.io.FileUtils;
 import org.openqa.selenium.*;
 import org.openqa.selenium.NoSuchElementException;
+import org.openqa.selenium.interactions.PointerInput;
+import org.openqa.selenium.interactions.Sequence;
 import org.openqa.selenium.remote.RemoteWebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
@@ -23,6 +29,10 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.time.Duration;
 import java.util.*;
+
+import static org.openqa.selenium.interactions.PointerInput.Kind.TOUCH;
+import static org.openqa.selenium.interactions.PointerInput.MouseButton.LEFT;
+import static org.openqa.selenium.interactions.PointerInput.Origin.viewport;
 
 public class AndroidActions extends AppiumUtils {
 
@@ -438,6 +448,94 @@ public class AndroidActions extends AppiumUtils {
         if (s == null) return "";
         if (s.length() <= 20) return s;
         return s.substring(0, 20) + "...";
+    }
+
+    public void dragAndDrop(WebElement source, WebElement target) {
+        ((JavascriptExecutor) driver).executeScript("mobile: dragAndDrop", ImmutableMap.of(
+                "sourceId", ((RemoteWebElement) source).getId(),
+                "targetId", ((RemoteWebElement) target).getId()
+        ));
+        log.info("Dragged element from source to target.");
+
+
+    }
+
+    public void performDragAndDrop(AppiumDriver driver, WebElement sourceElement, WebElement destinationElement) {
+        // Define a pointer for a touch event
+        PointerInput finger = new PointerInput(TOUCH, "finger");
+
+        // Create the sequence of actions
+        Sequence dragAndDrop = new Sequence(finger, 0);
+
+        // 1. Move to the source element location
+        dragAndDrop.addAction(finger.createPointerMove(Duration.ofMillis(0), viewport(), sourceElement.getLocation().getX(), sourceElement.getLocation().getY()));
+        // 2. Press down (long press is often needed to initiate a drag)
+        dragAndDrop.addAction(finger.createPointerDown(LEFT.asArg()));
+        // 3. Wait a bit to ensure the element is "grabbed"
+        dragAndDrop.addAction(finger.createPointerMove(Duration.ofMillis(3000), viewport(), sourceElement.getLocation().getX(), sourceElement.getLocation().getY()));
+
+        // 4. Move to the destination element location
+        dragAndDrop.addAction(finger.createPointerMove(Duration.ofMillis(3000), viewport(), destinationElement.getLocation().getX(), destinationElement.getLocation().getY()));
+        // 5. Release the press
+        dragAndDrop.addAction(finger.createPointerUp(LEFT.asArg()));
+
+        // Perform the combined action
+        driver.perform(Arrays.asList(dragAndDrop));
+    }
+
+    public void performLongPressAndDragDrop(AndroidDriver driver, WebElement sourceElement, WebElement destinationElement) {
+        try {
+            // Create a new TouchAction instance, passing the driver
+            TouchAction action = new TouchAction(driver);
+
+            // Chain the actions:
+            action.longPress(LongPressOptions.longPressOptions() // Use LongPressOptions for clarity and duration control
+                            .withElement(ElementOption.element(sourceElement))
+                            .withDuration(Duration.ofMillis(5000))) // Specify the hold duration (e.g., 2 seconds)
+                    .moveTo(ElementOption.element(destinationElement)) // Move to the destination element
+                    .release() // Lift the finger
+                    .perform(); // Execute the entire action sequence
+
+           // System.out.println("Successfully performed long press and drag to drop action.");
+            log.info("Successfully performed long press and drag to drop action.");
+
+        } catch (Exception e) {
+            log.error("Failed to perform the gesture: {}", e.getMessage(), e);
+            //System.err.println("Failed to perform the gesture: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+    public void safeClear(WebElement el, String name) {
+        try {
+            if (el != null) {
+                el.clear();
+                log.debug("{} input field cleared", name);
+            } else {
+                log.warn("{} element is null when trying to clear", name);
+            }
+        } catch (Exception e) {
+            log.warn("Exception clearing {}: {}", name, e.getMessage());
+            throw e;
+        }
+    }
+
+    public void safeSendKeys(WebElement el, String name, String value, boolean logVisible) {
+        try {
+            if (el == null) {
+                log.warn("{} element is null when trying to send keys", name);
+                return;
+            }
+            el.sendKeys(value == null ? "" : value);
+            if (logVisible) {
+                log.debug("{} entered: {}", name, value);
+            } else {
+                log.debug("{} entered (masked)", name);
+            }
+        } catch (Exception e) {
+            log.error("Failed to enter {}: {}", name, e.getMessage());
+            throw e;
+        }
     }
 
 
