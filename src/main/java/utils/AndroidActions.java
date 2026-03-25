@@ -391,9 +391,9 @@ public class AndroidActions extends AppiumUtils {
             log.info("Dropdown clicked to check for text");
             driver.findElement(AppiumBy.androidUIAutomator(
                     "new UiSelector().textContains(\"" + text + "\")"));
-            return true; // Text found
+            return false; // Text found
         } catch (NoSuchElementException e) {
-            return false; // Text not found
+            return true; // Text not found
         }
     }
 

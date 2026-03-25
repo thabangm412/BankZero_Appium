@@ -59,10 +59,13 @@ public class ExistingPaymentTests extends BaseTestsConfig {
         quickPayPage.clickRedo();
         quickPayPage.clickPay2Buttn();
         quickPayPage.clickConfirmButton();
+        quickPayPage.possibleDuplicateCheck();
 
         try {
             Assert.assertTrue(quickPayPage.getPaymentStatus());
             log.info("Payment status: {}",quickPayPage.getPaymentStatus());
+
+            attachScreenshot(driver, "Payment_Redo_Success");
         } catch (AssertionError e) {
             log.warn("Failed to do payment transaction");
             Assert.fail("Test failed due to exception: " + e.getMessage());
@@ -97,6 +100,8 @@ public class ExistingPaymentTests extends BaseTestsConfig {
         try {
             Assert.assertTrue(quickPayPage.getPaymentStatus());
             log.info("Payment status: {}",quickPayPage.getPaymentStatus());
+
+            attachScreenshot(driver, "Payment_ExistingRecipient_Success");
         } catch (AssertionError e) {
             log.warn("Failed to do payment transaction");
             Assert.fail("Test failed due to exception: " + e.getMessage());
@@ -134,9 +139,11 @@ public class ExistingPaymentTests extends BaseTestsConfig {
         try {
             softAssert.assertEquals(quickPayPage.getAttachment(), "sample-pdf.pdf");
             log.info("Found attached document: {}",quickPayPage.getAttachment());
+            attachScreenshot(driver, "Payment_With_Attachment");
             quickPayPage.clickConfirmButton();
             softAssert.assertTrue(quickPayPage.getPaymentStatus());
             log.info("Payment status: {}",quickPayPage.getPaymentStatus());
+            attachScreenshot(driver, "Payment_With_Attachment_Success");
 
         } catch (Exception e) {
             log.error("Unexpected error: ", e);
@@ -171,10 +178,11 @@ public class ExistingPaymentTests extends BaseTestsConfig {
         quickPayPage.updateRecipientDetails(input.get("updateRecipientName"),input.get("updateGroup"),input.get("updateBank"),input.get("updateAcc"),input.get("updateAccNo"));
 
         try {
-            String expectedAccNo =  quickPayPage.getAccNo();
-            log.info("Assertion expectation: {}",expectedAccNo);
+            String actualAccNo =  quickPayPage.getAccNo();
+            log.info("Assertion expectation: {}",actualAccNo);
 
-            Assert.assertEquals(expectedAccNo, "Account"+ " " + input.get("updateAcc"));
+            Assert.assertEquals(actualAccNo, "Account"+ " " + input.get("updateAccNo"));
+            attachScreenshot(driver, "Recipient_Updated_Success");
 
         } catch (AssertionError e) {
             log.warn("Failed to add payment recipient");
@@ -208,9 +216,11 @@ public class ExistingPaymentTests extends BaseTestsConfig {
         try {
             Assert.assertTrue(quickPayPage.isRecipientDeleted(input.get("updateRecipientName")));
             log.info("Recipient deletion confirmed: {}", input.get("updateRecipientName"));
+                attachScreenshot(driver, "Recipient_Deleted_Success");
         } catch (AssertionError e) {
             log.warn("Failed to delete payment recipient");
             Assert.fail("Test failed due to exception: " + e.getMessage());
+            log.info("Recipient still exists: {}", input.get("updateRecipientName"));
             throw e;  // Let TestNG fail the test
         }
         driver.navigate().back();
