@@ -166,7 +166,7 @@ public class ExistingPaymentTests extends BaseTestsConfig {
 
         accountMenuActions.clickAccountMenuActionsButtn();
         quickPayPage.clickPayButtn();
-        quickPayPage.getExistingRecipient(input.get("updateRecipientName"));
+        quickPayPage.getExistingRecipient(input.get("recipientName"));
         quickPayPage.editProfile();
         quickPayPage.updateRecipientDetails(input.get("updateRecipientName"),input.get("updateGroup"),input.get("updateBank"),input.get("updateAcc"),input.get("updateAccNo"));
 

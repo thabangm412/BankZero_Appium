@@ -221,7 +221,7 @@ public class DevicePairTests extends BaseTestsConfig {
     public Object[] [] getSingleDataSet() throws IOException {
 
         List<HashMap<String, String>> data = getJsonData(System.getProperty("user.dir") + "//src//test//java//testData//devicePairData.json");
-        return new Object[][]{{data.get(0)}};
+        return new Object[][]{{data.get(1)}};
     }
 
     private void validateInput(HashMap<String, String> input, String... required) {

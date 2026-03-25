@@ -15,6 +15,7 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.testng.ITestResult;
 import pageObjects.app.Registration.RegisterOTP;
 
 import java.io.BufferedReader;
@@ -32,6 +33,9 @@ import java.time.Duration;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
+import java.util.logging.Level;
+
+import static utils.Listeners.TEST_THREAD;
 
 public abstract class AppiumUtils {
 
@@ -370,4 +374,26 @@ public abstract class AppiumUtils {
         return date.format(outputFormatter);
 
     }
+
+    public void attachScreenshot(AppiumDriver driver, String screenshotName) {
+        try {
+            ExtentTest test = getTest();
+            if (test != null && driver != null) {
+                String base64Screenshot = getBase64Screenshot(driver);
+                test.addScreenCaptureFromBase64String(base64Screenshot, screenshotName);
+            }
+        } catch (Exception e) {
+            log.warn("Could not capture screenshot: {0}", e.getMessage());
+            ExtentTest test = getTest();
+            if (test != null) {
+                test.warning("Could not capture screenshot: " + e.getMessage());
+            }
+        }
+    }
+
+    private ExtentTest getTest() {
+        return TEST_THREAD.get();
+    }
+
+
 }

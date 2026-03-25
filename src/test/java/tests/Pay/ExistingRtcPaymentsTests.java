@@ -57,7 +57,7 @@ public class ExistingRtcPaymentsTests extends BaseTestsConfig {
 
         accountMenuActions.clickAccountMenuActionsButtn();
         quickPayPage.clickPayButtn();
-        quickPayPage.getExistingRecipient(input.get("updateRecipientName"));
+        quickPayPage.getExistingRecipient(input.get("recipientName"));
         quickPayPage.clickRedo();
         quickPayPage.clickPayImmediatelyButtn();
         quickPayPage.clickPay2Buttn();

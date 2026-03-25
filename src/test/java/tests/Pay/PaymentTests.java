@@ -1,5 +1,8 @@
 package tests.Pay;
 
+import com.aventstack.extentreports.ExtentTest;
+import io.appium.java_client.AppiumDriver;
+import org.openqa.selenium.OutputType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.testng.Assert;
@@ -11,10 +14,14 @@ import pageObjects.app.accountsActionMenu.pay.QuickPayPage;
 import pageObjects.app.accountsHome.HomePage;
 import pageObjects.app.login.LoginPage;
 import testConfig.BaseTestsConfig;
+import utils.AppiumUtils;
 
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
+import java.util.logging.Level;
+
+import static utils.Listeners.TEST_THREAD;
 
 public class PaymentTests extends BaseTestsConfig {
 
@@ -62,6 +69,8 @@ public class PaymentTests extends BaseTestsConfig {
 
             Assert.assertEquals(expectedTxt,input.get("recipientName"));
 
+            attachScreenshot(driver, "Recipient_Added_Success");
+
         } catch (AssertionError e) {
             log.warn("Failed to add payment recipient");
             Assert.fail("Test failed due to exception: " + e.getMessage());
@@ -70,8 +79,7 @@ public class PaymentTests extends BaseTestsConfig {
     }
 
     @Test(dataProvider = "getMultipleDataSet", priority = 1)
-    public void PaymentTest(HashMap<String, String> input)
-    {
+    public void PaymentTest(HashMap<String, String> input) throws InterruptedException {
         validateInput(input,
                 "profileName", "loginPin",
                 "amount", "ref"
@@ -83,11 +91,16 @@ public class PaymentTests extends BaseTestsConfig {
         try {
             Assert.assertTrue(quickPayPage.getPaymentStatus());
             log.info("Payment status: {}",quickPayPage.getPaymentStatus());
+            // ✅ Screenshot at EXACT success moment
+            attachScreenshot(driver, "Payment_Success");
+
+
         } catch (AssertionError e) {
             log.warn("Failed to do payment transaction");
             Assert.fail("Test failed due to exception: " + e.getMessage());
             throw e;  // Let TestNG fail the test
         }finally {
+            Thread.sleep(3000); // Wait for 3 seconds before clicking finish
             quickPayPage.clickFinish();
         }
         homePage.clickLogoutButtn();
@@ -114,6 +127,28 @@ public class PaymentTests extends BaseTestsConfig {
             throw new IllegalArgumentException("Missing required keys: " + missing.toString());
         }
     }
+
+//    public void attachScreenshot(AppiumDriver driver, String screenshotName) {
+//        try {
+//            ExtentTest test = getTest();
+//            if (test != null && driver != null) {
+//                String base64Screenshot = getBase64Screenshot(driver);
+//                test.addScreenCaptureFromBase64String(base64Screenshot, screenshotName);
+//            }
+//        } catch (Exception e) {
+//            log.warn("Could not capture screenshot: {0}", e.getMessage());
+//            ExtentTest test = getTest();
+//            if (test != null) {
+//                test.warning("Could not capture screenshot: " + e.getMessage());
+//            }
+//        }
+//    }
+//
+//     private ExtentTest getTest() {
+//        return TEST_THREAD.get();
+//    }
+
+
 }
 
 

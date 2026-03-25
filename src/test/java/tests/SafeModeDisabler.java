@@ -28,7 +28,7 @@ public class SafeModeDisabler {
         int remotePort = Integer.parseInt(System.getenv("DB_REMOTE_PORT"));
         int localPort = Integer.parseInt(System.getenv("DB_LOCAL_PORT"));
 
-        String phoneNumber = "0860539646"; // 📱 phone number to use in WHERE clause
+        String phoneNumber = "0868024152"; // 📱 phone number to use in WHERE clause
 
         disableSafeMode(sshUser, sshHost, sshPort, sshPassword,
                 dbUser, dbPassword, dbName,

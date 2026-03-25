@@ -20,7 +20,7 @@ public class Listeners extends AppiumUtils implements ITestListener {
 
     private static final Logger LOGGER = Logger.getLogger(Listeners.class.getName());
     private static final ExtentReports extent = getReportObject();
-    private static final ThreadLocal<ExtentTest> TEST_THREAD = new ThreadLocal<>();
+    public static final ThreadLocal<ExtentTest> TEST_THREAD = new ThreadLocal<>();
 
     private ExtentTest getTest() {
         return TEST_THREAD.get();
@@ -31,14 +31,14 @@ public class Listeners extends AppiumUtils implements ITestListener {
         TEST_THREAD.set(extent.createTest(result.getMethod().getMethodName()));
     }
 
-    @Override
-    public void onTestSuccess(ITestResult result) {
-        ExtentTest test = getTest();
-        if (test != null) {
-            test.log(Status.PASS, "Test Passed");
-        }
-        attachScreenshot(result);
-    }
+//    @Override
+//    public void onTestSuccess(ITestResult result) {
+//        ExtentTest test = getTest();
+//        if (test != null) {
+//            test.log(Status.PASS, "Test Passed");
+//        }
+//        attachScreenshot(result);
+//    }
 
     @Override
     public void onTestFailure(ITestResult result) {
