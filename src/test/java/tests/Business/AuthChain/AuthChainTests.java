@@ -1,7 +1,10 @@
 package tests.Business.AuthChain;
 
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebElement;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.testng.Assert;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.DataProvider;
@@ -114,6 +117,23 @@ public class AuthChainTests extends BaseTestsConfig {
         }finally {
             driver.navigate().back();
             businessAuthChainPage.confirmAbort();}
+
+    }
+
+    @Test(dataProvider = "getMultipleDataSet")
+    public void removeAuthChainLevelAowner(HashMap<String, String> input) throws InterruptedException {
+        log.info("Starting removing Authoriser Level A on auth chain test");
+
+        String profileName = input.get("profileName");
+        String loginPin = input.get("loginPin");
+        log.info("Logging in with profile: {}", profileName);
+        // do not log sensitive values such as PIN
+        loginPage.loginWithRetry(profileName, loginPin, 2);
+
+        businessPage.clickBusinessMenuActionButtn();
+        businessAuthChainPage.clickAuthorisationChain();
+        businessAuthChainPage.removeAuthoriserLevelOwner("Level B");
+        Thread.sleep(6000);
 
     }
 

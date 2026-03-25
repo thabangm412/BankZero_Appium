@@ -32,7 +32,7 @@ public class BusinessAuthChainPage {
     @AndroidFindBy(xpath = "//android.widget.TextView[@resource-id=\"za.co.neolabs.bankzero:id/menuItemText\" and @text=\"Authorisation chain\"]")
     private WebElement menuAuthChainButtn;
 
-    public  void clickAuthorisationChain()
+    public void clickAuthorisationChain()
     {
         try {
             menuAuthChainButtn.click();
@@ -107,5 +107,37 @@ public class BusinessAuthChainPage {
              log.error("Amount for level {} not entered",level);
              throw e;
          }
+    }
+
+    public void removeAuthoriserLevelOwner(String level)
+    {
+        try {
+            log.info("Authoriser level sele ted for removal: {}",level);
+            switch (level.toUpperCase())
+            {
+                case "LEVEL A":
+                    WebElement sourceELA = driver.findElement(By.xpath("(//android.widget.ImageView[@resource-id=\"za.co.neolabs.bankzero:id/tile_image\"])[9]"));
+                    break;
+                case "LEVEL B":
+                    WebElement sourceElB = driver.findElement(By.xpath("(//android.widget.ImageView[@resource-id=\"za.co.neolabs.bankzero:id/tile_image\"])[9]"));
+                    WebElement targetElB = driver.findElement(By.xpath("//android.widget.ImageButton[@resource-id=\"za.co.neolabs.bankzero:id/imgButton\"]"));
+                   // androidActions.performDragAndDrop(driver,sourceElB,targetElB);
+                    androidActions.performLongPressAndDragDrop(driver,sourceElB,targetElB);
+                    break;
+                case "LEVEL C":
+                    WebElement sourceElC = driver.findElement(By.xpath("(//android.widget.ImageView[@resource-id=\"za.co.neolabs.bankzero:id/tile_image\"])[11]"));
+                    break;
+                default:
+                    log.error("Invalid level provided for removal: {}",level);
+                    throw new IllegalArgumentException("Invalid level for removal: " + level);
+            }
+            //androidActions.performDragAndDrop(driver,sourceElement,target);
+            log.info("Drag and drop performed for removal of level: {}",level);
+        } catch (Exception e) {
+            log.error("Drag and drop failed for removal of level: {}",level);
+            throw e;
+        }
+
+
     }
 }
