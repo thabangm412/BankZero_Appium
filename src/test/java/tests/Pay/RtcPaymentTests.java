@@ -61,13 +61,14 @@ public class RtcPaymentTests extends BaseTestsConfig {
         quickPayPage.clickAddButton();
         try {
             String expectedTxt =  quickPayPage.getAccName();
-            log.info("Assertion expectation: {}",expectedTxt);
 
             Assert.assertEquals(expectedTxt,input.get("recipientName"));
+            log.info("Recipient added successfully: {}", expectedTxt);
+            attachScreenshot(driver, "Recipient_Added_Success");
 
         } catch (AssertionError e) {
-            log.warn("Failed to add payment recipient");
             Assert.fail("Test failed due to exception: " + e.getMessage());
+            log.warn("Failed to add payment recipient");
             throw e;  // Let TestNG fail the test
         }
     }
@@ -80,15 +81,18 @@ public class RtcPaymentTests extends BaseTestsConfig {
         );
         quickPayPage.enterPaymentDetails(input.get("amount"),input.get("ref"));
         quickPayPage.clickPayImmediatelyButtn();
+        attachScreenshot(driver, "RTC_Payment_Confirmation");
         quickPayPage.clickPay2Buttn();
+        attachScreenshot(driver, "RTC_Payment_Processing");
         quickPayPage.clickConfirmButton();
 
         try {
             Assert.assertTrue(quickPayPage.getPaymentStatus());
             log.info("Payment status: {}",quickPayPage.getPaymentStatus());
+            attachScreenshot(driver, "RTC_Payment_Success");
         } catch (AssertionError e) {
-            log.warn("Failed to do payment transaction");
             Assert.fail("Test failed due to exception: " + e.getMessage());
+            log.warn("Failed to do payment transaction");
             throw e;  // Let TestNG fail the test
         }finally {
             quickPayPage.clickFinish();
