@@ -79,7 +79,7 @@ public class PaymentTests extends BaseTestsConfig {
     }
 
     @Test(dataProvider = "getMultipleDataSet", priority = 1)
-    public void PaymentTest(HashMap<String, String> input) throws InterruptedException {
+    public void PaymentToAddedRecipientTest(HashMap<String, String> input) throws InterruptedException {
         validateInput(input,
                 "profileName", "loginPin",
                 "amount", "ref"
