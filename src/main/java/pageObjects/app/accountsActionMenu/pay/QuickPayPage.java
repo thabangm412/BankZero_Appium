@@ -126,6 +126,15 @@ public class QuickPayPage {
     @AndroidFindBy(accessibility = "Navigate up")
     private WebElement backButton;
 
+    public void possibleDuplicateCheck()
+    {
+        AppiumUtils.waitForTextToAppear(By.id("za.co.neolabs.bankzero:id/alertTitle"),"Possible duplicate?", driver);
+        log.warn("Possible duplicate payment detected - clicking 'Yes' to proceed with payment");
+        WebElement yesButton = driver.findElement(By.xpath("//android.widget.Button[@resource-id=\"android:id/button1\"] and @text=\"Yes\"]"));
+        yesButton.click();
+        log.info("'Yes' button clicked to confirm duplicate payment");
+    }
+
     public void clickPayToButtn()
     {
         payToButtn.click();
