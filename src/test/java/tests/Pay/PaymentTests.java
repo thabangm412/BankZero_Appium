@@ -46,7 +46,7 @@ public class PaymentTests extends BaseTestsConfig {
 
         validateInput(input,
                 "profileName", "loginPin",
-                "recipientName", "group", "bank", "account", "accountNo",
+                "recipientName1", "group", "bank", "account", "accountNo1",
                 "popEmail", "popPhone"
         );
 
@@ -60,14 +60,14 @@ public class PaymentTests extends BaseTestsConfig {
         quickPayPage.clickPayButtn();
         quickPayPage.clickAddRecipientButton();
 
-        quickPayPage.addRecipientDetails(input.get("recipientName"),input.get("group"),input.get("bank"),input.get("account"),input.get("accountNo"));
+        quickPayPage.addRecipientDetails(input.get("recipientName1"),input.get("group"),input.get("bank"),input.get("account"),input.get("accountNo1"));
         quickPayPage.addPoP(input.get("popEmail"),input.get("popPhone"));
         quickPayPage.clickAddButton();
         try {
             String expectedTxt =  quickPayPage.getAccName();
             log.info("Assertion expectation: {}",expectedTxt);
 
-            Assert.assertEquals(expectedTxt,input.get("recipientName"));
+            Assert.assertEquals(expectedTxt,input.get("recipientName1"));
 
             attachScreenshot(driver, "Recipient_Added_Success");
 
@@ -79,13 +79,80 @@ public class PaymentTests extends BaseTestsConfig {
     }
 
     @Test(dataProvider = "getMultipleDataSet", priority = 1)
-    public void PaymentToAddedRecipientTest(HashMap<String, String> input) throws InterruptedException {
+    public void PaymentToAddedRecipientWithPoPTest(HashMap<String, String> input) throws InterruptedException {
         validateInput(input,
                 "profileName", "loginPin",
                 "amount", "ref"
         );
         quickPayPage.enterPaymentDetails(input.get("amount"),input.get("ref"));
         quickPayPage.clickPay2Buttn();
+        attachScreenshot(driver, "Payment_Confirmation");
+        quickPayPage.clickConfirmButton();
+
+        try {
+            Assert.assertTrue(quickPayPage.getPaymentStatus());
+            log.info("Payment status: {}",quickPayPage.getPaymentStatus());
+            // ✅ Screenshot at EXACT success moment
+            attachScreenshot(driver, "Payment_Success");
+
+
+        } catch (AssertionError e) {
+            log.warn("Failed to do payment transaction");
+            Assert.fail("Test failed due to exception: " + e.getMessage());
+            throw e;  // Let TestNG fail the test
+        }finally {
+            Thread.sleep(3000); // Wait for 3 seconds before clicking finish
+            quickPayPage.clickFinish();
+        }
+        homePage.clickLogoutButtn();
+    }
+
+    @Test(dataProvider = "getMultipleDataSet",priority = 2)
+    public void AddRecipientTestWithoutPoP(HashMap<String, String> input) throws InterruptedException {
+
+        validateInput(input,
+                "profileName", "loginPin",
+                "recipientName2", "group", "bank", "account", "accountNo2",
+                "popEmail", "popPhone"
+        );
+
+        //androidActions.environmentChange();
+        String name = input.get("profileName");
+        String appPin = input.get("loginPin");
+
+        loginPage.loginWithRetry(name,appPin,2);
+
+        accountMenuActions.clickAccountMenuActionsButtn();
+        quickPayPage.clickPayButtn();
+        quickPayPage.clickAddRecipientButton();
+
+        quickPayPage.addRecipientDetails(input.get("recipientName2"),input.get("group"),input.get("bank"),input.get("account"),input.get("accountNo2"));
+        //quickPayPage.addPoP(input.get("popEmail"),input.get("popPhone"));
+        quickPayPage.clickAddButton();
+        try {
+            String expectedTxt =  quickPayPage.getAccName();
+            log.info("Assertion expectation: {}",expectedTxt);
+
+            Assert.assertEquals(expectedTxt,input.get("recipientName2"));
+
+            attachScreenshot(driver, "Recipient_Added_Success");
+
+        } catch (AssertionError e) {
+            log.warn("Failed to add payment recipient");
+            Assert.fail("Test failed due to exception: " + e.getMessage());
+            throw e;  // Let TestNG fail the test
+        }
+    }
+
+    @Test(dataProvider = "getMultipleDataSet", priority = 3)
+    public void PaymentToAddedRecipientWithoutPoPTest(HashMap<String, String> input) throws InterruptedException {
+        validateInput(input,
+                "profileName", "loginPin",
+                "amount", "ref"
+        );
+        quickPayPage.enterPaymentDetails(input.get("amount"),input.get("ref"));
+        quickPayPage.clickPay2Buttn();
+        attachScreenshot(driver, "Payment_Confirmation");
         quickPayPage.clickConfirmButton();
 
         try {

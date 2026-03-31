@@ -126,13 +126,27 @@ public class QuickPayPage {
     @AndroidFindBy(accessibility = "Navigate up")
     private WebElement backButton;
 
+    @AndroidFindBy(id = "za.co.neolabs.bankzero:id/snackbar_text")
+    private WebElement errorMessage;
+
+    public String getErrorMessage()
+    {
+        AppiumUtils.waitForElement(By.id("za.co.neolabs.bankzero:id/snackbar_text"),driver);
+        log.info("Retrieving error message");
+        return errorMessage.getText();
+    }
+
     public void possibleDuplicateCheck()
     {
-        AppiumUtils.waitForTextToAppear(By.id("za.co.neolabs.bankzero:id/alertTitle"),"Possible duplicate?", driver);
-        log.warn("Possible duplicate payment detected - clicking 'Yes' to proceed with payment");
-        WebElement yesButton = driver.findElement(By.xpath("//android.widget.Button[@resource-id=\"android:id/button1\"] and @text=\"Yes\"]"));
-        yesButton.click();
-        log.info("'Yes' button clicked to confirm duplicate payment");
+        if (driver.findElements(By.id("za.co.neolabs.bankzero:id/alertTitle")).size() > 0 && driver.findElement(By.id("za.co.neolabs.bankzero:id/alertTitle")).getText().equals("Possible duplicate?")) {
+            log.warn("Possible duplicate payment detected - clicking 'Yes' to proceed with payment");
+
+            WebElement yesButton = driver.findElement(By.xpath("//android.widget.Button[@resource-id=\"android:id/button1\" and @text=\"Yes\"]"));
+            yesButton.click();
+            log.info("'Yes' button clicked to confirm duplicate payment");
+        } else {
+            log.info("No duplicate payment alert detected");
+        }
     }
 
     public void clickPayToButtn()
@@ -232,6 +246,8 @@ public class QuickPayPage {
         log.info("Account number input field cleared");
         accountNo.sendKeys(accNo);
         log.info("Account number entered: {}",accNo);
+
+        androidActions.attachScreenshot(driver,"Recipient_Details_Updated");
 
         updateButtn.click();
         log.info("Add button clicked");
@@ -356,11 +372,13 @@ public class QuickPayPage {
 
     public void clickDelete()
     {
+        AndroidActions androidActions = new AndroidActions(driver);
         deleteButtn.click();
         log.info("Delete button clicked");
 
         AppiumUtils.waitForElement(By.id("android:id/message"),driver);
         WebElement confirmDelete = driver.findElement(By.xpath(" //android.widget.Button[@resource-id=\"android:id/button1\" and @text=\"Yes\"]"));
+        androidActions.attachScreenshot(driver,"Delete_Recipient_Confirmation");
         confirmDelete.click();
         log.info("Confirm delete button clicked");
     }
