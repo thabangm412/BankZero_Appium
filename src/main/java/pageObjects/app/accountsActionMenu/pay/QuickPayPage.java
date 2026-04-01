@@ -454,6 +454,7 @@ public class QuickPayPage {
                 driver.findElement(By.xpath("//android.view.View[@content-desc='" + onceOffDate + "']")).click();
                 driver.findElement(By.id("android:id/button1")).click();
                 log.info("Once-off Date selected: {}", onceOffDate);
+                //androidActions.attachScreenshot(driver,"Once_Off_Date_Selected");
 
                 refInputField.clear();
                 log.info("Reference input field cleared");
@@ -463,6 +464,7 @@ public class QuickPayPage {
                 log.info("Amount input field cleared");
                 amountInputField.sendKeys(amount);
                 log.info("Amount entered");
+                androidActions.attachScreenshot(driver,"Once_Off_Details_Entered");
 
 //                addButtn.click();
 //                log.info("Add schedule button clicked");
@@ -532,6 +534,7 @@ public class QuickPayPage {
                 driver.findElement(By.id("za.co.neolabs.bankzero:id/schedule_when_dd_arrow")).click();
                 androidActions.scrollToTextAndClick2("Monday", driver);
                 log.info("Day selected");
+                //androidActions.attachScreenshot(driver,"Weekly_Schedule_Selected");
 
                 refInputField.clear();
                 log.info("Reference input field cleared");
@@ -541,6 +544,7 @@ public class QuickPayPage {
                 log.info("Amount input field cleared");
                 amountInputField.sendKeys(amount);
                 log.info("Amount entered");
+                androidActions.attachScreenshot(driver,"Weekly_Schedule_Details_Entered");
 
 
                 break;
@@ -610,6 +614,7 @@ public class QuickPayPage {
                 driver.findElement(By.id("za.co.neolabs.bankzero:id/schedule_when_dd_arrow")).click();
                 androidActions.scrollToTextAndClick2("2nd day", driver);
                 log.info("Day selected");
+                //androidActions.attachScreenshot(driver,"Monthly_Schedule_Selected");
 
                 refInputField.clear();
                 log.info("Reference input field cleared");
@@ -619,6 +624,8 @@ public class QuickPayPage {
                 log.info("Amount input field cleared");
                 amountInputField.sendKeys(amount);
                 log.info("Amount entered");
+
+                androidActions.attachScreenshot(driver,"Monthly_Schedule_Details_Entered");
 
                 break;
 
