@@ -2,11 +2,13 @@
   {
   "profileName": "Isagi",
   "loginPin": "33333",
-  "recipientName": "Reo",
+  "recipientName1": "Reo",
+    "recipientName2": "Isagi Business",
   "group": "Finance",
   "bank": "Bank Zero Mutual Bank",
   "account": "Current Account",
-  "accountNo": "82000084186",
+  "accountNo1": "82000084186",
+    "accountNo2": "82000086197",
   "popEmail": "Thabang.monoane@gmail.com",
   "popPhone": "0676336781",
   "amount": "30",
@@ -18,7 +20,9 @@
     "updateAcc": "Current Account",
     "updateBank": "Bank Zero Mutual Bank",
     "scheduleType": "Weekly",
-    "daysToAdd": "2"
+    "daysToAdd": "2",
+    "CBV_Rejected_Acc": "1429909860",
+    "recipientName3": "CBV Rejected"
   },
   {
     "profileName": "Isagi",
@@ -33,11 +37,11 @@
     "amount": "70",
     "ref": "RTC Test",
     "redoAmount": "65",
-    "updateRecipientName": "Absa Savings",
+    "updateRecipientName": "TymeBank2",
     "updateGroup": "Investments",
-    "updateAccNo": "9050517604",
-    "updateAcc": "Savings Account",
-    "updateBank": "Absa Bank Limited"
+    "updateAccNo": "51001369989",
+    "updateAcc": "Current Account",
+    "updateBank": "Tyme Bank Limited"
   },
   {
     "profileName": "Isagi",
