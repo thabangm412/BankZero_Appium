@@ -224,19 +224,19 @@ public class DevicePairTests extends BaseTestsConfig {
         return new Object[][]{{data.get(1)}};
     }
 
-    private void validateInput(HashMap<String, String> input, String... required) {
-        if (input == null) throw new IllegalArgumentException("Input map is null");
-        StringBuilder missing = new StringBuilder();
-        for (String k : required) {
-            if (input.get(k) == null || input.get(k).trim().isEmpty()) {
-                if (missing.length() > 0) missing.append(", ");
-                missing.append(k);
-            }
-        }
-        if (missing.length() > 0) {
-            log.error("Missing required keys: {}", missing.toString());
-            throw new IllegalArgumentException("Missing required keys: " + missing.toString());
-        }
-    }
+//    private void validateInput(HashMap<String, String> input, String... required) {
+//        if (input == null) throw new IllegalArgumentException("Input map is null");
+//        StringBuilder missing = new StringBuilder();
+//        for (String k : required) {
+//            if (input.get(k) == null || input.get(k).trim().isEmpty()) {
+//                if (missing.length() > 0) missing.append(", ");
+//                missing.append(k);
+//            }
+//        }
+//        if (missing.length() > 0) {
+//            log.error("Missing required keys: {}", missing.toString());
+//            throw new IllegalArgumentException("Missing required keys: " + missing.toString());
+//        }
+//    }
 
 }
