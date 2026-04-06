@@ -648,7 +648,6 @@ public class QuickPayPage {
         backButton.click();
         log.info("Back button clicked");
     }
-
     public void addAttachments()
     {
 
