@@ -4,6 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.testng.Assert;
 import org.testng.annotations.AfterMethod;
+import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 import pageObjects.app.accountsActionMenu.AccountMenuActions;
@@ -22,19 +23,28 @@ public class ExistingAirtimeAccTests extends BaseTestsConfig {
 
     private static final Logger log = LoggerFactory.getLogger(ExistingAirtimeAccTests.class);
 
+    private LoginPage loginPage;
+    private AccountMenuActions accountMenuActions;
+    private BuyAirtimePage buyAirtimePage;
+
+    @BeforeMethod
+    public void preSetUp() {
+        loginPage = new LoginPage(driver);
+        accountMenuActions = new AccountMenuActions(driver);
+        buyAirtimePage = new BuyAirtimePage(driver);
+
+    }
+
     @Test(dataProvider = "getMultipleDataSet")
     public void existingAirtimeAccTest(HashMap<String, String> input) throws IOException {
+        validateInput(input,
+                    "AirtimeName", "amount", "ref"
+        );
 
-        LoginPage loginPage = new LoginPage(driver);
-        BuyAirtimePage buyAirtimePage = new BuyAirtimePage(driver);
-        AccountMenuActions accountMenuActions = new AccountMenuActions(driver);
         Properties properties = new Properties();
         FileInputStream fis = new FileInputStream(System.getProperty("user.dir")+"//src//main//java//resources//data.properties");
         properties.load(fis);
 
-        String name = input.get("AirtimeName");
-        String amount = input.get("amount");
-        String ref = input.get("ref");
         String appLogin = properties.getProperty("appLogin");
         String profileName = properties.getProperty("profileName");
 
@@ -42,9 +52,11 @@ public class ExistingAirtimeAccTests extends BaseTestsConfig {
 
         accountMenuActions.clickAccountMenuActionsButtn();
         buyAirtimePage.clickBuyButton();
-        buyAirtimePage.getExistingProfile(name);
+        buyAirtimePage.getExistingProfile(input.get("AirtimeName"));
+        attachScreenshot(driver,"Existing Airtime Profile Retrieved");
         buyAirtimePage.clickRedo();
         buyAirtimePage.clickHomeBuyButton();
+        attachScreenshot(driver,"Airtime Purchase Page");
         buyAirtimePage.clickConfirmButton();
 
         try {
@@ -53,13 +65,14 @@ public class ExistingAirtimeAccTests extends BaseTestsConfig {
             try {
                 Assert.assertEquals(status, "Success");
                 log.info("Transactional Status: {}",status);
+                attachScreenshot(driver,"Airtime Purchase Success");
             } catch (AssertionError e) {
                 log.warn("Transaction failed with status: {}", status);
                 throw e;  // Let TestNG fail the test
             }
         } catch (Exception e) {
-            log.error("Exception occurred during transaction handling: ", e);
             Assert.fail("Test failed due to exception: " + e.getMessage());
+            log.error("Exception occurred during transaction handling: ", e);
         }
         buyAirtimePage.clickFinishButton();
     }
@@ -67,16 +80,13 @@ public class ExistingAirtimeAccTests extends BaseTestsConfig {
     @Test(dataProvider = "getMultipleDataSet")
     public void deleteExistingRecipient(HashMap<String, String> input)  throws InterruptedException, IOException{
 
-        LoginPage loginPage = new LoginPage(driver);
-        BuyAirtimePage buyAirtimePage = new BuyAirtimePage(driver);
-        AccountMenuActions accountMenuActions = new AccountMenuActions(driver);
+       validateInput(input,
+                "AirtimeName", "amount", "ref"
+        );
         Properties properties = new Properties();
         FileInputStream fis = new FileInputStream(System.getProperty("user.dir")+"//src//main//java//resources//data.properties");
         properties.load(fis);
 
-        String name = input.get("AirtimeName");
-        String amount = input.get("amount");
-        String ref = input.get("ref");
         String appLogin = properties.getProperty("appLogin");
         String profileName = properties.getProperty("profileName");
 
@@ -84,18 +94,23 @@ public class ExistingAirtimeAccTests extends BaseTestsConfig {
 
         accountMenuActions.clickAccountMenuActionsButtn();
         buyAirtimePage.clickBuyButton();
-        buyAirtimePage.getExistingProfile(name);
+        buyAirtimePage.getExistingProfile(input.get("AirtimeName"));
+        attachScreenshot(driver,"Existing Airtime Profile Retrieved for Deletion");
         buyAirtimePage.clickEditButton();
         buyAirtimePage.clickDeleteButton();
-        String actualTxt = buyAirtimePage.getDeleteToastMsg();
+        //String actualTxt = buyAirtimePage.getDeleteToastMsg();
         try {
-            Assert.assertEquals(actualTxt,"Item deleted!");
-            log.info("Recipient deleted");
+            Assert.assertTrue(buyAirtimePage.isRecipientDeleted(input.get("AirtimeName")));
+            log.info("Recipient deletion confirmed: {}",input.get("AirtimeName"));
+//            Assert.assertEquals(actualTxt,"Item deleted!");
+//            log.info("Recipient deleted");
+            attachScreenshot(driver,"Airtime Recipient Deleted");
         } catch (Exception| AssertionError e) {
-            log.warn("Test failed due to: {}",e);
             Assert.fail("Test failed");
+            log.warn("Test failed due to: {}",e);
             throw new RuntimeException(e);
         }
+        driver.navigate().back();
         buyAirtimePage.clickBack();
     }
 
@@ -103,7 +118,7 @@ public class ExistingAirtimeAccTests extends BaseTestsConfig {
     public Object[] [] getMultipleDataSet() throws IOException {
 
         List<HashMap<String, String>> data = getJsonData(System.getProperty("user.dir") + "//src//test//java//testData//data+sms+bundle_BuyData.json");
-        return new Object[][]{{data.get(3)}};
+        return new Object[][]{{data.get(0)},{data.get(1)},{data.get(2)},{data.get(3)}};
     }
 
     @AfterMethod

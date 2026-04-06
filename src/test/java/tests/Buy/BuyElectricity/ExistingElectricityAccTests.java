@@ -4,6 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.testng.Assert;
 import org.testng.annotations.AfterMethod;
+import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 import pageObjects.app.accountsActionMenu.AccountMenuActions;
@@ -21,21 +22,28 @@ import java.util.Properties;
 public class ExistingElectricityAccTests extends BaseTestsConfig {
 
     private static final Logger log = LoggerFactory.getLogger(ExistingElectricityAccTests.class);
+    private LoginPage loginPage;
+    private AccountMenuActions accountMenuActions;
+    private BuyElectricityPage buyPage;
 
-    @Test(dataProvider = "getSingleDataSet")
+    @BeforeMethod
+    public void preSetUp() {
+        loginPage = new LoginPage(driver);
+        accountMenuActions = new AccountMenuActions(driver);
+        buyPage = new BuyElectricityPage(driver);
+
+    }
+
+    @Test(dataProvider = "getMultipleDataSet", priority = 0)
     public void existingElectricityAccTest(HashMap<String, String> input) throws InterruptedException, IOException {
 
-        LoginPage loginPage = new LoginPage(driver);
-        HomePage homePage = new HomePage(driver);
-        BuyElectricityPage buyPage = new BuyElectricityPage(driver);
-        AccountMenuActions accountMenuActions = new AccountMenuActions(driver);
+        validateInput(input,
+                "name", "amount", "ref"
+        );
         Properties properties = new Properties();
         FileInputStream fis = new FileInputStream(System.getProperty("user.dir")+"//src//main//java//resources//data.properties");
         properties.load(fis);
 
-        String name = input.get("name");
-        String amount = input.get("amount");
-        String ref = input.get("ref");
         String appLogin = properties.getProperty("appLogin");
         String profileName = properties.getProperty("profileName");
 
@@ -43,7 +51,8 @@ public class ExistingElectricityAccTests extends BaseTestsConfig {
 
         accountMenuActions.clickAccountMenuActionsButtn();
         buyPage.clickBuyButton();
-        buyPage.buyElectricityAgain(name,amount,ref);
+        buyPage.buyElectricityAgain(input.get("name"),input.get("amount"),input.get("ref"));
+        attachScreenshot(driver,"Confirm Electricity Purchase");
         buyPage.clickConfrimButton();
         Thread.sleep(5000);
 
@@ -53,32 +62,31 @@ public class ExistingElectricityAccTests extends BaseTestsConfig {
             try {
                 Assert.assertEquals(status, "Success");
                 log.info("Transactional Status: {}",status);
+                attachScreenshot(driver,"Electricity Purchase Success");
             } catch (AssertionError e) {
                 log.warn("Transaction failed with status: {}", status);
                 throw e;  // Let TestNG fail the test
             }
         } catch (Exception e) {
-            log.error("Exception occurred during transaction handling: ", e);
             Assert.fail("Test failed due to exception: " + e.getMessage());
+            log.error("Exception occurred during transaction handling: ", e);
+        }finally {
+            buyPage.clickFinishButton();
         }
 
-        buyPage.clickFinishButton();
     }
 
-    @Test(dataProvider = "getSingleDataSet")
-    public void deleteExistingRecipient(HashMap<String, String> input)  throws InterruptedException, IOException{
+    @Test(dataProvider = "getMultipleDataSet", priority = 1)
+    public void deleteExistingElectricityRecipient(HashMap<String, String> input)  throws InterruptedException, IOException{
 
-        LoginPage loginPage = new LoginPage(driver);
-        HomePage homePage = new HomePage(driver);
-        BuyElectricityPage buyPage = new BuyElectricityPage(driver);
-        AccountMenuActions accountMenuActions = new AccountMenuActions(driver);
+        validateInput(input,
+                "name", "amount", "ref"
+        );
+
         Properties properties = new Properties();
         FileInputStream fis = new FileInputStream(System.getProperty("user.dir")+"//src//main//java//resources//data.properties");
         properties.load(fis);
 
-        String name = input.get("name");
-        String amount = input.get("amount");
-        String ref = input.get("ref");
         String appLogin = properties.getProperty("appLogin");
         String profileName = properties.getProperty("profileName");
 
@@ -86,25 +94,31 @@ public class ExistingElectricityAccTests extends BaseTestsConfig {
         accountMenuActions.clickAccountMenuActionsButtn();
         buyPage.clickBuyButton();
         buyPage.getExistingRecipient(input.get("name"));
+        attachScreenshot(driver,"Existing Electricity Recipient Retrieved");
         buyPage.clickEditButton();
         buyPage.clickDeleteButton();
-        String actualTxt = buyPage.getDeleteToastMsg();
+
+        //String actualTxt = buyPage.getDeleteToastMsg();
         try {
-            Assert.assertEquals(actualTxt,"Item deleted!");
-            log.info("Recipient deleted");
+            Assert.assertTrue(buyPage.isRecipientDeleted(input.get("name")));
+            log.info("Recipient deleted successfully");
+            attachScreenshot(driver,"Electricity Recipient Deletion Success");
+//            Assert.assertEquals(actualTxt,"Item deleted!");
+//            log.info("Recipient deleted");
         } catch (Exception| AssertionError e) {
             log.warn("Test failed due to: {}",e);
             Assert.fail("Test failed");
             throw new RuntimeException(e);
         }
+        driver.navigate().back();
         buyPage.clickBack();
     }
 
     @DataProvider
-    public Object[] [] getSingleDataSet() throws IOException {
+    public Object[] [] getMultipleDataSet() throws IOException {
 
         List<HashMap<String, String>> data = getJsonData(System.getProperty("user.dir") + "//src//test//java//testData//buyElectricityData.json");
-        return new Object[][]{{data.get(0)}};
+        return new Object[][]{{data.get(0)},{data.get(1)}};
     }
 
     @AfterMethod
