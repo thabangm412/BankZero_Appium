@@ -4,9 +4,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.testng.Assert;
 import org.testng.annotations.AfterMethod;
+import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 import pageObjects.app.accountsActionMenu.AccountMenuActions;
+import pageObjects.app.accountsActionMenu.buy.BuyAirtimePage;
 import pageObjects.app.accountsActionMenu.buy.BuySMSPage;
 import pageObjects.app.accountsHome.HomePage;
 import pageObjects.app.login.LoginPage;
@@ -22,34 +24,39 @@ public class NewSMSAccTests extends BaseTestsConfig {
 
     private static final Logger log = LoggerFactory.getLogger(NewSMSAccTests.class);
 
+    private LoginPage loginPage;
+    private AccountMenuActions accountMenuActions;
+    private BuySMSPage buySMSPage;
+
+    @BeforeMethod
+    public void preSetUp() {
+        loginPage = new LoginPage(driver);
+        accountMenuActions = new AccountMenuActions(driver);
+        buySMSPage = new BuySMSPage(driver);
+
+    }
+
     @Test(dataProvider = "getMultipleDataSet")
     public void newSMSAccTest(HashMap<String, String> input) throws IOException {
-        LoginPage loginPage = new LoginPage(driver);
-        BuySMSPage buySMSPage = new BuySMSPage(driver);
-        AccountMenuActions accountMenuActions = new AccountMenuActions(driver);
+        validateInput(input,
+                "SMSName", "provider", "productSMS", "recipientNo", "amount", "ref"
+        );
         Properties properties = new Properties();
         FileInputStream fis = new FileInputStream(System.getProperty("user.dir")+"//src//main//java//resources//data.properties");
         properties.load(fis);
 
-        String name = input.get("SMSName");
-        String provider = input.get("provider");
-        String smsProduct = input.get("productSMS");
-        String recipient = input.get("recipientNo");
-        String amount = input.get("amount");
-        String ref = input.get("ref");
+     ;
         String appLogin = properties.getProperty("appLogin");
         String profileName = properties.getProperty("profileName");
-
-//        String name = input.get("prefName");
-//        String appPin = input.get("loginPin");
 
         loginPage.loginWithRetry(profileName,appLogin,2);
 
         accountMenuActions.clickAccountMenuActionsButtn();
         buySMSPage.clickBuyButton();
         buySMSPage.addAccButton();
-        buySMSPage.addSMSItem(name,provider,smsProduct,recipient);
+        buySMSPage.addSMSItem(input.get("SMSName"),input.get("provider"),input.get("productSMS"),input.get("recipientNo"));
         buySMSPage.clickHomeBuyButton();
+        attachScreenshot(driver,"SMS Purchase Page");
         buySMSPage.clickConfirmButton();
 
         try {
@@ -58,13 +65,14 @@ public class NewSMSAccTests extends BaseTestsConfig {
             try {
                 Assert.assertEquals(status, "Success");
                 log.info("Transactional Status: {}",status);
+                attachScreenshot(driver,"SMS Purchase Success");
             } catch (AssertionError e) {
                 log.warn("Transaction failed with status: {}", status);
                 throw e;  // Let TestNG fail the test
             }
         } catch (Exception e) {
-            log.error("Exception occurred during transaction handling: ", e);
             Assert.fail("Test failed due to exception: " + e.getMessage());
+            log.error("Exception occurred during transaction handling: ", e);
         }
 
     }
@@ -73,7 +81,7 @@ public class NewSMSAccTests extends BaseTestsConfig {
     public Object[] [] getMultipleDataSet() throws IOException {
 
         List<HashMap<String, String>> data = getJsonData(System.getProperty("user.dir") + "//src//test//java//testData//data+sms+bundle_BuyData.json");
-        return new Object[][]{{data.get(3)}};
+        return new Object[][]{{data.get(0)},{data.get(1)},{data.get(2)},{data.get(3)}};
     }
 
     @AfterMethod

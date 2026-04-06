@@ -4,11 +4,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.testng.Assert;
 import org.testng.annotations.AfterMethod;
+import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 import pageObjects.app.accountsActionMenu.AccountMenuActions;
 import pageObjects.app.accountsActionMenu.buy.BuyAirtimePage;
 import pageObjects.app.accountsActionMenu.buy.BuyElectricityPage;
+import pageObjects.app.accountsActionMenu.pay.QuickPayPage;
 import pageObjects.app.accountsHome.HomePage;
 import pageObjects.app.login.LoginPage;
 import testConfig.BaseTestsConfig;
@@ -23,20 +25,30 @@ public class NewAirtimeAccTests extends BaseTestsConfig {
 
     private static final Logger log = LoggerFactory.getLogger(NewAirtimeAccTests.class);
 
+    private LoginPage loginPage;
+    private AccountMenuActions accountMenuActions;
+    private BuyAirtimePage buyAirtimePage;
+
+    @BeforeMethod
+    public void preSetUp() {
+        loginPage = new LoginPage(driver);
+        accountMenuActions = new AccountMenuActions(driver);
+        buyAirtimePage = new BuyAirtimePage(driver);
+
+    }
+
+
     @Test(dataProvider = "getMultipleDataSet")
     public void newAirtimePurchase(HashMap<String, String> input) throws IOException, InterruptedException {
-        LoginPage loginPage = new LoginPage(driver);
-        BuyAirtimePage buyAirtimePage = new BuyAirtimePage(driver);
-        AccountMenuActions accountMenuActions = new AccountMenuActions(driver);
+
+         validateInput(input,
+                 "AirtimeName", "provider", "recipientNo", "amount", "ref"
+          );
+
         Properties properties = new Properties();
         FileInputStream fis = new FileInputStream(System.getProperty("user.dir")+"//src//main//java//resources//data.properties");
         properties.load(fis);
 
-        String name = input.get("AirtimeName");
-        String provider = input.get("provider");
-        String recipient = input.get("recipientNo");
-        String amount = input.get("amount");
-        String ref = input.get("ref");
         String appLogin = properties.getProperty("appLogin");
         String profileName = properties.getProperty("profileName");
 
@@ -45,8 +57,9 @@ public class NewAirtimeAccTests extends BaseTestsConfig {
         accountMenuActions.clickAccountMenuActionsButtn();
         buyAirtimePage.clickBuyButton();
         buyAirtimePage.addAccButton();
-        buyAirtimePage.addAirtimeItem(name,provider,recipient);
-        buyAirtimePage.buyAirtime(amount,ref);
+        buyAirtimePage.addAirtimeItem(input.get("AirtimeName"),input.get("provider"),input.get("recipientNo"));
+        buyAirtimePage.buyAirtime(input.get("amount"),input.get("ref"));
+        attachScreenshot(driver, "AirtimePurchaseDetails");
         buyAirtimePage.clickConfirmButton();
 
 
@@ -55,14 +68,15 @@ public class NewAirtimeAccTests extends BaseTestsConfig {
 
             try {
                 Assert.assertEquals(status, "Success");
+                attachScreenshot(driver, "AirtimePurchaseSuccess");
                 log.info("Transactional Status: {}",status);
             } catch (AssertionError e) {
                 log.warn("Transaction failed with status: {}", status);
                 throw e;  // Let TestNG fail the test
             }
         } catch (Exception e) {
-            log.error("Exception occurred during transaction handling: ", e);
             Assert.fail("Test failed due to exception: " + e.getMessage());
+            log.error("Exception occurred during transaction handling: ", e);
         }
 
     }
@@ -71,7 +85,7 @@ public class NewAirtimeAccTests extends BaseTestsConfig {
     public Object[] [] getMultipleDataSet() throws IOException {
 
         List<HashMap<String, String>> data = getJsonData(System.getProperty("user.dir") + "//src//test//java//testData//data+sms+bundle_BuyData.json");
-        return new Object[][]{{data.get(3)}};
+        return new Object[][]{{data.get(0)},{data.get(1)},{data.get(2)},{data.get(3)}};
     }
 
     @AfterMethod

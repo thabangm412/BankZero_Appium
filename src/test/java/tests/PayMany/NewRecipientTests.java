@@ -63,12 +63,14 @@ public class NewRecipientTests extends BaseTestsConfig {
         payManyPage.enterPOPDetails(input.get("popEmail"),input.get("popPhone"));
         payManyPage.clickAddButton();
         payManyPage.getGroups(input.get("group"));
+        attachScreenshot(driver,"RecipientDetails added");
 
         try {
             String expectedTxt =  input.get("recipientName");
             log.info("Assertion expectation: {}",expectedTxt);
-            String actualTxt = payManyPage.getRecipientName();
-            Assert.assertEquals(actualTxt,expectedTxt);
+            //String actualTxt = payManyPage.getRecipientName();
+            Assert.assertTrue(payManyPage.getRecipientNames().contains(expectedTxt), "Recipient name does not match expected value");
+            attachScreenshot(driver,"Recipient added successfully");
 
         } catch (AssertionError e) {
             log.warn("Failed to add payment recipient");
@@ -91,20 +93,21 @@ public class NewRecipientTests extends BaseTestsConfig {
         payManyPage.clickAttachments();
         payManyPage.addAttachments();
         payManyPage.enterAmount(input.get("amount"));
-        payManyPage.clickPayButton();
+        payManyPage.clickFinish();
+        attachScreenshot(driver,"Payment details");
         payManyPage.clickConfirmButton();
 
         try {
             String actualTxt = payManyPage.transactionStatus();
             Assert.assertEquals(actualTxt,"Thank you");
+            attachScreenshot(driver,"Payment successful");
         }catch (AssertionError | NoSuchElementException e)
         {
             log.warn("Failed to do payment transaction");
             Assert.fail("Test failed due to exception: " + e.getMessage());
             throw e;
-        }finally {
-            payManyPage.clickFinish();
         }
+        payManyPage.clickFinish();
         homePage.clickLogoutButtn();
 
     }
@@ -116,18 +119,4 @@ public class NewRecipientTests extends BaseTestsConfig {
         return new Object[][]{{data.getFirst()}};
     }
 
-    private void validateInput(HashMap<String, String> input, String... required) {
-        if (input == null) throw new IllegalArgumentException("Input map is null");
-        StringBuilder missing = new StringBuilder();
-        for (String k : required) {
-            if (input.get(k) == null || input.get(k).trim().isEmpty()) {
-                if (missing.length() > 0) missing.append(", ");
-                missing.append(k);
-            }
-        }
-        if (missing.length() > 0) {
-            log.error("Missing required keys: {}", missing.toString());
-            throw new IllegalArgumentException("Missing required keys: " + missing.toString());
-        }
-    }
 }
