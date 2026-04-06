@@ -1,0 +1,67 @@
+<!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd" >
+<suite name="Regression" verbose="2" thread-count="2">
+    <listeners>
+        <listener class-name="utils.Listeners"/>
+    </listeners>
+
+<!--    <test name="Buy Airtime Tests">-->
+<!--        <classes>-->
+<!--            <class name="tests.Buy.BuyAirtime.NewAirtimeAccTests">-->
+<!--                <methods>-->
+<!--                    <include name="newAirtimePurchase"/>-->
+<!--                </methods>-->
+<!--            </class>-->
+<!--            <class name="tests.Buy.BuyAirtime.ExistingAirtimeAccTests">-->
+<!--                <methods>-->
+<!--                    <include name="existingAirtimeAccTest"/>-->
+<!--                    <include name="deleteExistingRecipient"/>-->
+<!--                </methods>-->
+<!--            </class>-->
+<!--        </classes>-->
+<!--    </test>-->
+<!--    <test name="Buy SMS Tests">-->
+<!--    <classes>-->
+<!--        <class name="tests.Buy.BuySMS.NewSMSAccTests">-->
+<!--            <methods>-->
+<!--                <include name="newSMSAccTest"/>-->
+<!--            </methods>-->
+<!--        </class>-->
+<!--        <class name="tests.Buy.BuySMS.ExistingSMSTests">-->
+<!--            <methods>-->
+<!--                <include name="existingSMSAccTest"/>-->
+<!--                <include name="deleteSmsExistingRecipient"/>-->
+<!--            </methods>-->
+<!--        </class>-->
+<!--    </classes>-->
+<!--    </test>-->
+<!--    <test name="Buy Data Tests">-->
+<!--    <classes>-->
+<!--        <class name="tests.Buy.BuyData.NewDataAccTests">-->
+<!--            <methods>-->
+<!--                <include name="newDataAccTest"/>-->
+<!--            </methods>-->
+<!--        </class>-->
+<!--        <class name="tests.Buy.BuyData.ExistingDataAccTests">-->
+<!--            <methods>-->
+<!--                <include name="existingDataAccTest"/>-->
+<!--                <include name="deleteExistingDataRecipient"/>-->
+<!--            </methods>-->
+<!--        </class>-->
+<!--    </classes>-->
+<!--    </test>-->
+    <test name="Buy Electricity Tests">
+    <classes>
+        <class name="tests.Buy.BuyElectricity.NewElectricityAccTest">
+            <methods>
+                <include name="newElectricityAccTest"/>
+            </methods>
+        </class>
+        <class name="tests.Buy.BuyElectricity.ExistingElectricityAccTests">
+            <methods>
+                <include name="existingElectricityAccTest"/>
+                <include name="deleteExistingElectricityRecipient"/>
+            </methods>
+        </class>
+    </classes>
+    </test>
+</suite>
