@@ -123,10 +123,12 @@ public class BuyAirtimePage {
 
     public void clickDeleteButton()
     {
+        AndroidActions androidActions = new AndroidActions(driver);
         AppiumUtils.waitForTextToAppear(By.id("za.co.neolabs.bankzero:id/toolbar_title"),"Edit Airtime item",driver);
         log.info("Edit Airtime item page displayed.");
         deleteButton.click();
         log.info("Delete button clicked");
+        androidActions.attachScreenshot(driver, "Delete_Confirmation_Prompt");
         deleteConfirmButton.click();
         log.info("Confirm delete button clicked");
     }
@@ -223,8 +225,12 @@ public class BuyAirtimePage {
         androidActions.scrollToTextAndClick2(provider,driver);
         log.info("Provider options chosen: {}", provider);
 
-        recipientInputField.sendKeys(cellNumber);
+        recipientInputField.clear();
         log.info("Recipient cell number input field cleared");
+        recipientInputField.sendKeys(cellNumber);
+        log.info("Recipient cell number entered: {}", cellNumber);
+
+        androidActions.attachScreenshot(driver, "Airtime_Item_Details_Entered");
 
         clickBuyOrSubmitButton();
         log.info("Add button clicked...");
@@ -339,6 +345,26 @@ public class BuyAirtimePage {
 //        AppiumUtils.waitForTextToAppear(By.id("za.co.neolabs.bankzero:id/toolbar_title"),"Edit Airtime item",driver);
 //
 //    }
+
+    public boolean isRecipientDeleted(String text)
+    {
+        AndroidActions androidActions = new AndroidActions(driver);
+        log.info("Checking if recipient is deleted");
+
+        WebElement dropDown = driver.findElement(By.id("za.co.neolabs.bankzero:id/_arrow"));
+
+        boolean isDeleted = androidActions.isTextNotPresentInDropDown(dropDown,text);
+        if(isDeleted)
+        {
+            log.info("Recipient successfully deleted");
+        }
+        else
+        {
+            log.info("Recipient still present");
+        }
+        return isDeleted;
+
+    }
 
 
 }

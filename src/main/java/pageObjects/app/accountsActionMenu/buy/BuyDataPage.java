@@ -79,6 +79,18 @@ public class BuyDataPage {
     @AndroidFindBy(id = "za.co.neolabs.bankzero:id/redo_image")
     private WebElement redoButtn;
 
+    @AndroidFindBy(id = "za.co.neolabs.bankzero:id/edit_note")
+    private WebElement editButton;
+
+    @AndroidFindBy(id = "za.co.neolabs.bankzero:id/mnu_top_1")
+    private WebElement deleteButton;
+
+    @AndroidFindBy(id = "android:id/button1")
+    private WebElement deleteConfirmButton;
+
+    @AndroidFindBy(accessibility = "Navigate up")
+    private WebElement backButton;
+
 
     public void clickBuyButton()
     {
@@ -120,11 +132,15 @@ public class BuyDataPage {
         androidActions.scrollToTextAndClick2(product,driver);
         log.info("Product options chosen: {}", provider);
 
-        recipientInputField.sendKeys(cellNumber);
+        recipientInputField.clear();
         log.info("Recipient cell number input field cleared");
+        recipientInputField.sendKeys(cellNumber);
+        log.info("Recipient cell number entered: {}", cellNumber);
+        androidActions.attachScreenshot(driver,"BuyDataItemDetails");
 
         clickBuyOrSubmitButton();
         log.info("Add button clicked...");
+        androidActions.attachScreenshot(driver,"BuyDataItemAdded");
         clickBuyOrSubmitButton();
         log.info("Confirm button clicked...");
 
@@ -250,5 +266,53 @@ public class BuyDataPage {
         log.info("Finish button clicked...");
 
     }
+
+    public void clickEditButton()
+    {
+        AppiumUtils.waitForTextToAppear(By.id("za.co.neolabs.bankzero:id/toolbar_title"),"Quick Buy",driver);
+        log.info("Quick buy page displayed...");
+        editButton.click();
+        log.info("Edit button clicked");
+    }
+
+    public void clickDeleteButton()
+    {
+        AndroidActions androidActions = new AndroidActions(driver);
+        AppiumUtils.waitForTextToAppear(By.id("za.co.neolabs.bankzero:id/toolbar_title"),"Edit Data item",driver);
+        log.info("Edit Airtime item page displayed.");
+        deleteButton.click();
+        log.info("Delete button clicked");
+        androidActions.attachScreenshot(driver, "Delete_Confirmation_Prompt");
+        deleteConfirmButton.click();
+        log.info("Confirm delete button clicked");
+    }
+
+    public boolean isRecipientDeleted(String text)
+    {
+        AndroidActions androidActions = new AndroidActions(driver);
+        log.info("Checking if recipient is deleted");
+
+        WebElement dropDown = driver.findElement(By.id("za.co.neolabs.bankzero:id/_arrow"));
+
+        boolean isDeleted = androidActions.isTextNotPresentInDropDown(dropDown,text);
+        if(isDeleted)
+        {
+            log.info("Recipient successfully deleted");
+        }
+        else
+        {
+            log.info("Recipient still present");
+        }
+        return isDeleted;
+
+    }
+    public void clickBack()
+    {
+        AppiumUtils.waitForTextToAppear(By.id("za.co.neolabs.bankzero:id/toolbar_title"),"Quick Buy",driver);
+        log.info("Quick buy page displayed.");
+        backButton.click();
+        log.info("Back button clicked");
+    }
+
 
 }
