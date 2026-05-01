@@ -560,6 +560,26 @@ public class AndroidActions extends AppiumUtils {
         return TEST_THREAD.get();
     }
 
+    public static WebElement waitForElementAttribute(
+            AndroidDriver driver,
+            String xpath,
+            String attribute,
+            String expectedValue,
+            int timeoutSeconds) {
+
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(timeoutSeconds));
+
+        return wait.until(driver1 -> {
+            WebElement element = driver1.findElement(By.xpath(xpath));
+            String actualValue = element.getAttribute(attribute);
+
+            if (actualValue != null && actualValue.equals(expectedValue)) {
+                return element;
+            }
+            return null;
+        });
+    }
+
 
 
 
