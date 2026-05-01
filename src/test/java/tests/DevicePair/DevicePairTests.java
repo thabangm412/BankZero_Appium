@@ -72,7 +72,7 @@ public class DevicePairTests extends BaseTestsConfig {
         // Enter OTP
         registerOTP.enterOTP(input.get("cellNumber"), input.get("alNumber"));
         registerOTP.clickSubmitButton();
-        //Thread.sleep(3000);
+        Thread.sleep(3000);
 
         Assert.assertTrue(loginPage.loginPageConfirm());
         attachScreenshot(driver, "Device_Pairing_Success");
