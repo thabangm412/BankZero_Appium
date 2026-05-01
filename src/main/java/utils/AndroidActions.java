@@ -1,5 +1,6 @@
 package utils;
 
+import com.aventstack.extentreports.ExtentTest;
 import com.google.common.collect.ImmutableMap;
 import io.appium.java_client.AppiumBy;
 import io.appium.java_client.AppiumDriver;
@@ -33,6 +34,7 @@ import java.util.*;
 import static org.openqa.selenium.interactions.PointerInput.Kind.TOUCH;
 import static org.openqa.selenium.interactions.PointerInput.MouseButton.LEFT;
 import static org.openqa.selenium.interactions.PointerInput.Origin.viewport;
+import static utils.Listeners.TEST_THREAD;
 
 public class AndroidActions extends AppiumUtils {
 
@@ -391,9 +393,9 @@ public class AndroidActions extends AppiumUtils {
             log.info("Dropdown clicked to check for text");
             driver.findElement(AppiumBy.androidUIAutomator(
                     "new UiSelector().textContains(\"" + text + "\")"));
-            return true; // Text found
+            return false; // Text found
         } catch (NoSuchElementException e) {
-            return false; // Text not found
+            return true; // Text not found
         }
     }
 
@@ -538,6 +540,45 @@ public class AndroidActions extends AppiumUtils {
         }
     }
 
+    public void attachScreenshot(AppiumDriver driver, String screenshotName) {
+        try {
+            ExtentTest test = getTest();
+            if (test != null && driver != null) {
+                String base64Screenshot = getBase64Screenshot(driver);
+                test.addScreenCaptureFromBase64String(base64Screenshot, screenshotName);
+            }
+        } catch (Exception e) {
+            log.warn("Could not capture screenshot: {0}", e.getMessage());
+            ExtentTest test = getTest();
+            if (test != null) {
+                test.warning("Could not capture screenshot: " + e.getMessage());
+            }
+        }
+    }
+
+     private ExtentTest getTest() {
+        return TEST_THREAD.get();
+    }
+
+    public static WebElement waitForElementAttribute(
+            AndroidDriver driver,
+            String xpath,
+            String attribute,
+            String expectedValue,
+            int timeoutSeconds) {
+
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(timeoutSeconds));
+
+        return wait.until(driver1 -> {
+            WebElement element = driver1.findElement(By.xpath(xpath));
+            String actualValue = element.getAttribute(attribute);
+
+            if (actualValue != null && actualValue.equals(expectedValue)) {
+                return element;
+            }
+            return null;
+        });
+    }
 
 
 

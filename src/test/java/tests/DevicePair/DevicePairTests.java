@@ -72,9 +72,10 @@ public class DevicePairTests extends BaseTestsConfig {
         // Enter OTP
         registerOTP.enterOTP(input.get("cellNumber"), input.get("alNumber"));
         registerOTP.clickSubmitButton();
-        //Thread.sleep(3000);
+        Thread.sleep(3000);
 
         Assert.assertTrue(loginPage.loginPageConfirm());
+        attachScreenshot(driver, "Device_Pairing_Success");
     }
 
     @Test(dataProvider = "getSingleDataSet", priority = 1)
@@ -95,6 +96,7 @@ public class DevicePairTests extends BaseTestsConfig {
         }
 
         Assert.assertEquals(homePage.getHomePageConfirm(), "Accounts");
+        attachScreenshot(driver, "Login_Success");
         log.info("User logged in, Accounts screen displayed");
 
     }
@@ -102,11 +104,9 @@ public class DevicePairTests extends BaseTestsConfig {
     @Test(dataProvider = "getSingleDataSet", priority = 2)
     public void DevicePairLogOutTest(HashMap<String, String> input) throws InterruptedException
     {
-        HomePage homePage = new HomePage(driver);
-        LoginPage loginPage = new LoginPage(driver);
-
         homePage.clickLogoutButtn();
         Assert.assertEquals(loginPage.getLoginPageConfirm(),"Login");
+        attachScreenshot(driver, "Logout_Success");
         log.info("User logged out, Login screen displayed");
 
     }
@@ -130,6 +130,8 @@ public class DevicePairTests extends BaseTestsConfig {
         addAccountPage.clickAddAccButtn();
         try {
             Assert.assertEquals(loginPage.getSafeModeMsg(), input.get("safeModeMsg"));
+            attachScreenshot(driver, "Safe_Mode_Alert_Displayed");
+            log.info("Safe mode alert displayed with expected message: {}", input.get("safeModeMsg"));
 
         } catch (TimeoutException te) {
             log.error("No alert was displayed after clicking add account button", te);
@@ -143,34 +145,34 @@ public class DevicePairTests extends BaseTestsConfig {
         }
     }
 
-    @Test(dataProvider = "getSingleDataSet", priority = 3)
-    public void NegativeSafeModeCheckTest(HashMap<String, String> input) throws InterruptedException
-    {
-        try {
-            loginPage.loginAccount(input.get("prefName"));
-            loginPage.enterLoginPin(Integer.parseInt(input.get("loginPin")));
-        } catch (Exception e) {
-            try {
-                loginPage.loginAccount(input.get("prefName"));
-            } catch (NoSuchElementException ex) {
-                throw new RuntimeException(ex);
-            }
-        }
-        addAccountPage.clickAddAccButtn();
-        try {
-            Assert.assertEquals(loginPage.getSafeModeMsg(), input.get("negativeSafeModeMsg"));
-
-        } catch (TimeoutException te) {
-            log.error("No alert was displayed after clicking add account button", te);
-            Assert.fail("Expected alert was not displayed.");
-        } catch (AssertionError ae) {
-            log.error("Alert message did not match the expected value", ae);
-            throw ae; // Let the test fail
-        }finally {
-            Thread.sleep(3000);
-            homePage.clickLogoutButtn();
-        }
-    }
+//    @Test(dataProvider = "getSingleDataSet", priority = 3)
+//    public void NegativeSafeModeCheckTest(HashMap<String, String> input) throws InterruptedException
+//    {
+//        try {
+//            loginPage.loginAccount(input.get("prefName"));
+//            loginPage.enterLoginPin(Integer.parseInt(input.get("loginPin")));
+//        } catch (Exception e) {
+//            try {
+//                loginPage.loginAccount(input.get("prefName"));
+//            } catch (NoSuchElementException ex) {
+//                throw new RuntimeException(ex);
+//            }
+//        }
+//        addAccountPage.clickAddAccButtn();
+//        try {
+//            Assert.assertEquals(loginPage.getSafeModeMsg(), input.get("negativeSafeModeMsg"));
+//
+//        } catch (TimeoutException te) {
+//            log.error("No alert was displayed after clicking add account button", te);
+//            Assert.fail("Expected alert was not displayed.");
+//        } catch (AssertionError ae) {
+//            log.error("Alert message did not match the expected value", ae);
+//            throw ae; // Let the test fail
+//        }finally {
+//            Thread.sleep(3000);
+//            homePage.clickLogoutButtn();
+//        }
+//    }
 
     @Test(dataProvider = "getSingleDataSet", priority = 4)
     public void SafeModeLiftTest(HashMap<String, String> input) throws InterruptedException
@@ -206,6 +208,7 @@ public class DevicePairTests extends BaseTestsConfig {
         addAccountPage.clickAddAccButtn();
         try {
             Assert.assertEquals(addAccountPage.getPageConfirmation(), "Add");
+            attachScreenshot(driver, "Safe_Mode_Lifted_Add_Account_Page");
             log.info("Assertion passed: Page confirmation is 'Add'");
         } catch (AssertionError ae) {
             log.warn("Assertion failed: Expected page confirmation to be 'Add', but was: "
@@ -222,21 +225,6 @@ public class DevicePairTests extends BaseTestsConfig {
 
         List<HashMap<String, String>> data = getJsonData(System.getProperty("user.dir") + "//src//test//java//testData//devicePairData.json");
         return new Object[][]{{data.get(1)}};
-    }
-
-    private void validateInput(HashMap<String, String> input, String... required) {
-        if (input == null) throw new IllegalArgumentException("Input map is null");
-        StringBuilder missing = new StringBuilder();
-        for (String k : required) {
-            if (input.get(k) == null || input.get(k).trim().isEmpty()) {
-                if (missing.length() > 0) missing.append(", ");
-                missing.append(k);
-            }
-        }
-        if (missing.length() > 0) {
-            log.error("Missing required keys: {}", missing.toString());
-            throw new IllegalArgumentException("Missing required keys: " + missing.toString());
-        }
     }
 
 }

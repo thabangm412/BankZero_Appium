@@ -81,6 +81,9 @@ public class MyCardPage {
     public void confirmingBiometrics()
     {
         AppiumUtils.waitForElement(By.id("za.co.neolabs.bankzero:id/viewFinderTitle"),driver);
+        AndroidActions androidActions = new AndroidActions(driver);
+        String xpath = "//android.widget.Button[@resource-id=\"za.co.neolabs.bankzero:id/submit_btn\"]";
+        AndroidActions.waitForElementAttribute(driver,xpath,"enabled","true",5);
         finishButtn.click();
         log.info("Biometrics confirmed.");
     }

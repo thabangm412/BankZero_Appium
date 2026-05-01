@@ -145,10 +145,12 @@ public class BuyElectricityPage {
 
     public void clickDeleteButton()
     {
+        AndroidActions androidActions = new AndroidActions(driver);
         AppiumUtils.waitForTextToAppear(By.id("za.co.neolabs.bankzero:id/toolbar_title"),"Edit Electricity item",driver);
         log.info("Edit Airtime item page displayed.");
         deleteButton.click();
         log.info("Delete button clicked");
+        androidActions.attachScreenshot(driver,"Delete Confirmation Prompt");
         deleteConfirmButton.click();
         log.info("Confirm delete button clicked");
     }
@@ -253,6 +255,7 @@ public class BuyElectricityPage {
         log.info("SmS token input field cleared...");
         smsTokenInputField.sendKeys(tokenNo);
         log.info("Entered sms token number: {}", tokenNo);
+        androidActions.attachScreenshot(driver,"Electricity Item Details");
 //        popEmailInputField.clear();
 //        log.info("POP email input field cleared...");
 //        popEmailInputField.sendKeys(email);
@@ -264,6 +267,7 @@ public class BuyElectricityPage {
 
         clickBuyOrSubmitButton();
         log.info("Add button clicked...");
+        androidActions.attachScreenshot(driver,"Add Electricity Item Details");
         clickBuyOrSubmitButton();
         log.info("Confirm button clicked...");
 
@@ -310,6 +314,7 @@ public class BuyElectricityPage {
 
     public void buyElectricityAgain(String name,String amount, String ref)
     {
+        AndroidActions androidActions = new AndroidActions(driver);
         selectItemDropDownButton.click();
         log.info("Select item dropdown menu button clicked");
         //AppiumUtils.waitForElementToAppear((WebElement) By.xpath("/hierarchy/android.widget.FrameLayout"), "displayed", "true",driver);
@@ -323,9 +328,10 @@ public class BuyElectricityPage {
             for (WebElement group : groupNames) {
                 if (group.getText().equals("Electricity")) {
                     log.info("Group name matching Data found");
-                    AndroidActions androidActions = new AndroidActions(driver);
+
                     androidActions.scrollToTextAndClick2(name, driver);
                     log.info("Scrolled to the account name: {}", name);
+                    androidActions.attachScreenshot(driver,"Existing Electricity Profile Retrieved");
                     break; // stop once found
                 } else {
                     log.warn("Data group name not found!");
@@ -344,6 +350,7 @@ public class BuyElectricityPage {
         log.info("Amount input field cleared...");
         referenceInputField.sendKeys(ref);
         log.info("Entered reference: {}", ref);
+        androidActions.attachScreenshot(driver,"Buy Electricity Details");
         buyOrSubmittButtn.click();
         log.info("Buy button clicked");
 
@@ -361,6 +368,26 @@ public class BuyElectricityPage {
     {
         finishButton.click();
         log.info("Finish button clicked...");
+
+    }
+
+    public boolean isRecipientDeleted(String text)
+    {
+        AndroidActions androidActions = new AndroidActions(driver);
+        log.info("Checking if recipient is deleted");
+
+        WebElement dropDown = driver.findElement(By.id("za.co.neolabs.bankzero:id/_arrow"));
+
+        boolean isDeleted = androidActions.isTextNotPresentInDropDown(dropDown,text);
+        if(isDeleted)
+        {
+            log.info("Recipient successfully deleted");
+        }
+        else
+        {
+            log.info("Recipient still present");
+        }
+        return isDeleted;
 
     }
 

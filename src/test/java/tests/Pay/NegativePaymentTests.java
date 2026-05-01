@@ -7,24 +7,24 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 import pageObjects.app.accountsActionMenu.AccountMenuActions;
+import pageObjects.app.accountsActionMenu.card.MyCardPage;
 import pageObjects.app.accountsActionMenu.pay.QuickPayPage;
 import pageObjects.app.accountsHome.HomePage;
 import pageObjects.app.login.LoginPage;
 import testConfig.BaseTestsConfig;
-import utils.AndroidActions;
 
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 
-public class RtcPaymentTests extends BaseTestsConfig {
+public class NegativePaymentTests extends BaseTestsConfig {
 
-    private static final Logger log = LoggerFactory.getLogger(RtcPaymentTests.class);
+    private static final Logger log = LoggerFactory.getLogger(PaymentTests.class);
     private LoginPage loginPage;
     private HomePage homePage;
     private AccountMenuActions accountMenuActions;
     private QuickPayPage quickPayPage;
-    private AndroidActions androidActions;
+    private MyCardPage myCardPage;
 
     @BeforeMethod
     public void preSetUp() {
@@ -32,20 +32,20 @@ public class RtcPaymentTests extends BaseTestsConfig {
         homePage = new HomePage(driver);
         accountMenuActions = new AccountMenuActions(driver);
         quickPayPage = new QuickPayPage(driver);
-        androidActions = new AndroidActions(driver);
+        myCardPage = new MyCardPage(driver);
 
         log.debug("Page objects and androidActions initialized");
     }
 
-
     @Test(dataProvider = "getMultipleDataSet",priority = 0)
-    public void AddRtcRecipientTestWithPoP(HashMap<String, String> input) throws InterruptedException {
+    public void AddRecipientTestWithPoP(HashMap<String, String> input) throws InterruptedException {
 
         validateInput(input,
                 "profileName", "loginPin",
-                "recipientName", "group", "bank", "account", "accountNo",
+                "recipientName3", "group", "bank", "account", "CBV_Rejected_Acc",
                 "popEmail", "popPhone"
         );
+
         //androidActions.environmentChange();
         String name = input.get("profileName");
         String appPin = input.get("loginPin");
@@ -56,56 +56,33 @@ public class RtcPaymentTests extends BaseTestsConfig {
         quickPayPage.clickPayButtn();
         quickPayPage.clickAddRecipientButton();
 
-        quickPayPage.addRecipientDetails(input.get("recipientName"),input.get("group"),input.get("bank"),input.get("account"),input.get("accountNo"));
-        quickPayPage.addPoP(input.get("popEmail"),input.get("popPhone"));
+        quickPayPage.addRecipientDetails(input.get("recipientName3"),input.get("group"),input.get("bank"),input.get("account"),input.get("CBV_Rejected_Acc"));
+        //quickPayPage.addPoP(input.get("popEmail"),input.get("popPhone"));
         quickPayPage.clickAddButton();
         try {
-            String expectedTxt =  quickPayPage.getAccName();
 
-            Assert.assertEquals(expectedTxt,input.get("recipientName"));
-            log.info("Recipient added successfully: {}", expectedTxt);
-            attachScreenshot(driver, "Recipient_Added_Success");
+            String expectedTxt =  quickPayPage.getErrorMessage();
+            log.info("Assertion expectation: {}",expectedTxt);
+            Assert.assertEquals(expectedTxt,"Account number and branch combination could not be validated. Please check and rectify.");
+            attachScreenshot(driver, "Recipient_Add_Failed");
 
         } catch (AssertionError e) {
-            Assert.fail("Test failed due to exception: " + e.getMessage());
             log.warn("Failed to add payment recipient");
-            throw e;  // Let TestNG fail the test
-        }
-    }
-
-    @Test(dataProvider = "getMultipleDataSet", priority = 1)
-    public void RtCPaymentTest(HashMap<String, String> input)
-    {
-        validateInput(input,
-                "amount", "ref"
-        );
-        quickPayPage.enterPaymentDetails(input.get("amount"),input.get("ref"));
-        quickPayPage.clickPayImmediatelyButtn();
-        attachScreenshot(driver, "RTC_Payment_Confirmation");
-        quickPayPage.clickPay2Buttn();
-        attachScreenshot(driver, "RTC_Payment_Processing");
-        quickPayPage.clickConfirmButton();
-
-        try {
-            Assert.assertTrue(quickPayPage.getPaymentStatus());
-            log.info("Payment status: {}",quickPayPage.getPaymentStatus());
-            attachScreenshot(driver, "RTC_Payment_Success");
-        } catch (AssertionError e) {
             Assert.fail("Test failed due to exception: " + e.getMessage());
-            log.warn("Failed to do payment transaction");
             throw e;  // Let TestNG fail the test
         }finally {
-            quickPayPage.clickFinish();
+            quickPayPage.clickBack();
+            quickPayPage.clickBack();
+            homePage.clickLogoutButtn();
         }
-        homePage.clickLogoutButtn();
     }
-
     @DataProvider
     public Object[] [] getMultipleDataSet() throws IOException {
 
         List<HashMap<String, String>> data = getJsonData(System.getProperty("user.dir") + "//src//test//java//testData//payData.json");
-        return new Object[][]{{data.get(1)}};
+        return new Object[][]{{data.get(0)}};
     }
+
 //    private void validateInput(HashMap<String, String> input, String... required) {
 //        if (input == null) throw new IllegalArgumentException("Input map is null");
 //        StringBuilder missing = new StringBuilder();
@@ -120,4 +97,5 @@ public class RtcPaymentTests extends BaseTestsConfig {
 //            throw new IllegalArgumentException("Missing required keys: " + missing.toString());
 //        }
 //    }
+
 }

@@ -40,11 +40,11 @@ public class ExistingPaymentTests extends BaseTestsConfig {
     }
 
     @Test(dataProvider = "getMultipleDataSet", priority = 0)
-    public void PaymentRedoTest(HashMap<String, String> input)
+    public void PaymentRedoWithPoPTest(HashMap<String, String> input)
     {
         validateInput(input,
                 "profileName", "loginPin",
-                "recipientName"
+                "recipientName1"
         );
 
         //androidActions.environmentChange();
@@ -55,14 +55,18 @@ public class ExistingPaymentTests extends BaseTestsConfig {
 
         accountMenuActions.clickAccountMenuActionsButtn();
         quickPayPage.clickPayButtn();
-        quickPayPage.getExistingRecipient(input.get("recipientName"));
+        quickPayPage.getExistingRecipient(input.get("recipientName1"));
         quickPayPage.clickRedo();
         quickPayPage.clickPay2Buttn();
+        attachScreenshot(driver, "Payment_Redo_Confirmation");
         quickPayPage.clickConfirmButton();
+        quickPayPage.possibleDuplicateCheck();
 
         try {
             Assert.assertTrue(quickPayPage.getPaymentStatus());
             log.info("Payment status: {}",quickPayPage.getPaymentStatus());
+
+            attachScreenshot(driver, "Payment_Redo_Success");
         } catch (AssertionError e) {
             log.warn("Failed to do payment transaction");
             Assert.fail("Test failed due to exception: " + e.getMessage());
@@ -74,11 +78,11 @@ public class ExistingPaymentTests extends BaseTestsConfig {
     }
 
     @Test(dataProvider = "getMultipleDataSet", priority = 1)
-    public void paymentToExistingRecipient(HashMap<String, String> input)
+    public void PaymentRedoWithoutPoPTest(HashMap<String, String> input)
     {
-      validateInput(input,
+        validateInput(input,
                 "profileName", "loginPin",
-                "recipientName"
+                "recipientName2"
         );
 
         //androidActions.environmentChange();
@@ -89,14 +93,18 @@ public class ExistingPaymentTests extends BaseTestsConfig {
 
         accountMenuActions.clickAccountMenuActionsButtn();
         quickPayPage.clickPayButtn();
-        quickPayPage.getExistingRecipient(input.get("recipientName"));
-        quickPayPage.enterPaymentDetails(input.get("redoAmount"),input.get("ref"));
+        quickPayPage.getExistingRecipient(input.get("recipientName2"));
+        quickPayPage.clickRedo();
         quickPayPage.clickPay2Buttn();
+        attachScreenshot(driver, "Payment_Redo_Confirmation");
         quickPayPage.clickConfirmButton();
+        quickPayPage.possibleDuplicateCheck();
 
         try {
             Assert.assertTrue(quickPayPage.getPaymentStatus());
             log.info("Payment status: {}",quickPayPage.getPaymentStatus());
+
+            attachScreenshot(driver, "Payment_Redo_Success");
         } catch (AssertionError e) {
             log.warn("Failed to do payment transaction");
             Assert.fail("Test failed due to exception: " + e.getMessage());
@@ -108,11 +116,87 @@ public class ExistingPaymentTests extends BaseTestsConfig {
     }
 
     @Test(dataProvider = "getMultipleDataSet", priority = 2)
-    public void paymentWithAttachment(HashMap<String, String> input)
+    public void paymentToExistingRecipientwithPoP(HashMap<String, String> input)
+    {
+      validateInput(input,
+                "profileName", "loginPin",
+                "recipientName1"
+        );
+
+        //androidActions.environmentChange();
+        String name = input.get("profileName");
+        String appPin = input.get("loginPin");
+
+        loginPage.loginWithRetry(name,appPin,2);
+
+        accountMenuActions.clickAccountMenuActionsButtn();
+        quickPayPage.clickPayButtn();
+        quickPayPage.getExistingRecipient(input.get("recipientName1"));
+        quickPayPage.enterPaymentDetails(input.get("redoAmount"),input.get("ref"));
+        quickPayPage.clickPay2Buttn();
+        attachScreenshot(driver, "Payment_Redo_Confirmation");
+        quickPayPage.clickConfirmButton();
+        quickPayPage.possibleDuplicateCheck();
+
+        try {
+            Assert.assertTrue(quickPayPage.getPaymentStatus());
+            log.info("Payment status: {}",quickPayPage.getPaymentStatus());
+
+            attachScreenshot(driver, "Payment_ExistingRecipient_Success");
+        } catch (AssertionError e) {
+            log.warn("Failed to do payment transaction");
+            Assert.fail("Test failed due to exception: " + e.getMessage());
+            throw e;  // Let TestNG fail the test
+        }finally {
+            quickPayPage.clickFinish();
+        }
+        homePage.clickLogoutButtn();
+    }
+
+    @Test(dataProvider = "getMultipleDataSet", priority = 3)
+    public void paymentToExistingRecipientwithoutPoP(HashMap<String, String> input)
     {
         validateInput(input,
                 "profileName", "loginPin",
-                "recipientName",
+                "recipientName2"
+        );
+
+        //androidActions.environmentChange();
+        String name = input.get("profileName");
+        String appPin = input.get("loginPin");
+
+        loginPage.loginWithRetry(name,appPin,2);
+
+        accountMenuActions.clickAccountMenuActionsButtn();
+        quickPayPage.clickPayButtn();
+        quickPayPage.getExistingRecipient(input.get("recipientName2"));
+        quickPayPage.enterPaymentDetails(input.get("redoAmount"),input.get("ref"));
+        quickPayPage.clickPay2Buttn();
+        attachScreenshot(driver, "Payment_Redo_Confirmation");
+        quickPayPage.clickConfirmButton();
+        quickPayPage.possibleDuplicateCheck();
+
+        try {
+            Assert.assertTrue(quickPayPage.getPaymentStatus());
+            log.info("Payment status: {}",quickPayPage.getPaymentStatus());
+
+            attachScreenshot(driver, "Payment_ExistingRecipient_Success");
+        } catch (AssertionError e) {
+            log.warn("Failed to do payment transaction");
+            Assert.fail("Test failed due to exception: " + e.getMessage());
+            throw e;  // Let TestNG fail the test
+        }finally {
+            quickPayPage.clickFinish();
+        }
+        homePage.clickLogoutButtn();
+    }
+
+    @Test(dataProvider = "getMultipleDataSet", priority = 4)
+    public void paymentWithAttachmentPlusPoP(HashMap<String, String> input)
+    {
+        validateInput(input,
+                "profileName", "loginPin",
+                "recipientName1",
                 "amount", "ref"
         );
 
@@ -124,9 +208,10 @@ public class ExistingPaymentTests extends BaseTestsConfig {
 
         accountMenuActions.clickAccountMenuActionsButtn();
         quickPayPage.clickPayButtn();
-        quickPayPage.getExistingRecipient(input.get("recipientName"));
-        quickPayPage.enterPaymentDetails(input.get("amount"),input.get("ref"));
+        quickPayPage.getExistingRecipient(input.get("recipientName1"));
+        quickPayPage.enterPaymentDetails(input.get("redoAmount"),input.get("ref"));
         quickPayPage.addAttachment();
+        attachScreenshot(driver, "Attachment_Added");
         quickPayPage.clickPay2Buttn();
 
         SoftAssert softAssert = new SoftAssert(); // TestNG’s SoftAssert
@@ -134,9 +219,56 @@ public class ExistingPaymentTests extends BaseTestsConfig {
         try {
             softAssert.assertEquals(quickPayPage.getAttachment(), "sample-pdf.pdf");
             log.info("Found attached document: {}",quickPayPage.getAttachment());
+            attachScreenshot(driver, "Payment_With_Attachment");
             quickPayPage.clickConfirmButton();
+            quickPayPage.possibleDuplicateCheck();
             softAssert.assertTrue(quickPayPage.getPaymentStatus());
             log.info("Payment status: {}",quickPayPage.getPaymentStatus());
+            attachScreenshot(driver, "Payment_With_Attachment_Success");
+
+        } catch (Exception e) {
+            log.error("Unexpected error: ", e);
+            softAssert.fail("Test crashed: " + e.getMessage());
+        } finally {
+            quickPayPage.clickFinish();
+            softAssert.assertAll();
+        }
+        homePage.clickLogoutButtn();
+    }
+    @Test(dataProvider = "getMultipleDataSet", priority = 5)
+    public void paymentWithAttachmentMinusPoP(HashMap<String, String> input)
+    {
+        validateInput(input,
+                "profileName", "loginPin",
+                "recipientName2",
+                "amount", "ref"
+        );
+
+        //androidActions.environmentChange();
+        String name = input.get("profileName");
+        String appPin = input.get("loginPin");
+
+        loginPage.loginWithRetry(name,appPin,2);
+
+        accountMenuActions.clickAccountMenuActionsButtn();
+        quickPayPage.clickPayButtn();
+        quickPayPage.getExistingRecipient(input.get("recipientName2"));
+        quickPayPage.enterPaymentDetails(input.get("redoAmount"),input.get("ref"));
+        quickPayPage.addAttachment();
+        attachScreenshot(driver, "Attachment_Added");
+        quickPayPage.clickPay2Buttn();
+
+        SoftAssert softAssert = new SoftAssert(); // TestNG’s SoftAssert
+
+        try {
+            softAssert.assertEquals(quickPayPage.getAttachment(), "sample-pdf.pdf");
+            log.info("Found attached document: {}",quickPayPage.getAttachment());
+            attachScreenshot(driver, "Payment_With_Attachment");
+            quickPayPage.clickConfirmButton();
+            quickPayPage.possibleDuplicateCheck();
+            softAssert.assertTrue(quickPayPage.getPaymentStatus());
+            log.info("Payment status: {}",quickPayPage.getPaymentStatus());
+            attachScreenshot(driver, "Payment_With_Attachment_Success");
 
         } catch (Exception e) {
             log.error("Unexpected error: ", e);
@@ -149,12 +281,12 @@ public class ExistingPaymentTests extends BaseTestsConfig {
     }
 
 
-    @Test(dataProvider = "getMultipleDataSet", priority = 5)
+    @Test(dataProvider = "getMultipleDataSet", priority = 6)
     public void updateExistingRecipient(HashMap<String, String> input)
     {
         validateInput(input,
                 "profileName", "loginPin",
-                "recipientName",
+                "recipientName2",
                 "updateRecipientName", "updateGroup", "updateBank", "updateAcc"
         );
 
@@ -166,29 +298,32 @@ public class ExistingPaymentTests extends BaseTestsConfig {
 
         accountMenuActions.clickAccountMenuActionsButtn();
         quickPayPage.clickPayButtn();
-        quickPayPage.getExistingRecipient(input.get("recipientName"));
+        quickPayPage.getExistingRecipient(input.get("recipientName2"));
         quickPayPage.editProfile();
         quickPayPage.updateRecipientDetails(input.get("updateRecipientName"),input.get("updateGroup"),input.get("updateBank"),input.get("updateAcc"),input.get("updateAccNo"));
 
         try {
-            String expectedAccNo =  quickPayPage.getAccNo();
-            log.info("Assertion expectation: {}",expectedAccNo);
+            String actualAccNo =  quickPayPage.getAccNo();
+            log.info("Assertion expectation: {}",actualAccNo);
 
-            Assert.assertEquals(expectedAccNo, "Account"+ " " + input.get("updateAcc"));
+            Assert.assertEquals(actualAccNo, "Account"+ " " + input.get("updateAccNo"));
+            attachScreenshot(driver, "Recipient_Updated_Success");
 
         } catch (AssertionError e) {
             log.warn("Failed to add payment recipient");
             Assert.fail("Test failed due to exception: " + e.getMessage());
             throw e;  // Let TestNG fail the test
         }
+        driver.navigate().back();
+//        quickPayPage.clickBack();
+        homePage.clickLogoutButtn();
     }
 
-    @Test(dataProvider = "getMultipleDataSet", priority = 6)
+    @Test(dataProvider = "getMultipleDataSet", priority = 7)
     public void deleteExistingRecipientTest(HashMap<String, String> input){
 
         validateInput(input,
                 "profileName", "loginPin",
-                "recipientName",
                 "updateRecipientName", "updateGroup", "updateBank", "updateAcc"
         );
 
@@ -208,9 +343,11 @@ public class ExistingPaymentTests extends BaseTestsConfig {
         try {
             Assert.assertTrue(quickPayPage.isRecipientDeleted(input.get("updateRecipientName")));
             log.info("Recipient deletion confirmed: {}", input.get("updateRecipientName"));
+                attachScreenshot(driver, "Recipient_Deleted_Success");
         } catch (AssertionError e) {
             log.warn("Failed to delete payment recipient");
             Assert.fail("Test failed due to exception: " + e.getMessage());
+            log.info("Recipient still exists: {}", input.get("updateRecipientName"));
             throw e;  // Let TestNG fail the test
         }
         driver.navigate().back();
@@ -225,19 +362,19 @@ public class ExistingPaymentTests extends BaseTestsConfig {
         return new Object[][]{{data.get(0)}};
     }
 
-    private void validateInput(HashMap<String, String> input, String... required) {
-        if (input == null) throw new IllegalArgumentException("Input map is null");
-        StringBuilder missing = new StringBuilder();
-        for (String k : required) {
-            if (input.get(k) == null || input.get(k).trim().isEmpty()) {
-                if (missing.length() > 0) missing.append(", ");
-                missing.append(k);
-            }
-        }
-        if (missing.length() > 0) {
-            log.error("Missing required keys: {}", missing.toString());
-            throw new IllegalArgumentException("Missing required keys: " + missing.toString());
-        }
-    }
+//    private void validateInput(HashMap<String, String> input, String... required) {
+//        if (input == null) throw new IllegalArgumentException("Input map is null");
+//        StringBuilder missing = new StringBuilder();
+//        for (String k : required) {
+//            if (input.get(k) == null || input.get(k).trim().isEmpty()) {
+//                if (missing.length() > 0) missing.append(", ");
+//                missing.append(k);
+//            }
+//        }
+//        if (missing.length() > 0) {
+//            log.error("Missing required keys: {}", missing.toString());
+//            throw new IllegalArgumentException("Missing required keys: " + missing.toString());
+//        }
+//    }
 
 }

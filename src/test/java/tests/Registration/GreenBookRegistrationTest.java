@@ -56,7 +56,7 @@ public class GreenBookRegistrationTest extends BaseTestsConfig {
                 "phoneNumber", "idNumber", "name", "appPin",
                 "title", "surname", "allNames", "email",
                 "dwelling", "street", "city", "postalCode",
-                "recoveryCellNumber", "recoveryEmail");
+                "recoveryPhoneNumber", "recoveryEmail");
 
         int appPin = Integer.parseInt(input.get("appPin"));
 
@@ -96,6 +96,7 @@ public class GreenBookRegistrationTest extends BaseTestsConfig {
         driver.findElement(By.xpath("(//android.widget.CheckBox[@resource-id=\"za.co.neolabs.bankzero:id/listItemChecked\"])[1]")).click();
         //androidActions.scrollToTextAndClick("salary");
         whoAmIRegistration.clickIncomeSubButtn();
+        attachScreenshot(driver,"Source of Funds and Wealth");
         whoAmIRegistration.clickNextButtn();
 
         // Where am I Flow:
@@ -103,9 +104,10 @@ public class GreenBookRegistrationTest extends BaseTestsConfig {
         whoAmIRegistration.addAddresss(input.get("street"),input.get("city"),input.get("postalCode"));
         androidActions.wait(3);
         whoAmIRegistration.clickCardDelivery();
-        androidActions.scrollToTextAndClick2("Courier to residential address (R119 - R149)",driver);
+        androidActions.scrollToTextAndClick2("Courier to residential address (R125 - R155)",driver);
         log.info("Pick up option chosen.");
         androidActions.wait(3);
+        attachScreenshot(driver,"Address Entered");
         whoAmIRegistration.clickNextButtn();
         androidActions.wait(3);
 
@@ -116,7 +118,8 @@ public class GreenBookRegistrationTest extends BaseTestsConfig {
         // My Safety Flow:
         whoAmIRegistration.enterAppPin(appPin);
         whoAmIRegistration.confirmAppPin(appPin);
-        whoAmIRegistration.enterRecoveryDetails(input.get("recoveryCellNumber"),input.get("recoveryCellNumber"),input.get("recoveryEmail"));
+        whoAmIRegistration.enterRecoveryDetails(input.get("recoveryPhoneNumber"),input.get("recoveryPhoneNumber"),input.get("recoveryEmail"));
+        attachScreenshot(driver,"Recovery Details Entered");
         whoAmIRegistration.clickNextButtn();
 
         // Happy page Flow:
@@ -127,6 +130,7 @@ public class GreenBookRegistrationTest extends BaseTestsConfig {
         String status = whoAmIRegistration.getStatus();
         try {
             Assert.assertEquals(status, "Thank you");
+            attachScreenshot(driver,"Registration Success");
             log.info("Transactional successful matched status: {}",status);
         } catch (AssertionError | Exception e) {
             log.warn("Registration failed with status: {}", status);
@@ -151,6 +155,7 @@ public class GreenBookRegistrationTest extends BaseTestsConfig {
 
         try {
             Assert.assertEquals(homePage.getHomePageConfirm(), "Accounts");
+            attachScreenshot(driver, "Login_Success");
             log.info("New User logged in, Accounts screen displayed");
             androidActions.wait(3);
         } catch (AssertionError | Exception e) {
@@ -172,23 +177,23 @@ public class GreenBookRegistrationTest extends BaseTestsConfig {
             throw new IllegalStateException("Test data not found: " + path);
         }
         // return second entry as original code did
-        return new Object[][]{{data.get(1)}};
+        return new Object[][]{{data.get(0)}};
     }
 
-    private void validateInput(HashMap<String, String> input, String... required) {
-        if (input == null) throw new IllegalArgumentException("Input map is null");
-        StringBuilder missing = new StringBuilder();
-        for (String k : required) {
-            if (input.get(k) == null || input.get(k).trim().isEmpty()) {
-                if (missing.length() > 0) missing.append(", ");
-                missing.append(k);
-            }
-        }
-        if (missing.length() > 0) {
-            log.error("Missing required keys: {}", missing.toString());
-            throw new IllegalArgumentException("Missing required keys: " + missing.toString());
-        }
-    }
+//    private void validateInput(HashMap<String, String> input, String... required) {
+//        if (input == null) throw new IllegalArgumentException("Input map is null");
+//        StringBuilder missing = new StringBuilder();
+//        for (String k : required) {
+//            if (input.get(k) == null || input.get(k).trim().isEmpty()) {
+//                if (missing.length() > 0) missing.append(", ");
+//                missing.append(k);
+//            }
+//        }
+//        if (missing.length() > 0) {
+//            log.error("Missing required keys: {}", missing.toString());
+//            throw new IllegalArgumentException("Missing required keys: " + missing.toString());
+//        }
+//    }
 
     private String maskForLog(String s) {
         if (s == null) return "";

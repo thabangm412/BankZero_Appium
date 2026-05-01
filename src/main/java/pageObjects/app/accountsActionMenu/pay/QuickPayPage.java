@@ -126,6 +126,29 @@ public class QuickPayPage {
     @AndroidFindBy(accessibility = "Navigate up")
     private WebElement backButton;
 
+    @AndroidFindBy(id = "za.co.neolabs.bankzero:id/snackbar_text")
+    private WebElement errorMessage;
+
+    public String getErrorMessage()
+    {
+        AppiumUtils.waitForElement(By.id("za.co.neolabs.bankzero:id/snackbar_text"),driver);
+        log.info("Retrieving error message");
+        return errorMessage.getText();
+    }
+
+    public void possibleDuplicateCheck()
+    {
+        if (driver.findElements(By.id("za.co.neolabs.bankzero:id/alertTitle")).size() > 0 && driver.findElement(By.id("za.co.neolabs.bankzero:id/alertTitle")).getText().equals("Possible duplicate?")) {
+            log.warn("Possible duplicate payment detected - clicking 'Yes' to proceed with payment");
+
+            WebElement yesButton = driver.findElement(By.xpath("//android.widget.Button[@resource-id=\"android:id/button1\" and @text=\"Yes\"]"));
+            yesButton.click();
+            log.info("'Yes' button clicked to confirm duplicate payment");
+        } else {
+            log.info("No duplicate payment alert detected");
+        }
+    }
+
     public void clickPayToButtn()
     {
         payToButtn.click();
@@ -223,6 +246,8 @@ public class QuickPayPage {
         log.info("Account number input field cleared");
         accountNo.sendKeys(accNo);
         log.info("Account number entered: {}",accNo);
+
+        androidActions.attachScreenshot(driver,"Recipient_Details_Updated");
 
         updateButtn.click();
         log.info("Add button clicked");
@@ -347,11 +372,13 @@ public class QuickPayPage {
 
     public void clickDelete()
     {
+        AndroidActions androidActions = new AndroidActions(driver);
         deleteButtn.click();
         log.info("Delete button clicked");
 
         AppiumUtils.waitForElement(By.id("android:id/message"),driver);
         WebElement confirmDelete = driver.findElement(By.xpath(" //android.widget.Button[@resource-id=\"android:id/button1\" and @text=\"Yes\"]"));
+        androidActions.attachScreenshot(driver,"Delete_Recipient_Confirmation");
         confirmDelete.click();
         log.info("Confirm delete button clicked");
     }
@@ -427,6 +454,7 @@ public class QuickPayPage {
                 driver.findElement(By.xpath("//android.view.View[@content-desc='" + onceOffDate + "']")).click();
                 driver.findElement(By.id("android:id/button1")).click();
                 log.info("Once-off Date selected: {}", onceOffDate);
+                //androidActions.attachScreenshot(driver,"Once_Off_Date_Selected");
 
                 refInputField.clear();
                 log.info("Reference input field cleared");
@@ -436,6 +464,7 @@ public class QuickPayPage {
                 log.info("Amount input field cleared");
                 amountInputField.sendKeys(amount);
                 log.info("Amount entered");
+                androidActions.attachScreenshot(driver,"Once_Off_Details_Entered");
 
 //                addButtn.click();
 //                log.info("Add schedule button clicked");
@@ -505,6 +534,7 @@ public class QuickPayPage {
                 driver.findElement(By.id("za.co.neolabs.bankzero:id/schedule_when_dd_arrow")).click();
                 androidActions.scrollToTextAndClick2("Monday", driver);
                 log.info("Day selected");
+                //androidActions.attachScreenshot(driver,"Weekly_Schedule_Selected");
 
                 refInputField.clear();
                 log.info("Reference input field cleared");
@@ -514,6 +544,7 @@ public class QuickPayPage {
                 log.info("Amount input field cleared");
                 amountInputField.sendKeys(amount);
                 log.info("Amount entered");
+                androidActions.attachScreenshot(driver,"Weekly_Schedule_Details_Entered");
 
 
                 break;
@@ -583,6 +614,7 @@ public class QuickPayPage {
                 driver.findElement(By.id("za.co.neolabs.bankzero:id/schedule_when_dd_arrow")).click();
                 androidActions.scrollToTextAndClick2("2nd day", driver);
                 log.info("Day selected");
+                //androidActions.attachScreenshot(driver,"Monthly_Schedule_Selected");
 
                 refInputField.clear();
                 log.info("Reference input field cleared");
@@ -592,6 +624,8 @@ public class QuickPayPage {
                 log.info("Amount input field cleared");
                 amountInputField.sendKeys(amount);
                 log.info("Amount entered");
+
+                androidActions.attachScreenshot(driver,"Monthly_Schedule_Details_Entered");
 
                 break;
 
@@ -614,7 +648,6 @@ public class QuickPayPage {
         backButton.click();
         log.info("Back button clicked");
     }
-
     public void addAttachments()
     {
 

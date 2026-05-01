@@ -13,6 +13,7 @@ import utils.AndroidActions;
 import utils.AppiumUtils;
 
 import java.time.Duration;
+import java.util.ArrayList;
 import java.util.List;
 
 public class PayManyPage {
@@ -74,7 +75,7 @@ public class PayManyPage {
     @AndroidFindBy(id = "za.co.neolabs.bankzero:id/pay_amount")
     private WebElement amountInput;
 
-    @AndroidFindBy(id = "za.co.neolabs.bankzero:id/pay_amount")
+    @AndroidFindBy(id = "za.co.neolabs.bankzero:id/button_text")
     private WebElement payButtn;
 
     @AndroidFindBy(id = "za.co.neolabs.bankzero:id/button_text")
@@ -163,19 +164,44 @@ public class PayManyPage {
         AppiumUtils.waitForTextToAppear(By.id("za.co.neolabs.bankzero:id/toolbar_title"),"Pay Many", driver);
 
         //WebElement groupName = driver.findElement(By.xpath("//android.widget.TextView[@resource-id=\"za.co.neolabs.bankzero:id/groupName\" and @text=\"Finance\"]"));
-        String xpath = String.format("//android.widget.TextView[@resource-id=\"za.co.neolabs.bankzero:id/groupName\" and @text=\"%s\"]", group);
-        WebElement groupName = driver.findElement(By.xpath(xpath));
+        //String xpath = String.format("//android.widget.TextView[@resource-id=\"za.co.neolabs.bankzero:id/groupName\" and @text=\"%s\"]", group);
+        WebElement groupName = driver.findElement(By.xpath("//android.widget.TextView[@resource-id=\"za.co.neolabs.bankzero:id/groupName\" and @text='" + group + "']"));
         groupName.click();
-        log.info("Macthed group name clicked:{}",group);
+        log.info("Matched group name clicked:{}",group);
     }
 
-    public String getRecipientName()
+//    public Boolean getRecipientName(String name)
+//    {
+//        AppiumUtils.waitForTextToAppear(By.id("za.co.neolabs.bankzero:id/toolbar_title"),"Pay Many", driver);
+////        WebElement recipient = driver.findElement(
+////                AppiumBy.androidUIAutomator("new UiSelector().resourceId(\"za.co.neolabs.bankzero:id/recipientName\")")
+////        );
+//        WebElement recipient = driver.findElement(
+//                By.xpath("//android.widget.TextView[@resource-id=\"za.co.neolabs.bankzero:id/recipientName\" and @text=\"Reo\"]")
+//        );
+//        //return recipient.getText();
+//        return recipient.getText().equalsIgnoreCase(name);
+//    }
+    public List<String> getRecipientNames()
     {
-        AppiumUtils.waitForTextToAppear(By.id("za.co.neolabs.bankzero:id/toolbar_title"),"Pay Many", driver);
-        WebElement recipient = driver.findElement(
-                AppiumBy.androidUIAutomator("new UiSelector().resourceId(\"za.co.neolabs.bankzero:id/recipientName\")")
+        AppiumUtils.waitForTextToAppear(
+                By.id("za.co.neolabs.bankzero:id/toolbar_title"),
+                "Pay Many",
+                driver
         );
-        return recipient.getText();
+
+        List<WebElement> recipients = driver.findElements(
+                By.id("za.co.neolabs.bankzero:id/recipientName")
+        );
+
+        List<String> recipientNames = new ArrayList<>();
+
+        for (WebElement recipient : recipients) {
+            recipientNames.add(recipient.getText());
+        }
+        log.info("Recipient names found: {}", recipientNames);
+
+        return recipientNames;
     }
 
     public void clickNewPayment(String name)
@@ -241,6 +267,7 @@ public class PayManyPage {
         log.info("Clicked downloads");
         androidActions.scrollToTextAndClick2("sample-pdf.pdf",driver);
         log.info("Selected sample-pdf.pdf for upload");
+        androidActions.attachScreenshot(driver,"Attachment added");
         clickUpdate();
     }
 
@@ -298,7 +325,7 @@ public class PayManyPage {
 
     public void clickFinish()
     {
-        AppiumUtils.waitForTextToAppear(By.id("za.co.neolabs.bankzero:id/toolbar_title"),"Thank you", driver);
+        //AppiumUtils.waitForTextToAppear(By.id("za.co.neolabs.bankzero:id/toolbar_title"),"Thank you", driver);
         finishButton.click();
         log.info("Finish button clicked");
     }

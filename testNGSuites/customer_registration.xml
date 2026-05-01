@@ -1,0 +1,17 @@
+<!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd" >
+<suite name="Regression" verbose="2" thread-count="2">
+    <listeners>
+        <listener class-name="utils.Listeners"/>
+    </listeners>
+
+    <test name="Customer Registration Tests">
+        <classes>
+            <class name="tests.Registration.GreenBookRegistrationTest">
+                <methods>
+                    <include name="registrationPositiveFlow"/>
+                    <include name="loginTest"/>
+                </methods>
+            </class>
+        </classes>
+    </test>
+</suite>

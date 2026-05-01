@@ -60,15 +60,19 @@ public class ExistingRtcPaymentsTests extends BaseTestsConfig {
         quickPayPage.getExistingRecipient(input.get("recipientName"));
         quickPayPage.clickRedo();
         quickPayPage.clickPayImmediatelyButtn();
+        attachScreenshot(driver, "Payment_Redo_Before_Pay");
         quickPayPage.clickPay2Buttn();
+        attachScreenshot(driver, "Payment_Redo_Before_Confirmation");
         quickPayPage.clickConfirmButton();
+        quickPayPage.possibleDuplicateCheck();
 
         try {
             Assert.assertTrue(quickPayPage.getPaymentStatus());
             log.info("Payment status: {}",quickPayPage.getPaymentStatus());
+            attachScreenshot(driver, "Payment_Redo_Success");
         } catch (AssertionError e) {
-            log.warn("Failed to do payment transaction");
             Assert.fail("Test failed due to exception: " + e.getMessage());
+            log.warn("Failed to do payment transaction");
             throw e;  // Let TestNG fail the test
         }finally {
             quickPayPage.clickFinish();
@@ -95,15 +99,19 @@ public class ExistingRtcPaymentsTests extends BaseTestsConfig {
         quickPayPage.getExistingRecipient(input.get("recipientName"));
         quickPayPage.enterPaymentDetails(input.get("redoAmount"),input.get("ref"));
         quickPayPage.clickPayImmediatelyButtn();
+        attachScreenshot(driver, "Payment_To_Existing_Recipient_Before_Pay");
         quickPayPage.clickPay2Buttn();
+        attachScreenshot(driver, "Payment_To_Existing_Recipient_Before_Confirmation");
         quickPayPage.clickConfirmButton();
+        quickPayPage.possibleDuplicateCheck();
 
         try {
             Assert.assertTrue(quickPayPage.getPaymentStatus());
             log.info("Payment status: {}",quickPayPage.getPaymentStatus());
+            attachScreenshot(driver, "Payment_To_Existing_Recipient_Success");
         } catch (AssertionError e) {
-            log.warn("Failed to do payment transaction");
             Assert.fail("Test failed due to exception: " + e.getMessage());
+            log.warn("Failed to do payment transaction");
             throw e;  // Let TestNG fail the test
         }finally {
             quickPayPage.clickFinish();
@@ -128,8 +136,9 @@ public class ExistingRtcPaymentsTests extends BaseTestsConfig {
         accountMenuActions.clickAccountMenuActionsButtn();
         quickPayPage.clickPayButtn();
         quickPayPage.getExistingRecipient(input.get("recipientName"));
-        quickPayPage.enterPaymentDetails(input.get("amount"),input.get("ref"));
+        quickPayPage.enterPaymentDetails(input.get("redoAmount"),input.get("ref"));
         quickPayPage.clickPayImmediatelyButtn();
+        attachScreenshot(driver, "Payment_With_Attachment_Before_Adding_Attachment");
         quickPayPage.addAttachment();
         quickPayPage.clickPay2Buttn();
 
@@ -138,9 +147,12 @@ public class ExistingRtcPaymentsTests extends BaseTestsConfig {
         try {
             softAssert.assertEquals(quickPayPage.getAttachment(), "sample-pdf.pdf");
             log.info("Found attached document: {}",quickPayPage.getAttachment());
+            attachScreenshot(driver, "Payment_With_Attachment");
             quickPayPage.clickConfirmButton();
+            quickPayPage.possibleDuplicateCheck();
             softAssert.assertTrue(quickPayPage.getPaymentStatus());
             log.info("Payment status: {}",quickPayPage.getPaymentStatus());
+            attachScreenshot(driver, "Payment_With_Attachment_Success");
 
         } catch (Exception e) {
             log.error("Unexpected error: ", e);
@@ -152,22 +164,59 @@ public class ExistingRtcPaymentsTests extends BaseTestsConfig {
         homePage.clickLogoutButtn();
     }
 
+//    @Test(dataProvider = "getMultipleDataSet", priority = 3)
+//    public void onceOffPayment(HashMap<String, String> input)
+//    {
+//        LoginPage loginPage = new LoginPage(driver);
+//        HomePage homePage = new HomePage(driver);
+//        QuickPayPage quickPayPage = new QuickPayPage(driver);
+//        AccountMenuActions accountMenuActions = new AccountMenuActions(driver);
+//        AndroidActions androidActions = new AndroidActions(driver);
+//
+//        int daysToAdd = Integer.parseInt(input.get("daysToAdd"));  // 3
+//        double amount = Double.parseDouble(input.get("amount"));
+//        String formattedAmount = String.format("R%.2f", amount);
+//        String futureDate = AppiumUtils.getFutureDate(daysToAdd);
+//        String scheduleTypeLower = input.get("scheduleType").toLowerCase();
+//
+//        androidActions.environmentChange();
+//        String name = input.get("profileName");
+//        String appPin = input.get("loginPin");
+//
+//        loginPage.loginWithRetry(name,appPin,2);
+//
+//        accountMenuActions.clickAccountMenuActionsButtn();
+//        quickPayPage.clickPayButtn();
+//        quickPayPage.getExistingRecipient(input.get("recipientName"));
+//        quickPayPage.editProfile();
+//        quickPayPage.choosePaymentSchedule(input.get("scheduleType"), daysToAdd, input.get("ref"), input.get("amount"));
+//
+//        try {
+//            String expectedTxt = formattedAmount + " " + scheduleTypeLower + " on " + futureDate;
+//            log.info("Assertion expectation: {}", expectedTxt);
+//
+//            Assert.assertEquals(driver.findElement(By.id("za.co.neolabs.bankzero:id/product_type")).getText(), expectedTxt);
+//
+//        } catch (AssertionError | Exception e) {
+//            log.warn("Failed to do schedule transfer");
+//            Assert.fail("Test failed due to exception: " + e.getMessage());
+//            throw e;  // Let TestNG fail the test
+//        } finally {
+//            quickPayPage.clickBack();
+//            homePage.clickLogoutButtn();
+//        }
+//    }
+
     @Test(dataProvider = "getMultipleDataSet", priority = 3)
-    public void onceOffPayment(HashMap<String, String> input)
+    public void updateExistingRtcRecipient(HashMap<String, String> input)
     {
-        LoginPage loginPage = new LoginPage(driver);
-        HomePage homePage = new HomePage(driver);
-        QuickPayPage quickPayPage = new QuickPayPage(driver);
-        AccountMenuActions accountMenuActions = new AccountMenuActions(driver);
-        AndroidActions androidActions = new AndroidActions(driver);
+        validateInput(input,
+                "profileName", "loginPin",
+                "recipientName",
+                "updateRecipientName", "updateGroup", "updateBank", "updateAcc"
+        );
 
-        int daysToAdd = Integer.parseInt(input.get("daysToAdd"));  // 3
-        double amount = Double.parseDouble(input.get("amount"));
-        String formattedAmount = String.format("R%.2f", amount);
-        String futureDate = AppiumUtils.getFutureDate(daysToAdd);
-        String scheduleTypeLower = input.get("scheduleType").toLowerCase();
-
-        androidActions.environmentChange();
+        //androidActions.environmentChange();
         String name = input.get("profileName");
         String appPin = input.get("loginPin");
 
@@ -177,56 +226,60 @@ public class ExistingRtcPaymentsTests extends BaseTestsConfig {
         quickPayPage.clickPayButtn();
         quickPayPage.getExistingRecipient(input.get("recipientName"));
         quickPayPage.editProfile();
-        quickPayPage.choosePaymentSchedule(input.get("scheduleType"), daysToAdd, input.get("ref"), input.get("amount"));
-
-        try {
-            String expectedTxt = formattedAmount + " " + scheduleTypeLower + " on " + futureDate;
-            log.info("Assertion expectation: {}", expectedTxt);
-
-            Assert.assertEquals(driver.findElement(By.id("za.co.neolabs.bankzero:id/product_type")).getText(), expectedTxt);
-
-        } catch (AssertionError | Exception e) {
-            log.warn("Failed to do schedule transfer");
-            Assert.fail("Test failed due to exception: " + e.getMessage());
-            throw e;  // Let TestNG fail the test
-        } finally {
-            quickPayPage.clickBack();
-            homePage.clickLogoutButtn();
-        }
-    }
-
-    @Test(dataProvider = "getMultipleDataSet", priority = 4)
-    public void updateExistingRecipient(HashMap<String, String> input)
-    {
-        LoginPage loginPage = new LoginPage(driver);
-        HomePage homePage = new HomePage(driver);
-        QuickPayPage quickPayPage = new QuickPayPage(driver);
-        AccountMenuActions accountMenuActions = new AccountMenuActions(driver);
-        AndroidActions androidActions = new AndroidActions(driver);
-
-        androidActions.environmentChange();
-        String name = input.get("profileName");
-        String appPin = input.get("loginPin");
-
-        loginPage.loginWithRetry(name,appPin,2);
-
-        accountMenuActions.clickAccountMenuActionsButtn();
-        quickPayPage.clickPayButtn();
-        quickPayPage.getExistingRecipient(input.get("recipientName"));
-        quickPayPage.editProfile();
-        quickPayPage.updateRecipientDetails(input.get("updateRecipientName"),input.get("updateGroup"),input.get("updateBank"),input.get("updateAcc"),input.get("updateAcc"));
+        quickPayPage.updateRecipientDetails(input.get("updateRecipientName"),input.get("updateGroup"),input.get("updateBank"),input.get("updateAcc"),input.get("updateAccNo"));
 
         try {
             String expectedAccNo =  quickPayPage.getAccNo();
             log.info("Assertion expectation: {}",expectedAccNo);
 
-            Assert.assertEquals(expectedAccNo, "Account"+ " " + input.get("updateAcc"));
+            Assert.assertEquals(expectedAccNo, "Account"+ " " + input.get("updateAccNo"));
+            attachScreenshot(driver, "Recipient_Updated_Success");
 
         } catch (AssertionError e) {
-            log.warn("Failed to add payment recipient");
             Assert.fail("Test failed due to exception: " + e.getMessage());
+            log.warn("Failed to add payment recipient");
             throw e;  // Let TestNG fail the test
         }
+        driver.navigate().back();
+//        quickPayPage.clickBack();
+        homePage.clickLogoutButtn();
+    }
+
+    @Test(dataProvider = "getMultipleDataSet", priority = 4)
+    public void deleteExistingRtcRecipientTest(HashMap<String, String> input){
+
+        validateInput(input,
+                "profileName", "loginPin",
+                "recipientName",
+                "updateRecipientName", "updateGroup", "updateBank", "updateAcc"
+        );
+
+        //androidActions.environmentChange();
+        String name = input.get("profileName");
+        String appPin = input.get("loginPin");
+
+        loginPage.loginWithRetry(name,appPin,2);
+
+        accountMenuActions.clickAccountMenuActionsButtn();
+        quickPayPage.clickPayButtn();
+        quickPayPage.getExistingRecipient(input.get("updateRecipientName"));
+        quickPayPage.editProfile();
+        quickPayPage.clickDelete();
+
+
+        try {
+            Assert.assertTrue(quickPayPage.isRecipientDeleted(input.get("updateRecipientName")));
+            log.info("Recipient deletion confirmed: {}", input.get("updateRecipientName"));
+            attachScreenshot(driver, "Recipient_Deleted_Success");
+        } catch (AssertionError e) {
+            log.warn("Failed to delete payment recipient");
+            Assert.fail("Test failed due to exception: " + e.getMessage());
+            log.info("Recipient still exists: {}", input.get("updateRecipientName"));
+            throw e;  // Let TestNG fail the test
+        }
+        driver.navigate().back();
+        quickPayPage.clickBack();
+        homePage.clickLogoutButtn();
     }
 
     @DataProvider
@@ -236,20 +289,19 @@ public class ExistingRtcPaymentsTests extends BaseTestsConfig {
         return new Object[][]{{data.get(1)}};
     }
 
-    private void validateInput(HashMap<String, String> input, String... required) {
-        if (input == null) throw new IllegalArgumentException("Input map is null");
-        StringBuilder missing = new StringBuilder();
-        for (String k : required) {
-            if (input.get(k) == null || input.get(k).trim().isEmpty()) {
-                if (missing.length() > 0) missing.append(", ");
-                missing.append(k);
-            }
-        }
-        if (missing.length() > 0) {
-            log.error("Missing required keys: {}", missing.toString());
-            throw new IllegalArgumentException("Missing required keys: " + missing.toString());
-        }
-    }
-
+//    private void validateInput(HashMap<String, String> input, String... required) {
+//        if (input == null) throw new IllegalArgumentException("Input map is null");
+//        StringBuilder missing = new StringBuilder();
+//        for (String k : required) {
+//            if (input.get(k) == null || input.get(k).trim().isEmpty()) {
+//                if (missing.length() > 0) missing.append(", ");
+//                missing.append(k);
+//            }
+//        }
+//        if (missing.length() > 0) {
+//            log.error("Missing required keys: {}", missing.toString());
+//            throw new IllegalArgumentException("Missing required keys: " + missing.toString());
+//        }
+//    }
 
 }
