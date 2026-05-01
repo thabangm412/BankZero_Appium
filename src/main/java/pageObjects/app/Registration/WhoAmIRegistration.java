@@ -480,15 +480,18 @@ public class WhoAmIRegistration {
 
     public void clickCheckBox2()
     {
-        AppiumUtils.waitForElement(By.id("za.co.neolabs.bankzero:id/termsConditions_label"), driver);
+        //AppiumUtils.waitForElement(By.id("za.co.neolabs.bankzero:id/termsConditions_label"), driver);
+        String xpath = "//android.widget.TextView[@resource-id=\"za.co.neolabs.bankzero:id/termsConditions_label\"]";
+        AndroidActions.waitForElementAttribute(driver,xpath,"displayed","true",20);
         checkbox2.click();
-        log.info("Terms and conditions checkbox cliked");
+        log.info("Terms and conditions checkbox clicked.");
 
     }
 
     public String getStatus()
     {
-
+        String xpath = "//android.widget.TextView[@text=\"Read your 'Welcome' letter\"]";
+        AndroidActions.waitForElementAttribute(driver,xpath,"displayed","true",15);
         log.info("Retrieving status: {}",status.getText());
         return status.getText();
     }
