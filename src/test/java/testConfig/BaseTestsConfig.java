@@ -5,7 +5,9 @@ import io.appium.java_client.android.options.UiAutomator2Options;
 import io.appium.java_client.service.local.AppiumDriverLocalService;
 import io.appium.java_client.service.local.AppiumServiceBuilder;
 import org.testng.annotations.AfterClass;
+import org.testng.annotations.AfterSuite;
 import org.testng.annotations.BeforeClass;
+import org.testng.annotations.BeforeSuite;
 import utils.AndroidActions;
 import utils.AppiumUtils;
 
@@ -20,7 +22,7 @@ public class BaseTestsConfig extends AppiumUtils {
     public AndroidDriver driver;
     public AppiumDriverLocalService service;
 
-    @BeforeClass
+    @BeforeSuite
     public void ConfigureAppium() throws IOException {
         // Start Appium server
         service = new AppiumServiceBuilder()
@@ -35,24 +37,25 @@ public class BaseTestsConfig extends AppiumUtils {
         UiAutomator2Options options = new UiAutomator2Options();
         options.setDeviceName("Samsung SM-A566B");
         options.setUdid("R5CY60MB6KK");
-        options.setApp("C:\\Users\\ThabangMonoane\\IdeaProjects\\untitled\\src\\test\\java\\resources\\apps\\app-dev-0.9.9.52-rc02.apk");
-        options.setAutoGrantPermissions(true);
+        //options.setApp("C:\\Users\\ThabangMonoane\\IdeaProjects\\untitled\\src\\test\\java\\resources\\apps\\app-dev-0.9.9.52-rc02.apk");
         options.setPlatformName("Android");
         options.setAppPackage("za.co.neolabs.bankzero");
         options.setAppActivity("za.co.neolabs.bankzero.SplashActivity");
+        options.setAutoGrantPermissions(true);
 
         // Preserve app state
-
+        options.setCapability("noReset", true);
         options.setCapability("dontStopAppOnReset", true);
 
 //        options.setCapability("unicodeKeyboard", true);
 //        options.setCapability("resetKeyboard", true);
-        options.setCapability("noReset", true);
 
         // Start driver
         //driver = new AndroidDriver(new URL("http://127.0.0.1:4723"), options);
         driver = new AndroidDriver(new URL(URI.create("http://127.0.0.1:4725").toString()), options);
         driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
+
+        driver.activateApp("za.co.neolabs.bankzero");
 
        //AndroidActions.copyAttachmentsToDevice(driver);
     }
@@ -102,11 +105,21 @@ public class BaseTestsConfig extends AppiumUtils {
 
 
 
-    @AfterClass
-    public void tearDown() {
+//    @AfterClass
+//    public void tearDown() {
+//
+//        AndroidActions androidActions = new AndroidActions(driver);
+//        //androidActions.closeApp();
+//        if (driver != null) {
+//            driver.quit();
+//        }
+//        if (service != null && service.isRunning()) {
+//            service.stop();
+//        }
+//    }
 
-        AndroidActions androidActions = new AndroidActions(driver);
-        //androidActions.closeApp();
+    @AfterSuite
+    public void tearDown() {
         if (driver != null) {
             driver.quit();
         }
