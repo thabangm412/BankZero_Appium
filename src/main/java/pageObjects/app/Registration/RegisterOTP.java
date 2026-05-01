@@ -55,6 +55,7 @@ public class RegisterOTP {
             androidActions.sendKeysAction(otpField, otp); // Use string directly
             log.info("OTP entered into the field: {}", otp);
 
+
             try {
                 Thread.sleep(3000);
             } catch (InterruptedException e) {

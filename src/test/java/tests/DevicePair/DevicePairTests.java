@@ -60,9 +60,11 @@ public class DevicePairTests extends BaseTestsConfig {
         androidActions.environmentChange();
 
         // Enter user inputs into the app
+        pairOnDevicePage.addProfile();
         pairOnDevicePage.enterCellNumber(input.get("cellNumber"));
         pairOnDevicePage.enterIdNumber(input.get("idNumber"));
         pairOnDevicePage.enterPreferredName(input.get("prefName"));
+        attachScreenshot(driver, "Device_Pairing_Input");
         pairOnDevicePage.clickSubmit();
 
         pairOnDevicePage.enterLoginPin(Integer.parseInt(input.get("loginPin")));
@@ -75,7 +77,7 @@ public class DevicePairTests extends BaseTestsConfig {
         Thread.sleep(3000);
 
         Assert.assertTrue(loginPage.loginPageConfirm());
-        attachScreenshot(driver, "Device_Pairing_Success");
+        attachScreenshot(driver, "Device_Pairing_Login_Page_Displayed");
     }
 
     @Test(dataProvider = "getSingleDataSet", priority = 1)
@@ -90,6 +92,7 @@ public class DevicePairTests extends BaseTestsConfig {
         } catch (Exception e) {
             try {
                 loginPage.loginAccount(input.get("prefName"));
+                attachScreenshot(driver, "Login_Retry");
             } catch (NoSuchElementException ex) {
                 throw new RuntimeException(ex);
             }

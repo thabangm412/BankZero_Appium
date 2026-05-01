@@ -59,6 +59,8 @@ public class PairOnDevicePage {
     @AndroidFindBy(id = "za.co.neolabs.bankzero:id/snackbar_text")
     private  WebElement deviceAlreadyExistMsg;
 
+    @AndroidFindBy(id = "za.co.neolabs.bankzero:id/mnu_login_pair")
+    private  WebElement devicePairButton;
 
     public void clickChangeUrl()
     {
@@ -70,6 +72,21 @@ public class PairOnDevicePage {
     {
         return environmentField.getText();
 
+    }
+
+    public void addProfile() {
+
+        String xpath = "//android.widget.Button[@content-desc=\"Pair device\"]";
+
+        try {
+            AndroidActions.waitForElementAttribute(driver, xpath, "displayed", "true", 5);
+        } catch (Exception e) {
+            log.info("Add profile button not visible. Skipping method.");
+            return;
+        }
+
+        devicePairButton.click();
+        log.info("Add profile button clicked");
     }
 
     public void enterCellNumber(String cell)
