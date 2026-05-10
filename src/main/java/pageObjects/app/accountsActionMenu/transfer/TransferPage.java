@@ -353,10 +353,6 @@ public class TransferPage {
                 driver.findElement(By.id("android:id/button1")).click();
                 log.info("Select button clicked");
 
-                log.info("Attempting to select date: {}", monthlyToDate);
-                driver.findElement(By.xpath("//android.view.View[@content-desc='" + monthlyToDate + "']")).click();
-                driver.findElement(By.id("android:id/button1")).click();
-
 
                 driver.findElement(By.id("za.co.neolabs.bankzero:id/schedule_when_dd_arrow")).click();
                 androidActions.scrollToTextAndClick2("2nd day",driver);
@@ -376,6 +372,8 @@ public class TransferPage {
 
                 break;
         }
+
+        androidActions.attachScreenshot(driver, "Schedule type selected: " + scheduleType);
     }
 
     public boolean isDateVisible(String date, AppiumDriver driver) {
