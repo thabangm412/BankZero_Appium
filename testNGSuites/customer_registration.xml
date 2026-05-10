@@ -1,5 +1,5 @@
 <!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd" >
-<suite name="Regression" verbose="2" thread-count="2">
+<suite name="Regression" verbose="2" thread-count="1" parallel="false" preserve-order="true">
     <listeners>
         <listener class-name="utils.Listeners"/>
     </listeners>
@@ -10,6 +10,18 @@
                 <methods>
                     <include name="registrationPositiveFlow"/>
                     <include name="loginTest"/>
+                </methods>
+            </class>
+        </classes>
+    </test>
+
+    <test name="Child Registration Tests">
+        <classes>
+            <class name="tests.Child.ChildAccountRegistrationTest">
+                <methods>
+                    <include name="childInviteTest"/>
+                    <include name="childRegistrationTest"/>
+                    <include name="childLoginTest"/>
                 </methods>
             </class>
         </classes>
