@@ -118,7 +118,8 @@ public class ChildAccPage {
 
     public void enterChildDetails(String id, String surname, String allNames, String nationality)
     {
-        //AppiumUtils.waitForTextToAppear(By.id("za.co.neolabs.bankzero:id/toolbar_title"),"Add child",driver);
+
+        AndroidActions.waitForElementAttribute(driver, "//android.widget.TextView[@resource-id=\"za.co.neolabs.bankzero:id/next_screen_note\"]", "displayed", "true", 10);
         AndroidActions androidActions = new AndroidActions(driver);
 
         saIdInputField.clear();
@@ -167,6 +168,7 @@ public class ChildAccPage {
                // AppiumUtils.waitForTextToAppear(By.id("za.co.neolabs.bankzero:id/toolbarTitle"), "Birth certificate", driver);
 
                 clickNext();
+                androidActions.attachScreenshot(driver, "BirthCertificateUpload");
                 clickNext();
 
                 break;
@@ -190,8 +192,8 @@ public class ChildAccPage {
                 //AppiumUtils.waitForTextToAppear(By.id("za.co.neolabs.bankzero:id/toolbarTitle"), "Passport as ID", driver);
 
                 clickUpload();
+                androidActions.attachScreenshot(driver, "PassportUpload");
                 clickNext();
-
 
                 break;
 
@@ -352,11 +354,11 @@ public class ChildAccPage {
     {
         AndroidActions androidActions = new AndroidActions(driver);
 
-        AppiumUtils.waitForTextToAppear(By.id("za.co.neolabs.bankzero:id/toolbarTitle"),"Who am I",driver);
+        AppiumUtils.waitForTextToAppear(By.id("za.co.neolabs.bankzero:id/toolbarTitle"),"Where am I",driver);
         cardDelivery.click();
         log.info("Card delivery dropdown clicked");
 
-        androidActions.scrollToTextAndClick2("Courier to residential address (R119 - R149)",driver);
+        androidActions.scrollToTextAndClick2("Courier to residential address (R125 - R155)",driver);
         driver.findElement(By.id("za.co.neolabs.bankzero:id/cardDeliveryAddressType_dd_arrow"))
                 .click();
         log.info("Second card delivery dropdown clicked");
