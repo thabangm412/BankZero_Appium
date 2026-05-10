@@ -1,8 +1,5 @@
 package tests.Pay;
 
-import com.aventstack.extentreports.ExtentTest;
-import io.appium.java_client.AppiumDriver;
-import org.openqa.selenium.OutputType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.testng.Assert;
@@ -14,14 +11,10 @@ import pageObjects.app.accountsActionMenu.pay.QuickPayPage;
 import pageObjects.app.accountsHome.HomePage;
 import pageObjects.app.login.LoginPage;
 import testConfig.BaseTestsConfig;
-import utils.AppiumUtils;
 
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
-import java.util.logging.Level;
-
-import static utils.Listeners.TEST_THREAD;
 
 public class PaymentTests extends BaseTestsConfig {
 
@@ -78,7 +71,7 @@ public class PaymentTests extends BaseTestsConfig {
         }
     }
 
-    @Test(dataProvider = "getMultipleDataSet", priority = 1)
+    @Test(dataProvider = "getMultipleDataSet", dependsOnMethods ="AddRecipientTestWithPoP",priority = 1)
     public void PaymentToAddedRecipientWithPoPTest(HashMap<String, String> input) throws InterruptedException {
         validateInput(input,
                 "profileName", "loginPin",
@@ -144,7 +137,7 @@ public class PaymentTests extends BaseTestsConfig {
         }
     }
 
-    @Test(dataProvider = "getMultipleDataSet", priority = 3)
+    @Test(dataProvider = "getMultipleDataSet",dependsOnMethods = "AddRecipientTestWithoutPoP",priority = 3)
     public void PaymentToAddedRecipientWithoutPoPTest(HashMap<String, String> input) throws InterruptedException {
         validateInput(input,
                 "profileName", "loginPin",

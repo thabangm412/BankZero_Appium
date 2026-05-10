@@ -73,7 +73,7 @@ public class RtcPaymentTests extends BaseTestsConfig {
         }
     }
 
-    @Test(dataProvider = "getMultipleDataSet", priority = 1)
+    @Test(dataProvider = "getMultipleDataSet",dependsOnMethods = "AddRtcRecipientTestWithPoP", priority = 1)
     public void RtCPaymentTest(HashMap<String, String> input)
     {
         validateInput(input,
