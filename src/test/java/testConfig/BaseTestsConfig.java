@@ -4,11 +4,8 @@ import io.appium.java_client.android.AndroidDriver;
 import io.appium.java_client.android.options.UiAutomator2Options;
 import io.appium.java_client.service.local.AppiumDriverLocalService;
 import io.appium.java_client.service.local.AppiumServiceBuilder;
-import org.testng.annotations.AfterClass;
 import org.testng.annotations.AfterSuite;
-import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeSuite;
-import utils.AndroidActions;
 import utils.AppiumUtils;
 
 import java.io.File;
@@ -19,8 +16,8 @@ import java.time.Duration;
 
 public class BaseTestsConfig extends AppiumUtils {
 
-    public AndroidDriver driver;
-    public AppiumDriverLocalService service;
+    public static AndroidDriver driver;
+    public static AppiumDriverLocalService service;
 
     @BeforeSuite
     public void ConfigureAppium() throws IOException {
