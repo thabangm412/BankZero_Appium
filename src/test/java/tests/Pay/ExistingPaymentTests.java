@@ -1,5 +1,7 @@
 package tests.Pay;
 
+import org.openqa.selenium.By;
+import org.openqa.selenium.NoSuchElementException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.testng.Assert;
@@ -280,8 +282,51 @@ public class ExistingPaymentTests extends BaseTestsConfig {
         homePage.clickLogoutButtn();
     }
 
-
     @Test(dataProvider = "getMultipleDataSet", priority = 6)
+    public void addAlreadyExistingRecipientTest(HashMap<String, String> input)
+    {
+
+        validateInput(input,
+                "profileName", "loginPin",
+                "recipientName1", "group", "bank", "account", "accountNo1",
+                "popEmail", "popPhone"
+        );
+
+        String name = input.get("profileName");
+        String appPin = input.get("loginPin");
+
+        loginPage.loginWithRetry(name,appPin,2);
+
+        accountMenuActions.clickAccountMenuActionsButtn();
+        quickPayPage.clickPayButtn();
+        quickPayPage.clickAddRecipientButton();
+
+        quickPayPage.addRecipientDetails(input.get("recipientName1"),input.get("group"),input.get("bank"),input.get("account"),input.get("accountNo1"));
+        quickPayPage.addPoP(input.get("popEmail"),input.get("popPhone"));
+        quickPayPage.clickAddButton();
+
+
+
+        try {
+            String toastMessage = driver.findElement(
+                    By.xpath("//android.widget.Toast")
+            ).getText();
+            Assert.assertEquals(toastMessage, "[79] We're sorry, you cannot add this recipient as it already exists");
+            log.warn("Failed to add recipient, error message: {}", toastMessage);
+            attachScreenshot(driver, "Add_Existing_Recipient_Failed");
+        } catch (NoSuchElementException e) {
+            log.warn("Test failed to validate existing recipient addition");
+            Assert.fail("Element not found: " + e.getMessage());
+        }finally {
+            driver.navigate().back();
+            quickPayPage.clickBack();
+            homePage.clickLogoutButtn();
+
+        }
+    }
+
+
+    @Test(dataProvider = "getMultipleDataSet", priority = 7)
     public void updateExistingRecipient(HashMap<String, String> input)
     {
         validateInput(input,
@@ -319,7 +364,7 @@ public class ExistingPaymentTests extends BaseTestsConfig {
         homePage.clickLogoutButtn();
     }
 
-    @Test(dataProvider = "getMultipleDataSet", priority = 7)
+    @Test(dataProvider = "getMultipleDataSet",dependsOnMethods = "updateExistingRecipient", priority = 8)
     public void deleteExistingRecipientTest(HashMap<String, String> input){
 
         validateInput(input,
@@ -362,19 +407,5 @@ public class ExistingPaymentTests extends BaseTestsConfig {
         return new Object[][]{{data.get(0)}};
     }
 
-//    private void validateInput(HashMap<String, String> input, String... required) {
-//        if (input == null) throw new IllegalArgumentException("Input map is null");
-//        StringBuilder missing = new StringBuilder();
-//        for (String k : required) {
-//            if (input.get(k) == null || input.get(k).trim().isEmpty()) {
-//                if (missing.length() > 0) missing.append(", ");
-//                missing.append(k);
-//            }
-//        }
-//        if (missing.length() > 0) {
-//            log.error("Missing required keys: {}", missing.toString());
-//            throw new IllegalArgumentException("Missing required keys: " + missing.toString());
-//        }
-//    }
 
 }
