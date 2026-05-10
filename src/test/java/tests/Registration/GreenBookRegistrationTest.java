@@ -67,6 +67,7 @@ public class GreenBookRegistrationTest extends BaseTestsConfig {
         androidActions.wait(3);
 
         // Enter user inputs into the app
+        pairOnDevicePage.addProfile();
         pairOnDevicePage.enterCellNumber(input.get("phoneNumber"));
         pairOnDevicePage.enterIdNumber(input.get("idNumber"));
         pairOnDevicePage.enterPreferredName(input.get("name"));
