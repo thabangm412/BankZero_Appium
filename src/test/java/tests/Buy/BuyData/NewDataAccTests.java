@@ -10,7 +10,6 @@ import org.testng.annotations.Test;
 import pageObjects.app.accountsActionMenu.AccountMenuActions;
 import pageObjects.app.accountsActionMenu.buy.BuyDataPage;
 import pageObjects.app.accountsActionMenu.buy.BuyElectricityPage;
-import pageObjects.app.accountsActionMenu.buy.BuySMSPage;
 import pageObjects.app.accountsHome.HomePage;
 import pageObjects.app.login.LoginPage;
 import testConfig.BaseTestsConfig;
