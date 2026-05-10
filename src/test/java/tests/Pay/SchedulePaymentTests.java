@@ -67,6 +67,7 @@ public class SchedulePaymentTests extends BaseTestsConfig {
 
             Assert.assertEquals(driver.findElement(By.id("za.co.neolabs.bankzero:id/product_type")).getText(), expectedTxt);
             attachScreenshot(driver, "Schedule Once-off Payment - " + name);
+            log.info("Schedule Once-off Payment test passed for user: {}", name);
 
         } catch (AssertionError | Exception e) {
             log.warn("Failed to do schedule transfer");
@@ -110,6 +111,7 @@ public class SchedulePaymentTests extends BaseTestsConfig {
 
             Assert.assertEquals(driver.findElement(By.id("za.co.neolabs.bankzero:id/product_type")).getText(), expectedTxt);
             attachScreenshot(driver, "Schedule Weekly Payment - " + name);
+            log.info("Schedule Weekly Payment assertion passed for user: {}", name);
 
         } catch (AssertionError | Exception e) {
             log.warn("Failed to do schedule transfer");
@@ -150,6 +152,7 @@ public class SchedulePaymentTests extends BaseTestsConfig {
 
             Assert.assertEquals(driver.findElement(By.id("za.co.neolabs.bankzero:id/product_type")).getText(), expectedTxt);
             attachScreenshot(driver, "Schedule Monthly Payment - " + name);
+            log.info("Schedule monthly payment test passed for profile: {}", name);
 
         } catch (AssertionError | Exception e) {
             log.warn("Failed to do schedule transfer");
