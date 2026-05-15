@@ -1,0 +1,19 @@
+<!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd" >
+<suite name="Regression" verbose="2" thread-count="1" parallel="false" preserve-order="true">
+    <listeners>
+        <listener class-name="utils.Listeners"/>
+    </listeners>
+    <test name="Statements and letters Tests">
+        <classes>
+            <class name="tests.StatementsAndLetters.StatementsAndLettersTests">
+                <methods>
+                    <include name="accountConfirmationLetterEmailTest"/>
+                    <include name="accountStatementsEmailTest"/>
+                    <include name="salarySwitchLetterEmailTest"/>
+                    <include name="welcomeLetterEmailTest"/>
+                    <include name="paymentRecipientsEmailTest"/>
+                </methods>
+            </class>
+        </classes>
+    </test>
+</suite>
