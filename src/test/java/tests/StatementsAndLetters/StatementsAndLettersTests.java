@@ -7,9 +7,7 @@ import models.TransferData;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.testng.Assert;
-import org.testng.annotations.AfterMethod;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
+import org.testng.annotations.*;
 import pageObjects.app.accountsActionMenu.AccountMenuActions;
 import pageObjects.app.accountsActionMenu.statements.StatementsAndLettersPage;
 import pageObjects.app.accountsHome.HomePage;
@@ -24,7 +22,7 @@ public class StatementsAndLettersTests extends BaseTestsConfig {
     private AccountMenuActions accountMenuActions;
     private HomePage homePage;
 
-    @BeforeMethod
+    @BeforeClass
     public void preSetUp() throws JSchException {
          statementsAndLettersPage = new StatementsAndLettersPage(driver);
          loginPage = new LoginPage(driver);
@@ -37,7 +35,7 @@ public class StatementsAndLettersTests extends BaseTestsConfig {
         log.debug("Page objects and androidActions initialized");
     }
 
-    @Test
+    @Test(priority = 0)
     public void accountConfirmationLetterEmailTest(){
 
         loginPage.loginWithRetry(
@@ -58,11 +56,10 @@ public class StatementsAndLettersTests extends BaseTestsConfig {
         }catch (Exception e){
             log.error("Error while sending account confirmation letter email: " + e.getMessage());
         }
-        statementsAndLettersPage.clickOkButton();
-        statementsAndLettersPage.clickFinishButton();
+
     }
 
-    @Test
+    @Test(priority = 1)
     public void accountStatementsEmailTest(){
 
         loginPage.loginWithRetry(
@@ -82,11 +79,10 @@ public class StatementsAndLettersTests extends BaseTestsConfig {
         }catch (Exception e){
             log.error("Error while sending Account Statements letter email: " + e.getMessage());
         }
-        statementsAndLettersPage.clickOkButton();
-        statementsAndLettersPage.clickFinishButton();
+
     }
 
-    @Test
+    @Test(priority = 2)
     public void salarySwitchLetterEmailTest(){
 
         loginPage.loginWithRetry(
@@ -106,11 +102,10 @@ public class StatementsAndLettersTests extends BaseTestsConfig {
         }catch (Exception e){
             log.error("Error while sending Salary switch letter email: " + e.getMessage());
         }
-        statementsAndLettersPage.clickOkButton();
-        statementsAndLettersPage.clickFinishButton();
+
     }
 
-    @Test
+    @Test(priority = 3)
     public void welcomeLetterEmailTest(){
 
         loginPage.loginWithRetry(
@@ -130,11 +125,9 @@ public class StatementsAndLettersTests extends BaseTestsConfig {
         }catch (Exception e){
             log.error("Error while sending welcome letter email: " + e.getMessage());
         }
-        statementsAndLettersPage.clickOkButton();
-        statementsAndLettersPage.clickFinishButton();
     }
 
-    @Test
+    @Test(priority = 4)
     public void paymentRecipientsEmailTest(){
 
         loginPage.loginWithRetry(
@@ -154,14 +147,18 @@ public class StatementsAndLettersTests extends BaseTestsConfig {
         }catch (Exception e){
             log.error("Error while sending payment recipient letter email: " + e.getMessage());
         }
-        statementsAndLettersPage.clickOkButton();
-        statementsAndLettersPage.clickFinishButton();
+
     }
 
     @AfterMethod
+    public void finshProcess() {
+        statementsAndLettersPage.clickOkButton();
+        statementsAndLettersPage.clickFinishButton();
+        homePage.clickLogoutButtn();
+    }
+
+    @AfterClass
     public void tearDown() throws JSchException {
-         driver.navigate().back();
-         homePage.clickLogoutButtn();
          EmailsConfig.disableEmails();
     }
 }

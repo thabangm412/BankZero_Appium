@@ -65,12 +65,12 @@ public class StatementsAndLettersPage {
                 break;
 
             case "welcome letter":
-                driver.findElement(By.xpath("//android.widget.TextView[@resource-id=\"android:id/text1\" and @text=\"Welcome Letter\"])"))
+                driver.findElement(By.xpath("//android.widget.TextView[@resource-id=\"android:id/text1\" and @text=\"Welcome Letter\"]"))
                         .click();
                 break;
 
             case "download payments recipients":
-                driver.findElement(By.xpath("//android.widget.TextView[@resource-id=\"android:id/text1\" and @text=\"Download Payments Recipients\"])"))
+                driver.findElement(By.xpath("//android.widget.TextView[@resource-id=\"android:id/text1\" and @text=\"Download Payments Recipients\"]"))
                         .click();
                 break;
             default:
