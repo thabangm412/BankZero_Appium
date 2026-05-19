@@ -1,4 +1,4 @@
-package pageObjects.app.accountsActionMenu.sedMoney;
+package pageObjects.app.accountsActionMenu.sendMoney;
 
 import io.appium.java_client.AppiumBy;
 import io.appium.java_client.android.AndroidDriver;
@@ -20,8 +20,12 @@ public class SendMoneyPage {
     protected AndroidDriver driver;
 
     public SendMoneyPage(AndroidDriver driver) {
-        this.driver = driver;
-        PageFactory.initElements(new AppiumFieldDecorator(driver, Duration.ofSeconds(10)), this);
+             if (driver == null) {
+        throw new IllegalStateException("AndroidDriver is NULL. Check DriverManager initialization order.");
+    }
+
+    this.driver = driver;
+    PageFactory.initElements(new AppiumFieldDecorator(driver, Duration.ofSeconds(10)), this);
     }
 
     @AndroidFindBy(xpath = "//android.widget.TextView[@resource-id=\"za.co.neolabs.bankzero:id/menuItemText\" and @text=\"Send Money\"]")

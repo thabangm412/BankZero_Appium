@@ -12,8 +12,12 @@ public class Who_AM_I_Page {
     protected AndroidDriver driver;
 
     public Who_AM_I_Page(AndroidDriver driver) {
-        this.driver = driver;
-        PageFactory.initElements(new AppiumFieldDecorator(driver, Duration.ofSeconds(10)), this);
+             if (driver == null) {
+        throw new IllegalStateException("AndroidDriver is NULL. Check DriverManager initialization order.");
+    }
+
+    this.driver = driver;
+    PageFactory.initElements(new AppiumFieldDecorator(driver, Duration.ofSeconds(10)), this);
     }
 
     @AndroidFindBy(xpath = "//android.widget.TextView[@resource-id=\"za.co.neolabs.bankzero:id/toolbarTitle\"]")

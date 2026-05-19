@@ -21,8 +21,12 @@ public class BuySMSPage {
     private static final Logger log = LoggerFactory.getLogger(BuySMSPage.class);
 
     public BuySMSPage(AndroidDriver driver) {
-        this.driver = driver;
-        PageFactory.initElements(new AppiumFieldDecorator(driver, Duration.ofSeconds(10)), this);
+             if (driver == null) {
+        throw new IllegalStateException("AndroidDriver is NULL. Check DriverManager initialization order.");
+    }
+
+    this.driver = driver;
+    PageFactory.initElements(new AppiumFieldDecorator(driver, Duration.ofSeconds(10)), this);
     }
 
     @AndroidFindBy(xpath = "//android.widget.TextView[@resource-id=\"za.co.neolabs.bankzero:id/list_text\" and @text=\"SMS\"]")
