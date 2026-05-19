@@ -10,6 +10,7 @@ import pageObjects.app.accountsHome.HomePage;
 import pageObjects.app.login.LoginPage;
 import testConfig.BaseTestsConfig;
 import utils.AndroidActions;
+import utils.DriverManager;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -20,11 +21,11 @@ public class CardSettingsTests extends BaseTestsConfig {
     @Test(dataProvider = "getMultipleDataSet")
     public void lockCardTest(HashMap<String, String> input)
     {
-        LoginPage loginPage = new LoginPage(driver);
-        MyCardPage cardPage = new MyCardPage(driver);
-        HomePage homePage = new HomePage(driver);
-        AccountMenuActions accountMenuActions = new AccountMenuActions(driver);
-        AndroidActions androidActions = new AndroidActions(driver);
+        LoginPage loginPage = new LoginPage(DriverManager.driver);
+        MyCardPage cardPage = new MyCardPage(DriverManager.driver);
+        HomePage homePage = new HomePage(DriverManager.driver);
+        AccountMenuActions accountMenuActions = new AccountMenuActions(DriverManager.driver);
+        AndroidActions androidActions = new AndroidActions(DriverManager.driver);
 
         String name = input.get("profileName");
         String appPin = input.get("loginPin");
@@ -51,11 +52,11 @@ public class CardSettingsTests extends BaseTestsConfig {
     @Test(dataProvider = "getMultipleDataSet")
     public void unlockCardTest(HashMap<String, String> input)
     {
-        LoginPage loginPage = new LoginPage(driver);
-        MyCardPage cardPage = new MyCardPage(driver);
-        HomePage homePage = new HomePage(driver);
-        AccountMenuActions accountMenuActions = new AccountMenuActions(driver);
-        AndroidActions androidActions = new AndroidActions(driver);
+        LoginPage loginPage = new LoginPage(DriverManager.driver);
+        MyCardPage cardPage = new MyCardPage(DriverManager.driver);
+        HomePage homePage = new HomePage(DriverManager.driver);
+        AccountMenuActions accountMenuActions = new AccountMenuActions(DriverManager.driver);
+        AndroidActions androidActions = new AndroidActions(DriverManager.driver);
 
         String name = input.get("profileName");
         String appPin = input.get("loginPin");
@@ -82,11 +83,11 @@ public class CardSettingsTests extends BaseTestsConfig {
     @Test(dataProvider = "getMultipleDataSet")
     public void enableAtmWithdrawals(HashMap<String, String> input)
     {
-        LoginPage loginPage = new LoginPage(driver);
-        MyCardPage cardPage = new MyCardPage(driver);
-        HomePage homePage = new HomePage(driver);
-        AccountMenuActions accountMenuActions = new AccountMenuActions(driver);
-        AndroidActions androidActions = new AndroidActions(driver);
+        LoginPage loginPage = new LoginPage(DriverManager.driver);
+        MyCardPage cardPage = new MyCardPage(DriverManager.driver);
+        HomePage homePage = new HomePage(DriverManager.driver);
+        AccountMenuActions accountMenuActions = new AccountMenuActions(DriverManager.driver);
+        AndroidActions androidActions = new AndroidActions(DriverManager.driver);
 
         String applogin = input.get("loginPin");
 
@@ -121,11 +122,11 @@ public class CardSettingsTests extends BaseTestsConfig {
     @Test(dataProvider = "getMultipleDataSet")
     public void disableAtmWithdrawals(HashMap<String, String> input)
     {
-        LoginPage loginPage = new LoginPage(driver);
-        MyCardPage cardPage = new MyCardPage(driver);
-        HomePage homePage = new HomePage(driver);
-        AccountMenuActions accountMenuActions = new AccountMenuActions(driver);
-        AndroidActions androidActions = new AndroidActions(driver);
+        LoginPage loginPage = new LoginPage(DriverManager.driver);
+        MyCardPage cardPage = new MyCardPage(DriverManager.driver);
+        HomePage homePage = new HomePage(DriverManager.driver);
+        AccountMenuActions accountMenuActions = new AccountMenuActions(DriverManager.driver);
+        AndroidActions androidActions = new AndroidActions(DriverManager.driver);
 
         String applogin = input.get("loginPin");
 
@@ -160,11 +161,11 @@ public class CardSettingsTests extends BaseTestsConfig {
     public void updateLocalDailyCash(HashMap<String, String> input)
     {
 
-        LoginPage loginPage = new LoginPage(driver);
-        MyCardPage cardPage = new MyCardPage(driver);
-        HomePage homePage = new HomePage(driver);
-        AccountMenuActions accountMenuActions = new AccountMenuActions(driver);
-        AndroidActions androidActions = new AndroidActions(driver);
+        LoginPage loginPage = new LoginPage(DriverManager.driver);
+        MyCardPage cardPage = new MyCardPage(DriverManager.driver);
+        HomePage homePage = new HomePage(DriverManager.driver);
+        AccountMenuActions accountMenuActions = new AccountMenuActions(DriverManager.driver);
+        AndroidActions androidActions = new AndroidActions(DriverManager.driver);
 
         //String applogin = input.get("loginPin");
 
@@ -202,11 +203,11 @@ public class CardSettingsTests extends BaseTestsConfig {
     public void updateGlobalDailyCash(HashMap<String, String> input)
     {
 
-        LoginPage loginPage = new LoginPage(driver);
-        MyCardPage cardPage = new MyCardPage(driver);
-        HomePage homePage = new HomePage(driver);
-        AccountMenuActions accountMenuActions = new AccountMenuActions(driver);
-        AndroidActions androidActions = new AndroidActions(driver);
+        LoginPage loginPage = new LoginPage(DriverManager.driver);
+        MyCardPage cardPage = new MyCardPage(DriverManager.driver);
+        HomePage homePage = new HomePage(DriverManager.driver);
+        AccountMenuActions accountMenuActions = new AccountMenuActions(DriverManager.driver);
+        AndroidActions androidActions = new AndroidActions(DriverManager.driver);
 
         String name = input.get("profileName");
         String appPin = input.get("loginPin");
@@ -234,11 +235,11 @@ public class CardSettingsTests extends BaseTestsConfig {
     public void updateOnlineMaxCash(HashMap<String, String> input)
     {
 
-        LoginPage loginPage = new LoginPage(driver);
-        MyCardPage cardPage = new MyCardPage(driver);
-        HomePage homePage = new HomePage(driver);
-        AccountMenuActions accountMenuActions = new AccountMenuActions(driver);
-        AndroidActions androidActions = new AndroidActions(driver);
+        LoginPage loginPage = new LoginPage(DriverManager.driver);
+        MyCardPage cardPage = new MyCardPage(DriverManager.driver);
+        HomePage homePage = new HomePage(DriverManager.driver);
+        AccountMenuActions accountMenuActions = new AccountMenuActions(DriverManager.driver);
+        AndroidActions androidActions = new AndroidActions(DriverManager.driver);
 
         String name = input.get("profileName");
         String appPin = input.get("loginPin");

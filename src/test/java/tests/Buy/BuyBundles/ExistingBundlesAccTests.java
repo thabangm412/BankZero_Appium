@@ -11,6 +11,7 @@ import pageObjects.app.accountsActionMenu.buy.BuyBundlesPage;
 import pageObjects.app.accountsHome.HomePage;
 import pageObjects.app.login.LoginPage;
 import testConfig.BaseTestsConfig;
+import utils.DriverManager;
 
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -25,9 +26,9 @@ public class ExistingBundlesAccTests extends BaseTestsConfig {
 
     @Test(dataProvider = "getSingleDataSet")
     public void existingBundlesAccTest(HashMap<String, String> input) throws IOException {
-        LoginPage loginPage = new LoginPage(driver);
-        BuyBundlesPage buyBundlesPage = new BuyBundlesPage(driver);
-        AccountMenuActions accountMenuActions = new AccountMenuActions(driver);
+        LoginPage loginPage = new LoginPage(DriverManager.driver);
+        BuyBundlesPage buyBundlesPage = new BuyBundlesPage(DriverManager.driver);
+        AccountMenuActions accountMenuActions = new AccountMenuActions(DriverManager.driver);
         Properties properties = new Properties();
         FileInputStream fis = new FileInputStream(System.getProperty("user.dir")+"//src//main//java//resources//data.properties");
         properties.load(fis);
@@ -72,8 +73,8 @@ public class ExistingBundlesAccTests extends BaseTestsConfig {
     @AfterMethod
     public void cleanUp() {
         try {
-            HomePage homePage = new HomePage(driver);
-            BuyBundlesPage buyBundlesPage = new BuyBundlesPage(driver);
+            HomePage homePage = new HomePage(DriverManager.driver);
+            BuyBundlesPage buyBundlesPage = new BuyBundlesPage(DriverManager.driver);
 
             buyBundlesPage.clickFinishButton();
             homePage.clickLogoutButtn();

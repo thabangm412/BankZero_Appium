@@ -13,6 +13,7 @@ import pageObjects.app.accountsActionMenu.buy.BuySMSPage;
 import pageObjects.app.accountsHome.HomePage;
 import pageObjects.app.login.LoginPage;
 import testConfig.BaseTestsConfig;
+import utils.DriverManager;
 
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -32,10 +33,10 @@ public class ExistingSMSTests extends BaseTestsConfig {
 
     @BeforeMethod
     public void preSetUp() {
-        loginPage = new LoginPage(driver);
-        accountMenuActions = new AccountMenuActions(driver);
-        buySMSPage = new BuySMSPage(driver);
-        buyAirtimePage = new BuyAirtimePage(driver);
+        loginPage = new LoginPage(DriverManager.driver);
+        accountMenuActions = new AccountMenuActions(DriverManager.driver);
+        buySMSPage = new BuySMSPage(DriverManager.driver);
+        buyAirtimePage = new BuyAirtimePage(DriverManager.driver);
 
 
     }
@@ -57,10 +58,10 @@ public class ExistingSMSTests extends BaseTestsConfig {
         accountMenuActions.clickAccountMenuActionsButtn();
         buySMSPage.clickBuyButton();
         buySMSPage.getExistingProfile(input.get("SMSName"));
-        attachScreenshot(driver,"Existing SMS Profile Retrieved");
+        attachScreenshot(DriverManager.driver,"Existing SMS Profile Retrieved");
         buySMSPage.clickRedo();
         buySMSPage.clickHomeBuyButton();
-        attachScreenshot(driver,"SMS Purchase Page");
+        attachScreenshot(DriverManager.driver,"SMS Purchase Page");
         buySMSPage.clickConfrimButton();
 
         try {
@@ -69,7 +70,7 @@ public class ExistingSMSTests extends BaseTestsConfig {
             try {
                 Assert.assertEquals(status, "Success");
                 log.info("Transactional Status: {}",status);
-                attachScreenshot(driver,"SMS Purchase Success");
+                attachScreenshot(DriverManager.driver,"SMS Purchase Success");
             } catch (AssertionError e) {
                 log.warn("Transaction failed with status: {}", status);
                 throw e;  // Let TestNG fail the test
@@ -99,20 +100,20 @@ public class ExistingSMSTests extends BaseTestsConfig {
         accountMenuActions.clickAccountMenuActionsButtn();
         buySMSPage.clickBuyButton();
         buySMSPage.getExistingProfile(input.get("SMSName"));
-        attachScreenshot(driver,"Existing Airtime Profile Retrieved for Deletion");
+        attachScreenshot(DriverManager.driver,"Existing Airtime Profile Retrieved for Deletion");
         buySMSPage.clickEditButton();
         buySMSPage.clickDeleteButton();
 
         try {
             Assert.assertTrue(buySMSPage.isRecipientDeleted(input.get("SMSName")));
             log.info("Recipient deletion confirmed: {}",input.get("SMSName"));
-            attachScreenshot(driver,"SMSName Recipient Deleted");
+            attachScreenshot(DriverManager.driver,"SMSName Recipient Deleted");
         } catch (Exception| AssertionError e) {
             Assert.fail("Test failed");
             log.warn("Test failed due to: {}",e);
             throw new RuntimeException(e);
         }
-        driver.navigate().back();
+        DriverManager.driver.navigate().back();
         buyAirtimePage.clickBack();
     }
 
@@ -125,7 +126,7 @@ public class ExistingSMSTests extends BaseTestsConfig {
     @AfterMethod
     public void cleanUp() {
         try {
-            HomePage homePage = new HomePage(driver);
+            HomePage homePage = new HomePage(DriverManager.driver);
 
             homePage.clickLogoutButtn();
         } catch (Exception e) {

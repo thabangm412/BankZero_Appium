@@ -12,12 +12,13 @@ import org.testng.annotations.Test;
 import org.testng.asserts.SoftAssert;
 import pageObjects.app.accountsActionMenu.AccountMenuActions;
 import pageObjects.app.accountsActionMenu.pay.QuickPayPage;
-import pageObjects.app.accountsActionMenu.sedMoney.SendMoneyPage;
+import pageObjects.app.accountsActionMenu.sendMoney.SendMoneyPage;
 import pageObjects.app.accountsHome.HomePage;
 import pageObjects.app.login.LoginPage;
 import testConfig.BaseTestsConfig;
 import utils.AndroidActions;
 import utils.AppiumUtils;
+import utils.DriverManager;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -37,12 +38,12 @@ public class ExistingSendMoneyTests extends BaseTestsConfig {
 
     @BeforeMethod
     public void preSetUp() {
-        loginPage = new LoginPage(driver);
-        homePage = new HomePage(driver);
-        accountMenuActions = new AccountMenuActions(driver);
-        sendMoneyPage = new SendMoneyPage(driver);
-        quickPayPage = new QuickPayPage(driver);
-        androidActions = new AndroidActions(driver);
+        loginPage = new LoginPage(DriverManager.driver);
+        homePage = new HomePage(DriverManager.driver);
+        accountMenuActions = new AccountMenuActions(DriverManager.driver);
+        sendMoneyPage = new SendMoneyPage(DriverManager.driver);
+        quickPayPage = new QuickPayPage(DriverManager.driver);
+        androidActions = new AndroidActions(DriverManager.driver);
 
         log.debug("Page objects and androidActions initialized");
     }
@@ -64,7 +65,7 @@ public class ExistingSendMoneyTests extends BaseTestsConfig {
         sendMoneyPage.clickSendMoneyButton();
         sendMoneyPage.getExistingProfile(input.get("recipientName"));
         sendMoneyPage.sendMoney(input.get("amount"),input.get("ref"));
-        attachScreenshot(driver, "SendMoneyDetails");
+        attachScreenshot(DriverManager.driver, "SendMoneyDetails");
         sendMoneyPage.clickSend();
         sendMoneyPage.clickConfirm();
         quickPayPage.possibleDuplicateCheck();
@@ -74,7 +75,7 @@ public class ExistingSendMoneyTests extends BaseTestsConfig {
             try {
                 Assert.assertEquals(sendMoneyPage.getStatus(), "Thank you");
                 log.info("Transactional successful");
-                attachScreenshot(driver, "SendMoney_Success");
+                attachScreenshot(DriverManager.driver, "SendMoney_Success");
             } catch (AssertionError e) {
                 log.warn("Transaction failed with status: {}", sendMoneyPage.getStatus());
                 throw e;
@@ -105,7 +106,7 @@ public class ExistingSendMoneyTests extends BaseTestsConfig {
         sendMoneyPage.clickSendMoneyButton();
         sendMoneyPage.getExistingProfile(input.get("recipientName"));
         sendMoneyPage.clickRedo();
-        attachScreenshot(driver, "Redo_Screen");
+        attachScreenshot(DriverManager.driver, "Redo_Screen");
         sendMoneyPage.clickSend();
         sendMoneyPage.clickConfirm();
         quickPayPage.possibleDuplicateCheck();
@@ -113,7 +114,7 @@ public class ExistingSendMoneyTests extends BaseTestsConfig {
         try {
             try {
                 Assert.assertEquals(sendMoneyPage.getStatus(), "Thank you");
-                attachScreenshot(driver, "SendMoney_Redo_Success");
+                attachScreenshot(DriverManager.driver, "SendMoney_Redo_Success");
                 log.info("Transactional successful");
             } catch (AssertionError e) {
                 log.warn("Transaction failed with status: {}", sendMoneyPage.getStatus());
@@ -145,8 +146,8 @@ public class ExistingSendMoneyTests extends BaseTestsConfig {
         sendMoneyPage.getExistingProfile(input.get("recipientName"));
         sendMoneyPage.sendMoney(input.get("amount"),input.get("ref"));
         sendMoneyPage.addAttachment();
-        AppiumUtils.waitForElement(By.id("za.co.neolabs.bankzero:id/fileImage"),driver);
-        attachScreenshot(driver, "Attachment_Added");
+        AppiumUtils.waitForElement(By.id("za.co.neolabs.bankzero:id/fileImage"),DriverManager.driver);
+        attachScreenshot(DriverManager.driver, "Attachment_Added");
         sendMoneyPage.clickSend();
         sendMoneyPage.clickConfirm();
 
@@ -155,7 +156,7 @@ public class ExistingSendMoneyTests extends BaseTestsConfig {
         try {
             softAssert.assertTrue(sendMoneyPage.getAttachment(), "Attachment missing");
             softAssert.assertEquals(sendMoneyPage.getStatus(), "Thank you", "Wrong status");
-            attachScreenshot(driver, "SendMoney_Attachment_Success");
+            attachScreenshot(DriverManager.driver, "SendMoney_Attachment_Success");
 
             if (sendMoneyPage.getAttachment()) {
                 log.info("Attachment check passed");
@@ -189,17 +190,17 @@ public class ExistingSendMoneyTests extends BaseTestsConfig {
         sendMoneyPage.addRecipient(input.get("recipientName"),input.get("recipientPhone"));
 
         try {
-            String toastMessage = driver.findElement(
+            String toastMessage = DriverManager.driver.findElement(
                     By.xpath("//android.widget.Toast")
             ).getText();
             Assert.assertEquals(toastMessage, "Error code: 79 - We're sorry, you cannot add this recipient as it already exists");
             log.warn("Failed to add recipient, error message: {}", toastMessage);
-            attachScreenshot(driver, "Add_Existing_Recipient_Failed");
+            attachScreenshot(DriverManager.driver, "Add_Existing_Recipient_Failed");
         } catch (NoSuchElementException e) {
             log.warn("Test failed to validate existing recipient addition");
             Assert.fail("Element not found: " + e.getMessage());
         }finally {
-            driver.navigate().back();
+            DriverManager.driver.navigate().back();
             sendMoneyPage.clickBack();
 
         }
@@ -222,13 +223,13 @@ public class ExistingSendMoneyTests extends BaseTestsConfig {
         accountMenuActions.clickAccountMenuActionsButtn();
         sendMoneyPage.clickSendMoneyButton();
         sendMoneyPage.getExistingProfile(input.get("recipientName"));
-        attachScreenshot(driver, "Profile_Before_Update");
+        attachScreenshot(DriverManager.driver, "Profile_Before_Update");
         sendMoneyPage.editProfile();
         sendMoneyPage.updateRecipient(input.get("updateRecipientName"),input.get("updateRecipientPhone"));
         try {
             String addedPhone = sendMoneyPage.getAddedProfile();
             Assert.assertEquals(addedPhone, input.get("updateRecipientPhone"));
-            attachScreenshot(driver, "Profile_After_Update");
+            attachScreenshot(DriverManager.driver, "Profile_After_Update");
             log.info("Updated phone added: {}",input.get("updateRecipientPhone"));
         } catch (NoSuchElementException e) {
             log.warn("Test failed to update profile");
@@ -255,7 +256,7 @@ public class ExistingSendMoneyTests extends BaseTestsConfig {
         accountMenuActions.clickAccountMenuActionsButtn();
         sendMoneyPage.clickSendMoneyButton();
         sendMoneyPage.getExistingProfile(input.get("updateRecipientName"));
-        attachScreenshot(driver, "Profile_Before_Deletion");
+        attachScreenshot(DriverManager.driver, "Profile_Before_Deletion");
 
         sendMoneyPage.editProfile();
         sendMoneyPage.clickDeleteProfile();
@@ -263,7 +264,7 @@ public class ExistingSendMoneyTests extends BaseTestsConfig {
         try {
             Assert.assertTrue(quickPayPage.isRecipientDeleted(input.get("updateRecipientName")));
             log.info("Recipient deletion confirmed: {}", input.get("updateRecipientName"));
-            attachScreenshot(driver, "Recipient_Deleted_Success");
+            attachScreenshot(DriverManager.driver, "Recipient_Deleted_Success");
         } catch (AssertionError e) {
             log.warn("Failed to delete payment recipient");
             Assert.fail("Test failed due to exception: " + e.getMessage());
@@ -271,7 +272,7 @@ public class ExistingSendMoneyTests extends BaseTestsConfig {
             throw e;  // Let TestNG fail the test
         }
 
-        driver.navigate().back();
+        DriverManager.driver.navigate().back();
         sendMoneyPage.clickBack();
     }
 
@@ -285,7 +286,7 @@ public class ExistingSendMoneyTests extends BaseTestsConfig {
     @AfterMethod
     public void cleanUp() {
         try {
-            HomePage homePage = new HomePage(driver);
+            HomePage homePage = new HomePage(DriverManager.driver);
             homePage.clickLogoutButtn();
 
         } catch (Exception e) {

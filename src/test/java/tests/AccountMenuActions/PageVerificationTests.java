@@ -11,6 +11,7 @@ import pageObjects.app.accountsHome.HomePage;
 import pageObjects.app.login.LoginPage;
 import testConfig.BaseTestsConfig;
 import utils.AndroidActions;
+import utils.DriverManager;
 
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -23,11 +24,11 @@ public class PageVerificationTests extends BaseTestsConfig {
 
     @BeforeMethod
     public void preSetUp() throws IOException {
-        AndroidActions androidActions = new AndroidActions(driver);
+        AndroidActions androidActions = new AndroidActions(DriverManager.driver);
         androidActions.environmentChange();
 
-        LoginPage loginPage = new LoginPage(driver);
-        HomePage homePage = new HomePage(driver);
+        LoginPage loginPage = new LoginPage(DriverManager.driver);
+        HomePage homePage = new HomePage(DriverManager.driver);
         Properties properties = new Properties();
         FileInputStream fis = new FileInputStream(System.getProperty("user.dir")+"//src//main//java//resources//data.properties");
         properties.load(fis);
@@ -42,7 +43,7 @@ public class PageVerificationTests extends BaseTestsConfig {
     @Test()
     public void payPageConfirmation() throws IOException {
 
-        AccountMenuActions accountMenuActions = new AccountMenuActions(driver);
+        AccountMenuActions accountMenuActions = new AccountMenuActions(DriverManager.driver);
         Assert.assertEquals(accountMenuActions.confirmPage("pay"), "Quick Pay");
         accountMenuActions.clickBack();
 
@@ -50,7 +51,7 @@ public class PageVerificationTests extends BaseTestsConfig {
 
     @Test()
     public void payManyPageConfirmation() {
-        AccountMenuActions accountMenuActions = new AccountMenuActions(driver);
+        AccountMenuActions accountMenuActions = new AccountMenuActions(DriverManager.driver);
         Assert.assertEquals(accountMenuActions.confirmPage("pay many"), "Pay Many");
         accountMenuActions.clickBack();
     }
@@ -59,7 +60,7 @@ public class PageVerificationTests extends BaseTestsConfig {
     @Test()
     public void transferPageConfirmation() {
 
-        AccountMenuActions accountMenuActions = new AccountMenuActions(driver);
+        AccountMenuActions accountMenuActions = new AccountMenuActions(DriverManager.driver);
         Assert.assertEquals(accountMenuActions.confirmPage("transfer"), "Transfer");
         accountMenuActions.clickBack();
     }
@@ -67,42 +68,42 @@ public class PageVerificationTests extends BaseTestsConfig {
     @Test()
     public void buyPageConfirmation() {
 
-        AccountMenuActions accountMenuActions = new AccountMenuActions(driver);
+        AccountMenuActions accountMenuActions = new AccountMenuActions(DriverManager.driver);
         Assert.assertEquals(accountMenuActions.confirmPage("buy"), "Quick Buy");
         accountMenuActions.clickBack();
     }
 
     @Test()
     public void sendMoneyPageConfirmation() {
-        AccountMenuActions accountMenuActions = new AccountMenuActions(driver);
+        AccountMenuActions accountMenuActions = new AccountMenuActions(DriverManager.driver);
         Assert.assertEquals(accountMenuActions.confirmPage("send money"), "Send Money");
         accountMenuActions.clickBack();
     }
 
     @Test()
     public void friendsPageConfirmation() {
-        AccountMenuActions accountMenuActions = new AccountMenuActions(driver);
+        AccountMenuActions accountMenuActions = new AccountMenuActions(DriverManager.driver);
         Assert.assertEquals(accountMenuActions.confirmPage("friends"), "Friends");
         accountMenuActions.clickBack();
     }
 
     @Test()
     public void statementsAndLettersPageConfirmation() {
-        AccountMenuActions accountMenuActions = new AccountMenuActions(driver);
+        AccountMenuActions accountMenuActions = new AccountMenuActions(DriverManager.driver);
         Assert.assertEquals(accountMenuActions.confirmPage("statements"), "Statements & letters");
         accountMenuActions.clickBack();
     }
 
     @Test()
     public void ficaDocumentsPageConfirmation() {
-        AccountMenuActions accountMenuActions = new AccountMenuActions(driver);
+        AccountMenuActions accountMenuActions = new AccountMenuActions(DriverManager.driver);
         Assert.assertEquals(accountMenuActions.confirmPage("fica documents"), "FICA Documents");
         accountMenuActions.clickBack();
     }
 
     @Test()
     public void settingsPageConfirmation() {
-        AccountMenuActions accountMenuActions = new AccountMenuActions(driver);
+        AccountMenuActions accountMenuActions = new AccountMenuActions(DriverManager.driver);
         Assert.assertEquals(accountMenuActions.confirmPage("settings"), "Settings");
         accountMenuActions.clickBack();
     }
@@ -110,17 +111,17 @@ public class PageVerificationTests extends BaseTestsConfig {
     @Test()
     public void cardPageConfirmation()
     {
-        AccountMenuActions accountMenuActions = new AccountMenuActions(driver);
+        AccountMenuActions accountMenuActions = new AccountMenuActions(DriverManager.driver);
         accountMenuActions.clickAccountMenuActionsButtn();
         accountMenuActions.clickCardButton();
         Assert.assertTrue(accountMenuActions.cardWidget());
-        driver.navigate().back();
+        DriverManager.driver.navigate().back();
     }
 
     @AfterMethod
     public void cleanUp() {
         try {
-            HomePage homePage = new HomePage(driver);
+            HomePage homePage = new HomePage(DriverManager.driver);
             homePage.clickLogoutButtn();
         } catch (Exception e) {
             log.error("Cleanup failed: ", e);

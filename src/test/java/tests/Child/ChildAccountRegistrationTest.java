@@ -17,6 +17,7 @@ import pageObjects.app.login.LoginPage;
 import pageObjects.app.login.PairOnDevicePage;
 import testConfig.BaseTestsConfig;
 import utils.AndroidActions;
+import utils.DriverManager;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -39,17 +40,17 @@ public class ChildAccountRegistrationTest extends BaseTestsConfig {
     @BeforeMethod
     public void preSetUp()
     {
-        androidActions = new AndroidActions(driver);
+        androidActions = new AndroidActions(DriverManager.driver);
         androidActions.environmentChange();
 
-        loginPage = new LoginPage(driver);
-        homePage = new HomePage(driver);
-        addAccountPage = new AddAccountPage(driver);
-        childAccPage = new ChildAccPage(driver);
-        registerOTP = new RegisterOTP(driver);
-        myCardPage = new MyCardPage(driver);
-        whoAmIRegistration = new WhoAmIRegistration(driver);
-        pairOnDevicePage = new PairOnDevicePage(driver);
+        loginPage = new LoginPage(DriverManager.driver);
+        homePage = new HomePage(DriverManager.driver);
+        addAccountPage = new AddAccountPage(DriverManager.driver);
+        childAccPage = new ChildAccPage(DriverManager.driver);
+        registerOTP = new RegisterOTP(DriverManager.driver);
+        myCardPage = new MyCardPage(DriverManager.driver);
+        whoAmIRegistration = new WhoAmIRegistration(DriverManager.driver);
+        pairOnDevicePage = new PairOnDevicePage(DriverManager.driver);
     }
 
     @Test(dataProvider = "getMultipleDataSet", priority = 0)
@@ -77,7 +78,7 @@ public class ChildAccountRegistrationTest extends BaseTestsConfig {
 
             try {
                 Assert.assertEquals(status,"Thank you");
-                attachScreenshot(driver,"Child Account Registration Confirmation");
+                attachScreenshot(DriverManager.driver,"Child Account Registration Confirmation");
                 log.info("Registration status: {}",status);
             } catch (AssertionError e) {
                 log.warn("Registration failed with status: {}", status);
@@ -122,7 +123,7 @@ public class ChildAccountRegistrationTest extends BaseTestsConfig {
         childAccPage.clickNext();
 
         childAccPage.cardDelivery();
-        attachScreenshot(driver,"Card Delivery Details Entered");
+        attachScreenshot(DriverManager.driver,"Card Delivery Details Entered");
         childAccPage.clickNext();
         whoAmIRegistration.enterIamSavingForDetails("Child Future", "1000.00");
         whoAmIRegistration.clickNextButtn();
@@ -130,7 +131,7 @@ public class ChildAccountRegistrationTest extends BaseTestsConfig {
         whoAmIRegistration.enterAppPin(Integer.parseInt(input.get("childPin")));
         whoAmIRegistration.confirmAppPin(Integer.parseInt(input.get("childPin")));
         whoAmIRegistration.enterRecoveryDetails(input.get("recoveryNumber"),input.get("recoveryNumber"),input.get("recoveryEmail"));
-        attachScreenshot(driver,"Recovery Details Entered");
+        attachScreenshot(DriverManager.driver,"Recovery Details Entered");
         whoAmIRegistration.clickNextButtn();
 
         whoAmIRegistration.clickCheckBox2();
@@ -140,7 +141,7 @@ public class ChildAccountRegistrationTest extends BaseTestsConfig {
         String status = whoAmIRegistration.getStatus();
         try {
             Assert.assertEquals(status, "Thank you");
-            attachScreenshot(driver,"Child Registration Success");
+            attachScreenshot(DriverManager.driver,"Child Registration Success");
             log.info("Registration successful matched status: {}",status);
         } catch (AssertionError | Exception e) {
             log.warn("Registration failed with status: {}", status);
@@ -164,7 +165,7 @@ public class ChildAccountRegistrationTest extends BaseTestsConfig {
 
         try {
             Assert.assertEquals(homePage.getHomePageConfirm(), "Accounts");
-            attachScreenshot(driver, "Child Login Success");
+            attachScreenshot(DriverManager.driver, "Child Login Success");
             log.info("User logged in, Accounts screen displayed");
         } catch (AssertionError | Exception e) {
             Assert.fail("Test failed due to exception: " + e.getMessage());
@@ -172,7 +173,7 @@ public class ChildAccountRegistrationTest extends BaseTestsConfig {
             throw e;
         }finally {
             homePage.clickLogoutButtn();
-            attachScreenshot(driver, "Child Logout Success");
+            attachScreenshot(DriverManager.driver, "Child Logout Success");
              log.info("User logged out, Login screen displayed");
         }
     }
@@ -195,8 +196,8 @@ public class ChildAccountRegistrationTest extends BaseTestsConfig {
     @AfterMethod
     public void cleanUp() {
         try {
-            ChildAccPage childAccPage = new ChildAccPage(driver);
-            HomePage homePage = new HomePage(driver);
+            ChildAccPage childAccPage = new ChildAccPage(DriverManager.driver);
+            HomePage homePage = new HomePage(DriverManager.driver);
             childAccPage.clickFinishButton();
             homePage.clickLogoutButtn();
 

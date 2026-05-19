@@ -13,6 +13,7 @@ import pageObjects.app.accountsActionMenu.statements.StatementsAndLettersPage;
 import pageObjects.app.accountsHome.HomePage;
 import pageObjects.app.login.LoginPage;
 import testConfig.BaseTestsConfig;
+import utils.DriverManager;
 
 public class StatementsAndLettersTests extends BaseTestsConfig {
     private static final Logger log = LoggerFactory.getLogger(StatementsAndLettersTests.class);
@@ -24,10 +25,10 @@ public class StatementsAndLettersTests extends BaseTestsConfig {
 
     @BeforeClass
     public void preSetUp() throws JSchException {
-         statementsAndLettersPage = new StatementsAndLettersPage(driver);
-         loginPage = new LoginPage(driver);
-         homePage = new HomePage(driver);
-         accountMenuActions = new AccountMenuActions(driver);
+         statementsAndLettersPage = new StatementsAndLettersPage(DriverManager.driver);
+         loginPage = new LoginPage(DriverManager.driver);
+         homePage = new HomePage(DriverManager.driver);
+         accountMenuActions = new AccountMenuActions(DriverManager.driver);
          data = TransferDataFactory.validTransfer();
 
          EmailsConfig.enableEmails();
@@ -50,7 +51,7 @@ public class StatementsAndLettersTests extends BaseTestsConfig {
         statementsAndLettersPage.clickEmailButton();
         try {
             Assert.assertEquals(statementsAndLettersPage.getDocumentRequestStatus(),"Email sent successful. Please check your inbox");
-            attachScreenshot(driver,"Account Confirmation Letter Email Sent");
+            attachScreenshot(DriverManager.driver,"Account Confirmation Letter Email Sent");
             log.info("Account confirmation letter email sent successfully and verified the success message.");
 
         }catch (Exception e){
@@ -73,7 +74,7 @@ public class StatementsAndLettersTests extends BaseTestsConfig {
         statementsAndLettersPage.clickEmailButton();
         try {
             Assert.assertEquals(statementsAndLettersPage.getDocumentRequestStatus(),"Email sent successful. Please check your inbox");
-            attachScreenshot(driver,"Account Statements Email Sent");
+            attachScreenshot(DriverManager.driver,"Account Statements Email Sent");
             log.info("Account Statements letter email sent successfully and verified the success message.");
 
         }catch (Exception e){
@@ -96,7 +97,7 @@ public class StatementsAndLettersTests extends BaseTestsConfig {
         statementsAndLettersPage.clickEmailButton();
         try {
             Assert.assertEquals(statementsAndLettersPage.getDocumentRequestStatus(),"Email sent successful. Please check your inbox");
-            attachScreenshot(driver,"Salary Switch Letter Email Sent");
+            attachScreenshot(DriverManager.driver,"Salary Switch Letter Email Sent");
             log.info("Salary switch letter email sent successfully and verified the success message.");
 
         }catch (Exception e){
@@ -119,7 +120,7 @@ public class StatementsAndLettersTests extends BaseTestsConfig {
         statementsAndLettersPage.clickEmailButton();
         try {
             Assert.assertEquals(statementsAndLettersPage.getDocumentRequestStatus(),"Email sent successful. Please check your inbox");
-            attachScreenshot(driver,"Welcome Letter Email Sent");
+            attachScreenshot(DriverManager.driver,"Welcome Letter Email Sent");
             log.info("Welcome letter email sent successfully and verified the success message.");
 
         }catch (Exception e){
@@ -141,7 +142,7 @@ public class StatementsAndLettersTests extends BaseTestsConfig {
         statementsAndLettersPage.clickEmailButton();
         try {
             Assert.assertEquals(statementsAndLettersPage.getDocumentRequestStatus(),"Email sent successful. Please check your inbox");
-            attachScreenshot(driver,"Payment recipient Letter Email Sent");
+            attachScreenshot(DriverManager.driver,"Payment recipient Letter Email Sent");
             log.info("Payment recipient letter email sent successfully and verified the success message.");
 
         }catch (Exception e){

@@ -12,6 +12,7 @@ import pageObjects.app.accountsActionMenu.pay.QuickPayPage;
 import pageObjects.app.accountsHome.HomePage;
 import pageObjects.app.login.LoginPage;
 import testConfig.BaseTestsConfig;
+import utils.DriverManager;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -28,11 +29,11 @@ public class NegativePaymentTests extends BaseTestsConfig {
 
     @BeforeMethod
     public void preSetUp() {
-        loginPage = new LoginPage(driver);
-        homePage = new HomePage(driver);
-        accountMenuActions = new AccountMenuActions(driver);
-        quickPayPage = new QuickPayPage(driver);
-        myCardPage = new MyCardPage(driver);
+        loginPage = new LoginPage(DriverManager.driver);
+        homePage = new HomePage(DriverManager.driver);
+        accountMenuActions = new AccountMenuActions(DriverManager.driver);
+        quickPayPage = new QuickPayPage(DriverManager.driver);
+        myCardPage = new MyCardPage(DriverManager.driver);
 
         log.debug("Page objects and androidActions initialized");
     }
@@ -64,7 +65,7 @@ public class NegativePaymentTests extends BaseTestsConfig {
             String expectedTxt =  quickPayPage.getErrorMessage();
             log.info("Assertion expectation: {}",expectedTxt);
             Assert.assertEquals(expectedTxt,"Account number and branch combination could not be validated. Please check and rectify.");
-            attachScreenshot(driver, "Recipient_Add_Failed");
+            attachScreenshot(DriverManager.driver, "Recipient_Add_Failed");
 
         } catch (AssertionError e) {
             log.warn("Failed to add payment recipient");

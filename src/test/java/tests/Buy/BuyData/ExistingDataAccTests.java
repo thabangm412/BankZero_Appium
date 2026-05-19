@@ -12,6 +12,7 @@ import pageObjects.app.accountsActionMenu.buy.BuyDataPage;
 import pageObjects.app.accountsHome.HomePage;
 import pageObjects.app.login.LoginPage;
 import testConfig.BaseTestsConfig;
+import utils.DriverManager;
 
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -28,9 +29,9 @@ public class ExistingDataAccTests extends BaseTestsConfig {
 
     @BeforeMethod
     public void preSetUp() {
-        loginPage = new LoginPage(driver);
-        accountMenuActions = new AccountMenuActions(driver);
-        buyDataPage = new BuyDataPage(driver);
+        loginPage = new LoginPage(DriverManager.driver);
+        accountMenuActions = new AccountMenuActions(DriverManager.driver);
+        buyDataPage = new BuyDataPage(DriverManager.driver);
 
     }
 
@@ -52,10 +53,10 @@ public class ExistingDataAccTests extends BaseTestsConfig {
         accountMenuActions.clickAccountMenuActionsButtn();
         buyDataPage.clickBuyButton();
         buyDataPage.getExistingProfile(input.get("DataName"));
-        attachScreenshot(driver,"Existing Data Profile Retrieved");
+        attachScreenshot(DriverManager.driver,"Existing Data Profile Retrieved");
         buyDataPage.clickRedo();
         buyDataPage.clickHomeBuyButton();
-        attachScreenshot(driver,"Data Purchase Page");
+        attachScreenshot(DriverManager.driver,"Data Purchase Page");
         buyDataPage.clickConfirmButton();
 
         try {
@@ -64,7 +65,7 @@ public class ExistingDataAccTests extends BaseTestsConfig {
             try {
                 Assert.assertEquals(status, "Success");
                 log.info("Transactional Status: {}",status);
-                attachScreenshot(driver,"Existing Data Profile Transaction Status");
+                attachScreenshot(DriverManager.driver,"Existing Data Profile Transaction Status");
             } catch (AssertionError e) {
                 log.warn("Transaction failed with status: {}", status);
                 throw e;  // Let TestNG fail the test
@@ -94,7 +95,7 @@ public class ExistingDataAccTests extends BaseTestsConfig {
         accountMenuActions.clickAccountMenuActionsButtn();
         buyDataPage.clickBuyButton();
         buyDataPage.getExistingProfile(input.get("DataName"));
-        attachScreenshot(driver,"Existing Data Profile Retrieved for Deletion");
+        attachScreenshot(DriverManager.driver,"Existing Data Profile Retrieved for Deletion");
         buyDataPage.clickEditButton();
         buyDataPage.clickDeleteButton();
 
@@ -103,13 +104,13 @@ public class ExistingDataAccTests extends BaseTestsConfig {
             log.info("Recipient deletion confirmed: {}",input.get("DataName"));
 //            Assert.assertEquals(actualTxt,"Item deleted!");
 //            log.info("Recipient deleted");
-            attachScreenshot(driver,"Data Recipient Deleted");
+            attachScreenshot(DriverManager.driver,"Data Recipient Deleted");
         } catch (Exception| AssertionError e) {
             Assert.fail("Test failed");
             log.warn("Test failed due to: {}",e);
             throw new RuntimeException(e);
         }
-        driver.navigate().back();
+        DriverManager.driver.navigate().back();
         buyDataPage.clickBack();
     }
 
@@ -124,7 +125,7 @@ public class ExistingDataAccTests extends BaseTestsConfig {
     @AfterMethod
     public void cleanUp() {
         try {
-            HomePage homePage = new HomePage(driver);
+            HomePage homePage = new HomePage(DriverManager.driver);
 
             homePage.clickLogoutButtn();
         } catch (Exception e) {

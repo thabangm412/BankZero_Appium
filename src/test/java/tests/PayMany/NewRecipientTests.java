@@ -14,6 +14,7 @@ import pageObjects.app.accountsHome.HomePage;
 import pageObjects.app.login.LoginPage;
 import testConfig.BaseTestsConfig;
 import utils.AndroidActions;
+import utils.DriverManager;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -31,12 +32,12 @@ public class NewRecipientTests extends BaseTestsConfig {
 
     @BeforeMethod
     public void preSetUp() {
-        loginPage = new LoginPage(driver);
-        homePage = new HomePage(driver);
-        accountMenuActions = new AccountMenuActions(driver);
-        quickPayPage = new QuickPayPage(driver);
-        androidActions = new AndroidActions(driver);
-        payManyPage = new PayManyPage(driver);
+        loginPage = new LoginPage(DriverManager.driver);
+        homePage = new HomePage(DriverManager.driver);
+        accountMenuActions = new AccountMenuActions(DriverManager.driver);
+        quickPayPage = new QuickPayPage(DriverManager.driver);
+        androidActions = new AndroidActions(DriverManager.driver);
+        payManyPage = new PayManyPage(DriverManager.driver);
 
         log.debug("Page objects and androidActions initialized");
     }
@@ -63,14 +64,14 @@ public class NewRecipientTests extends BaseTestsConfig {
         payManyPage.enterPOPDetails(input.get("popEmail"),input.get("popPhone"));
         payManyPage.clickAddButton();
         payManyPage.getGroups(input.get("group"));
-        attachScreenshot(driver,"RecipientDetails added");
+        attachScreenshot(DriverManager.driver,"RecipientDetails added");
 
         try {
             String expectedTxt =  input.get("recipientName");
             log.info("Assertion expectation: {}",expectedTxt);
             //String actualTxt = payManyPage.getRecipientName();
             Assert.assertTrue(payManyPage.getRecipientNames().contains(expectedTxt), "Recipient name does not match expected value");
-            attachScreenshot(driver,"Recipient added successfully");
+            attachScreenshot(DriverManager.driver,"Recipient added successfully");
 
         } catch (AssertionError e) {
             log.warn("Failed to add payment recipient");
@@ -94,13 +95,13 @@ public class NewRecipientTests extends BaseTestsConfig {
         payManyPage.addAttachments();
         payManyPage.enterAmount(input.get("amount"));
         payManyPage.clickFinish();
-        attachScreenshot(driver,"Payment details");
+        attachScreenshot(DriverManager.driver,"Payment details");
         payManyPage.clickConfirmButton();
 
         try {
             String actualTxt = payManyPage.transactionStatus();
             Assert.assertEquals(actualTxt,"Thank you");
-            attachScreenshot(driver,"Payment successful");
+            attachScreenshot(DriverManager.driver,"Payment successful");
         }catch (AssertionError | NoSuchElementException e)
         {
             log.warn("Failed to do payment transaction");

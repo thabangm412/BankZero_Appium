@@ -15,6 +15,7 @@ import pageObjects.app.login.LoginPage;
 import pageObjects.app.login.PairOnDevicePage;
 import testConfig.BaseTestsConfig;
 import utils.AndroidActions;
+import utils.DriverManager;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -26,18 +27,18 @@ public class SADrivingLicenceRegistrationTest extends BaseTestsConfig {
 
     @BeforeMethod
     public void preSetUp() {
-        AndroidActions androidActions = new AndroidActions(driver);
+        AndroidActions androidActions = new AndroidActions(DriverManager.driver);
         androidActions.environmentChange();
     }
 
     @Test(dataProvider = "getSingleDataSet", priority = 0)
     public void registrationPositiveFlow(HashMap<String, String> input) throws InterruptedException {
-        PairOnDevicePage pairOnDevicePage = new PairOnDevicePage(driver);
-        RegisterOTP registerOTP = new RegisterOTP(driver);
-        MyCardPage myCardPage = new MyCardPage(driver);
-        WhoAmIRegistration whoAmIRegistration = new WhoAmIRegistration(driver);
-        AndroidActions androidActions = new AndroidActions(driver);
-        LoginPage loginPage = new LoginPage(driver);
+        PairOnDevicePage pairOnDevicePage = new PairOnDevicePage(DriverManager.driver);
+        RegisterOTP registerOTP = new RegisterOTP(DriverManager.driver);
+        MyCardPage myCardPage = new MyCardPage(DriverManager.driver);
+        WhoAmIRegistration whoAmIRegistration = new WhoAmIRegistration(DriverManager.driver);
+        AndroidActions androidActions = new AndroidActions(DriverManager.driver);
+        LoginPage loginPage = new LoginPage(DriverManager.driver);
 
         // Clear cell phone data...
         androidActions.clearPhoneData(input.get("phoneNumber"));
@@ -71,7 +72,7 @@ public class SADrivingLicenceRegistrationTest extends BaseTestsConfig {
         androidActions.scrollToTextAndClick("Salary");
         whoAmIRegistration.clickIncomeSubButtn();
         whoAmIRegistration.clickSourceOfWealthButtn();
-        driver.findElement(By.xpath("(//android.widget.CheckBox[@resource-id=\"za.co.neolabs.bankzero:id/listItemChecked\"])[1]")).click();
+        DriverManager.driver.findElement(By.xpath("(//android.widget.CheckBox[@resource-id=\"za.co.neolabs.bankzero:id/listItemChecked\"])[1]")).click();
         //androidActions.scrollToTextAndClick("salary");
         whoAmIRegistration.clickIncomeSubButtn();
         whoAmIRegistration.clickNextButtn();
@@ -81,7 +82,7 @@ public class SADrivingLicenceRegistrationTest extends BaseTestsConfig {
         whoAmIRegistration.addAddresss(input.get("street"),input.get("city"),input.get("postalCode"));
         androidActions.wait(3);
         whoAmIRegistration.clickCardDelivery();
-        androidActions.scrollToTextAndClick2("Courier to residential address (R119 - R149)",driver);
+        androidActions.scrollToTextAndClick2("Courier to residential address (R119 - R149)",DriverManager.driver);
         log.info("Pick up option chosen.");
         androidActions.wait(3);
         whoAmIRegistration.clickNextButtn();
@@ -101,7 +102,7 @@ public class SADrivingLicenceRegistrationTest extends BaseTestsConfig {
         whoAmIRegistration.clickCheckBox2();
         whoAmIRegistration.clickNextButtn();
         Thread.sleep(3000);
-//        AppiumUtils.waitForTextToAppear(By.id("za.co.neolabs.bankzero:id/toolbar_title"),"Thank you",driver);
+//        AppiumUtils.waitForTextToAppear(By.id("za.co.neolabs.bankzero:id/toolbar_title"),"Thank you",DriverManager.driver);
 //        whoAmIRegistration.clickNextButtn();
 //        Assert.assertTrue(loginPage.loginPageConfirm());
 //        log.info("Login page displayed.");
@@ -121,8 +122,8 @@ public class SADrivingLicenceRegistrationTest extends BaseTestsConfig {
 
     @Test(dataProvider = "getSingleDataSet", priority = 1)
     public void loginTest(HashMap<String, String> input) throws InterruptedException {
-        LoginPage loginPage = new LoginPage(driver);
-        HomePage homePage = new HomePage(driver);
+        LoginPage loginPage = new LoginPage(DriverManager.driver);
+        HomePage homePage = new HomePage(DriverManager.driver);
 
         loginPage.loginAccount(input.get("name"));
         loginPage.enterLoginPin(Integer.parseInt(input.get("appPin")));

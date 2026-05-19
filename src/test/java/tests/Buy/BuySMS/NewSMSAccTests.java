@@ -12,6 +12,7 @@ import pageObjects.app.accountsActionMenu.buy.BuySMSPage;
 import pageObjects.app.accountsHome.HomePage;
 import pageObjects.app.login.LoginPage;
 import testConfig.BaseTestsConfig;
+import utils.DriverManager;
 
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -29,9 +30,9 @@ public class NewSMSAccTests extends BaseTestsConfig {
 
     @BeforeMethod
     public void preSetUp() {
-        loginPage = new LoginPage(driver);
-        accountMenuActions = new AccountMenuActions(driver);
-        buySMSPage = new BuySMSPage(driver);
+        loginPage = new LoginPage(DriverManager.driver);
+        accountMenuActions = new AccountMenuActions(DriverManager.driver);
+        buySMSPage = new BuySMSPage(DriverManager.driver);
 
     }
 
@@ -55,7 +56,7 @@ public class NewSMSAccTests extends BaseTestsConfig {
         buySMSPage.addAccButton();
         buySMSPage.addSMSItem(input.get("SMSName"),input.get("provider"),input.get("productSMS"),input.get("recipientNo"));
         buySMSPage.clickHomeBuyButton();
-        attachScreenshot(driver,"SMS Purchase Page");
+        attachScreenshot(DriverManager.driver,"SMS Purchase Page");
         buySMSPage.clickConfirmButton();
 
         try {
@@ -64,7 +65,7 @@ public class NewSMSAccTests extends BaseTestsConfig {
             try {
                 Assert.assertEquals(status, "Success");
                 log.info("Transactional Status: {}",status);
-                attachScreenshot(driver,"SMS Purchase Success");
+                attachScreenshot(DriverManager.driver,"SMS Purchase Success");
             } catch (AssertionError e) {
                 log.warn("Transaction failed with status: {}", status);
                 throw e;  // Let TestNG fail the test
@@ -86,8 +87,8 @@ public class NewSMSAccTests extends BaseTestsConfig {
     @AfterMethod
     public void cleanUp() {
         try {
-            HomePage homePage = new HomePage(driver);
-            BuySMSPage buySMSPage = new BuySMSPage(driver);
+            HomePage homePage = new HomePage(DriverManager.driver);
+            BuySMSPage buySMSPage = new BuySMSPage(DriverManager.driver);
 
             buySMSPage.clickFinishButton();
             homePage.clickLogoutButtn();

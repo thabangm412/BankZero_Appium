@@ -15,6 +15,7 @@ import pageObjects.app.login.LoginPage;
 import pageObjects.app.login.PairOnDevicePage;
 import testConfig.BaseTestsConfig;
 import utils.AndroidActions;
+import utils.DriverManager;
 
 import java.io.File;
 import java.io.IOException;
@@ -35,16 +36,16 @@ public class GreenBookRegistrationTest extends BaseTestsConfig {
 
     @BeforeMethod
     public void preSetUp() {
-        androidActions  = new AndroidActions(driver);
+        androidActions  = new AndroidActions(DriverManager.driver);
         androidActions.environmentChange();
 
         // initialize page objects once per test
-        pairOnDevicePage = new PairOnDevicePage(driver);
-        registerOTP = new RegisterOTP(driver);
-        myCardPage = new MyCardPage(driver);
-        whoAmIRegistration = new WhoAmIRegistration(driver);
-        loginPage = new LoginPage(driver);
-        homePage = new HomePage(driver);
+        pairOnDevicePage = new PairOnDevicePage(DriverManager.driver);
+        registerOTP = new RegisterOTP(DriverManager.driver);
+        myCardPage = new MyCardPage(DriverManager.driver);
+        whoAmIRegistration = new WhoAmIRegistration(DriverManager.driver);
+        loginPage = new LoginPage(DriverManager.driver);
+        homePage = new HomePage(DriverManager.driver);
 
         log.debug("Page objects and androidActions initialized");
     }
@@ -94,10 +95,10 @@ public class GreenBookRegistrationTest extends BaseTestsConfig {
         androidActions.scrollToTextAndClick("Salary");
         whoAmIRegistration.clickIncomeSubButtn();
         whoAmIRegistration.clickSourceOfWealthButtn();
-        driver.findElement(By.xpath("(//android.widget.CheckBox[@resource-id=\"za.co.neolabs.bankzero:id/listItemChecked\"])[1]")).click();
+        DriverManager.driver.findElement(By.xpath("(//android.widget.CheckBox[@resource-id=\"za.co.neolabs.bankzero:id/listItemChecked\"])[1]")).click();
         //androidActions.scrollToTextAndClick("salary");
         whoAmIRegistration.clickIncomeSubButtn();
-        attachScreenshot(driver,"Source of Funds and Wealth");
+        attachScreenshot(DriverManager.driver,"Source of Funds and Wealth");
         whoAmIRegistration.clickNextButtn();
 
         // Where am I Flow:
@@ -105,10 +106,10 @@ public class GreenBookRegistrationTest extends BaseTestsConfig {
         whoAmIRegistration.addAddresss(input.get("street"),input.get("city"),input.get("postalCode"));
         androidActions.wait(3);
         whoAmIRegistration.clickCardDelivery();
-        androidActions.scrollToTextAndClick2("Courier to residential address (R125 - R155)",driver);
+        androidActions.scrollToTextAndClick2("Courier to residential address (R125 - R155)",DriverManager.driver);
         log.info("Pick up option chosen.");
         androidActions.wait(3);
-        attachScreenshot(driver,"Address Entered");
+        attachScreenshot(DriverManager.driver,"Address Entered");
         whoAmIRegistration.clickNextButtn();
         androidActions.wait(3);
 
@@ -120,7 +121,7 @@ public class GreenBookRegistrationTest extends BaseTestsConfig {
         whoAmIRegistration.enterAppPin(appPin);
         whoAmIRegistration.confirmAppPin(appPin);
         whoAmIRegistration.enterRecoveryDetails(input.get("recoveryPhoneNumber"),input.get("recoveryPhoneNumber"),input.get("recoveryEmail"));
-        attachScreenshot(driver,"Recovery Details Entered");
+        attachScreenshot(DriverManager.driver,"Recovery Details Entered");
         whoAmIRegistration.clickNextButtn();
 
         // Happy page Flow:
@@ -131,7 +132,7 @@ public class GreenBookRegistrationTest extends BaseTestsConfig {
         String status = whoAmIRegistration.getStatus();
         try {
             Assert.assertEquals(status, "Thank you");
-            attachScreenshot(driver,"Registration Success");
+            attachScreenshot(DriverManager.driver,"Registration Success");
             log.info("Transactional successful matched status: {}",status);
         } catch (AssertionError | Exception e) {
             log.warn("Registration failed with status: {}", status);
@@ -156,7 +157,7 @@ public class GreenBookRegistrationTest extends BaseTestsConfig {
 
         try {
             Assert.assertEquals(homePage.getHomePageConfirm(), "Accounts");
-            attachScreenshot(driver, "Login_Success");
+            attachScreenshot(DriverManager.driver, "Login_Success");
             log.info("New User logged in, Accounts screen displayed");
             androidActions.wait(3);
         } catch (AssertionError | Exception e) {

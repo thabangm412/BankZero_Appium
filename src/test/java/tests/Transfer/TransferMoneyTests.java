@@ -10,13 +10,14 @@ import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 import pageObjects.app.accountsActionMenu.AccountMenuActions;
 import pageObjects.app.accountsActionMenu.pay.QuickPayPage;
-import pageObjects.app.accountsActionMenu.sedMoney.SendMoneyPage;
+import pageObjects.app.accountsActionMenu.sendMoney.SendMoneyPage;
 import pageObjects.app.accountsActionMenu.transfer.TransferPage;
 import pageObjects.app.accountsHome.HomePage;
 import pageObjects.app.login.LoginPage;
 import testConfig.BaseTestsConfig;
 import utils.AndroidActions;
 import utils.AppiumUtils;
+import utils.DriverManager;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -35,12 +36,12 @@ public class TransferMoneyTests extends BaseTestsConfig {
 
     @BeforeMethod
     public void preSetUp() {
-        loginPage = new LoginPage(driver);
-        homePage = new HomePage(driver);
-        accountMenuActions = new AccountMenuActions(driver);
-        sendMoneyPage = new SendMoneyPage(driver);
-        androidActions = new AndroidActions(driver);
-        transferPage = new TransferPage(driver);
+        loginPage = new LoginPage(DriverManager.driver);
+        homePage = new HomePage(DriverManager.driver);
+        accountMenuActions = new AccountMenuActions(DriverManager.driver);
+        sendMoneyPage = new SendMoneyPage(DriverManager.driver);
+        androidActions = new AndroidActions(DriverManager.driver);
+        transferPage = new TransferPage(DriverManager.driver);
 
         log.debug("Page objects and androidActions initialized");
     }
@@ -62,7 +63,7 @@ public class TransferMoneyTests extends BaseTestsConfig {
         transferPage.clickTransferButton();
         transferPage.selectExistingAccount(input.get("accountName"));
         transferPage.transferMoney(input.get("amount"),input.get("ref"));
-        attachScreenshot(driver,"TransferDetails");
+        attachScreenshot(DriverManager.driver,"TransferDetails");
 
         transferPage.clickTransfer();
         transferPage.clickConfrim();
@@ -71,7 +72,7 @@ public class TransferMoneyTests extends BaseTestsConfig {
             try {
                 Assert.assertEquals(transferPage.getTransferStatus(),"Transfer success");
                 log.info("Transfer status: {}",transferPage.getTransferStatus());
-                attachScreenshot(driver,"TransferSuccess");
+                attachScreenshot(DriverManager.driver,"TransferSuccess");
             } catch (AssertionError e) {
                 log.warn("Failed to do transfer transaction");
                 throw e;
@@ -115,9 +116,9 @@ public class TransferMoneyTests extends BaseTestsConfig {
             String expectedTxt = formattedAmount + " " + scheduleTypeLower + " on " + futureDate;
             log.info("Assertion expectation: {}", expectedTxt);
 
-            Assert.assertEquals(driver.findElement(By.id("za.co.neolabs.bankzero:id/product_type")).getText(), expectedTxt);
+            Assert.assertEquals(DriverManager.driver.findElement(By.id("za.co.neolabs.bankzero:id/product_type")).getText(), expectedTxt);
             log.info("Assertion passed for scheduled transfer: {}", expectedTxt);
-            attachScreenshot(driver, "Schedule Once-off Payment - " + name);
+            attachScreenshot(DriverManager.driver, "Schedule Once-off Payment - " + name);
 
 
         } catch (AssertionError | Exception e) {
@@ -160,9 +161,9 @@ public class TransferMoneyTests extends BaseTestsConfig {
         try {
             String expectedTxt = formattedAmount + " " + scheduleTypeLower + " on Monday till " + toDate;
             log.info("Future date calculated for assertion: {}", toDate);
-            Assert.assertEquals(driver.findElement(By.id("za.co.neolabs.bankzero:id/product_type")).getText(), expectedTxt);
+            Assert.assertEquals(DriverManager.driver.findElement(By.id("za.co.neolabs.bankzero:id/product_type")).getText(), expectedTxt);
             log.info("Assertion passed for scheduled transfer: {}", expectedTxt);
-            attachScreenshot(driver, "Schedule Weekly Payment - " + name);
+            attachScreenshot(DriverManager.driver, "Schedule Weekly Payment - " + name);
 
         } catch (AssertionError | Exception e) {
             log.warn("Failed to do schedule transfer");
@@ -206,8 +207,8 @@ public class TransferMoneyTests extends BaseTestsConfig {
             String expectedTxt = formattedAmount + " " + scheduleTypeLower + " on 2nd till " + monthlyToDate;
             log.info("Assertion expectation: {}",expectedTxt);
 
-            Assert.assertEquals(driver.findElement(By.id("za.co.neolabs.bankzero:id/product_type")).getText(), expectedTxt);
-            attachScreenshot(driver, "Schedule Monthly Payment - " + name);
+            Assert.assertEquals(DriverManager.driver.findElement(By.id("za.co.neolabs.bankzero:id/product_type")).getText(), expectedTxt);
+            attachScreenshot(DriverManager.driver, "Schedule Monthly Payment - " + name);
             log.info("Assertion passed for scheduled transfer: {}", expectedTxt);
 
         } catch (AssertionError | Exception e) {
@@ -231,7 +232,7 @@ public class TransferMoneyTests extends BaseTestsConfig {
     @AfterMethod
     public void cleanUp() {
         try {
-            HomePage homePage = new HomePage(driver);
+            HomePage homePage = new HomePage(DriverManager.driver);
             homePage.clickLogoutButtn();
 
         } catch (Exception e) {

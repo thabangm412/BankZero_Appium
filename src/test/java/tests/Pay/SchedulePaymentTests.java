@@ -14,6 +14,7 @@ import pageObjects.app.login.LoginPage;
 import testConfig.BaseTestsConfig;
 import utils.AndroidActions;
 import utils.AppiumUtils;
+import utils.DriverManager;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -30,11 +31,11 @@ public class SchedulePaymentTests extends BaseTestsConfig {
 
     @BeforeMethod
     public void setup() {
-        loginPage = new LoginPage(driver);
-        homePage = new HomePage(driver);
-        accountMenuActions = new AccountMenuActions(driver);
-        quickPayPage = new QuickPayPage(driver);
-        androidActions = new AndroidActions(driver);
+        loginPage = new LoginPage(DriverManager.driver);
+        homePage = new HomePage(DriverManager.driver);
+        accountMenuActions = new AccountMenuActions(DriverManager.driver);
+        quickPayPage = new QuickPayPage(DriverManager.driver);
+        androidActions = new AndroidActions(DriverManager.driver);
     }
 
     @Test(dataProvider = "getMultipleDataSet", priority = 0)
@@ -65,8 +66,8 @@ public class SchedulePaymentTests extends BaseTestsConfig {
             String expectedTxt = formattedAmount + " " + scheduleTypeLower + " on " + futureDate;
             log.info("Assertion expectation: {}", expectedTxt);
 
-            Assert.assertEquals(driver.findElement(By.id("za.co.neolabs.bankzero:id/product_type")).getText(), expectedTxt);
-            attachScreenshot(driver, "Schedule Once-off Payment - " + name);
+            Assert.assertEquals(DriverManager.driver.findElement(By.id("za.co.neolabs.bankzero:id/product_type")).getText(), expectedTxt);
+            attachScreenshot(DriverManager.driver, "Schedule Once-off Payment - " + name);
             log.info("Schedule Once-off Payment test passed for user: {}", name);
 
         } catch (AssertionError | Exception e) {
@@ -109,8 +110,8 @@ public class SchedulePaymentTests extends BaseTestsConfig {
             log.info("Future date calculated for assertion: {}", toDate);
             log.info("Assertion expectation: {}",expectedTxt);
 
-            Assert.assertEquals(driver.findElement(By.id("za.co.neolabs.bankzero:id/product_type")).getText(), expectedTxt);
-            attachScreenshot(driver, "Schedule Weekly Payment - " + name);
+            Assert.assertEquals(DriverManager.driver.findElement(By.id("za.co.neolabs.bankzero:id/product_type")).getText(), expectedTxt);
+            attachScreenshot(DriverManager.driver, "Schedule Weekly Payment - " + name);
             log.info("Schedule Weekly Payment assertion passed for user: {}", name);
 
         } catch (AssertionError | Exception e) {
@@ -150,8 +151,8 @@ public class SchedulePaymentTests extends BaseTestsConfig {
             String expectedTxt = formattedAmount + " " + scheduleTypeLower + " on 2nd till " + monthlyToDate;
             log.info("Assertion expectation: {}",expectedTxt);
 
-            Assert.assertEquals(driver.findElement(By.id("za.co.neolabs.bankzero:id/product_type")).getText(), expectedTxt);
-            attachScreenshot(driver, "Schedule Monthly Payment - " + name);
+            Assert.assertEquals(DriverManager.driver.findElement(By.id("za.co.neolabs.bankzero:id/product_type")).getText(), expectedTxt);
+            attachScreenshot(DriverManager.driver, "Schedule Monthly Payment - " + name);
             log.info("Schedule monthly payment test passed for profile: {}", name);
 
         } catch (AssertionError | Exception e) {
