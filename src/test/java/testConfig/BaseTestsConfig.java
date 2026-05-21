@@ -1,12 +1,16 @@
 package testConfig;
 
+import com.jcraft.jsch.JSchException;
 import io.appium.java_client.android.AndroidDriver;
 import io.appium.java_client.android.options.UiAutomator2Options;
 import io.appium.java_client.service.local.AppiumDriverLocalService;
 import io.appium.java_client.service.local.AppiumServiceBuilder;
+import org.testng.ITestContext;
 import org.testng.annotations.AfterSuite;
+import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeSuite;
 import utils.AppiumUtils;
+import utils.DriverManager;
 
 import java.io.File;
 import java.io.IOException;
@@ -16,7 +20,7 @@ import java.time.Duration;
 
 public class BaseTestsConfig extends AppiumUtils {
 
-    public static AndroidDriver driver;
+//    public static AndroidDriver driver;
     public static AppiumDriverLocalService service;
 
     @BeforeSuite
@@ -34,7 +38,7 @@ public class BaseTestsConfig extends AppiumUtils {
         UiAutomator2Options options = new UiAutomator2Options();
         options.setDeviceName("Samsung SM-A566B");
         options.setUdid("R5CY60MB6KK");
-        //options.setApp("C:\\Users\\ThabangMonoane\\IdeaProjects\\untitled\\src\\test\\java\\resources\\apps\\app-dev-0.9.9.52-rc02.apk");
+
         options.setPlatformName("Android");
         options.setAppPackage("za.co.neolabs.bankzero");
         options.setAppActivity("za.co.neolabs.bankzero.SplashActivity");
@@ -44,83 +48,22 @@ public class BaseTestsConfig extends AppiumUtils {
         options.setCapability("noReset", true);
         options.setCapability("dontStopAppOnReset", true);
 
-//        options.setCapability("unicodeKeyboard", true);
-//        options.setCapability("resetKeyboard", true);
 
-        // Start driver
-        //driver = new AndroidDriver(new URL("http://127.0.0.1:4723"), options);
-        driver = new AndroidDriver(new URL(URI.create("http://127.0.0.1:4725").toString()), options);
-        driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
+        DriverManager.driver = new AndroidDriver(new URL(URI.create("http://127.0.0.1:4725").toString()), options);
+        System.out.println("BASE DRIVER HASH: " + DriverManager.driver.hashCode());
+        DriverManager.driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
 
-        driver.activateApp("za.co.neolabs.bankzero");
+        DriverManager.driver.activateApp("za.co.neolabs.bankzero");
 
        //AndroidActions.copyAttachmentsToDevice(driver);
     }
 
-//    @BeforeClass
-//    @Parameters({"deviceName", "portNumber", "udid"})
-//    public void ConfigureAppium(String deviceName, String portNumber, String udid) throws IOException {
-//        int port = Integer.parseInt(portNumber);
-//
-//        // Start Appium server
-//        service = new AppiumServiceBuilder()
-//                .withAppiumJS(new File("C:\\Users\\ThabangMonoane\\AppData\\Roaming\\npm\\node_modules\\appium\\build\\lib\\main.js"))
-//                .withIPAddress("127.0.0.1")
-//                .usingPort(port) // Match this port with driver URL
-//                .withTimeout(Duration.ofSeconds(30))
-//                .build();
-//        service.start();
-//
-//        // Set desired capabilities
-//        UiAutomator2Options options = new UiAutomator2Options();
-//        options.setDeviceName(deviceName);
-//        options.setUdid(udid);
-//        options.setApp("C:\\Users\\ThabangMonoane\\IdeaProjects\\BzAppiumAutomation\\src\\test\\java\\resources\\apps\\app-dev-0.9.9.42-rc15.apk");
-//        options.setAutoGrantPermissions(true);
-//        options.setPlatformName("Android");
-//        options.setAppPackage("za.co.neolabs.bankzero");
-//        options.setAppActivity("za.co.neolabs.bankzero.SplashActivity");
-//
-//        // Preserve app state
-//        options.setCapability("noReset", true);
-//        options.setCapability("dontStopAppOnReset", true);
-//
-//        // Keyboard settings
-//        options.setCapability("unicodeKeyboard", true);
-//        options.setCapability("resetKeyboard", true);
-//
-//        // Start Android driver with matching Appium port
-//        URL gridUrl = new URL("http://localhost:4444");
-//        driver = new AndroidDriver(gridUrl, options);
-////        URL appiumUrl = new URL("http://127.0.0.1:" + port);
-////        driver = new AndroidDriver(appiumUrl, options);
-//        driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
-//
-//        // Optional utility method for attachment setup
-//        // AndroidActions.copyAttachmentsToDevice(driver);
-//    }
-
-
-
-//    @AfterClass
-//    public void tearDown() {
-//
-//        AndroidActions androidActions = new AndroidActions(driver);
-//        //androidActions.closeApp();
-//        if (driver != null) {
-//            driver.quit();
-//        }
-//        if (service != null && service.isRunning()) {
-//            service.stop();
-//        }
-//    }
-
     @AfterSuite
-    public void tearDown() {
-        if (driver != null) {
-            driver.quit();
+    public void tearDown() throws JSchException {
+        if (DriverManager.driver != null) {
+            DriverManager.driver.quit();
         }
-        if (service != null && service.isRunning()) {
+        if (DriverManager.driver != null && service.isRunning()) {
             service.stop();
         }
     }

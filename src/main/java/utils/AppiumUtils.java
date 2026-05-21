@@ -37,7 +37,8 @@ import static utils.Listeners.TEST_THREAD;
 
 public abstract class AppiumUtils {
 
-    protected static AndroidDriver driver;
+    //protected static AndroidDriver driver;
+    public static AndroidDriver driver;
     private static final Logger log = LoggerFactory.getLogger(AppiumUtils.class);
 
     public double getFormattedAmount(String amount) {
