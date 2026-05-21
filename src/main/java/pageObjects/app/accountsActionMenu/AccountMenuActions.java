@@ -10,6 +10,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import utils.AndroidActions;
 import utils.AppiumUtils;
+import utils.DriverManager;
 
 import java.time.Duration;
 
@@ -20,8 +21,16 @@ public class AccountMenuActions {
     private static final Logger log = LoggerFactory.getLogger(AccountMenuActions.class);
 
     public AccountMenuActions(AndroidDriver driver) {
-        this.driver = driver;
-        PageFactory.initElements(new AppiumFieldDecorator(driver, Duration.ofSeconds(10)), this);
+        if (driver == null) {
+            throw new IllegalStateException("AndroidDriver is NULL. Check DriverManager initialization order.");
+        }
+
+             if (driver == null) {
+        throw new IllegalStateException("AndroidDriver is NULL. Check DriverManager initialization order.");
+    }
+
+    this.driver = driver;
+    PageFactory.initElements(new AppiumFieldDecorator(driver, Duration.ofSeconds(10)), this);
     }
 
     @AndroidFindBy(xpath = "//android.widget.TextView[@resource-id=\"za.co.neolabs.bankzero:id/menuItemText\" and @text=\"Pay\"]")
@@ -73,7 +82,7 @@ public class AccountMenuActions {
 
     public void clickBack()
     {
-        AppiumUtils.waitForElementToAppear(backAccountButtn,"clickable", "true",driver);
+        AppiumUtils.waitForElementToAppear(backAccountButtn,"clickable", "true", driver);
         backAccountButtn.click();
         log.info("Back button clicked.");
     }
