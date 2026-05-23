@@ -2,23 +2,28 @@ package utils;
 
 import com.aventstack.extentreports.ExtentReports;
 import com.aventstack.extentreports.ExtentTest;
+import com.aventstack.extentreports.Status;
 import io.appium.java_client.AppiumDriver;
+import io.appium.java_client.android.AndroidDriver;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.testng.ITestContext;
 import org.testng.ITestListener;
 import org.testng.ITestResult;
 
 import java.lang.reflect.Field;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Optional;
 import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import static utils.ExtentReporterNG.getReportObject;
 
 public class Listeners extends AppiumUtils implements ITestListener {
 
 
-    private static final Logger LOGGER = Logger.getLogger(Listeners.class.getName());
-    private static final ExtentReports extent = getReportObject();
+    private static final Logger log = LoggerFactory.getLogger(Listeners.class);
+    private static ExtentReports extent;
     public static final ThreadLocal<ExtentTest> TEST_THREAD = new ThreadLocal<>();
 
     private ExtentTest getTest() {
@@ -30,22 +35,33 @@ public class Listeners extends AppiumUtils implements ITestListener {
         TEST_THREAD.set(extent.createTest(result.getMethod().getMethodName()));
     }
 
-//    @Override
-//    public void onTestSuccess(ITestResult result) {
-//        ExtentTest test = getTest();
-//        if (test != null) {
-//            test.log(Status.PASS, "Test Passed");
-//        }
+    @Override
+    public void onTestSuccess(ITestResult result) {
+        ExtentTest test = getTest();
+        if (test != null) {
+            test.pass("Test Passed");
+        }
 //        attachScreenshot(result);
-//    }
+    }
 
     @Override
     public void onTestFailure(ITestResult result) {
         ExtentTest test = getTest();
+        Throwable cause = result.getThrowable();
+
         if (test != null) {
-            test.fail(result.getThrowable());
+            if (cause instanceof AssertionError) {
+                log.error("Assertion failed in [{}]: {}", result.getName(), cause.getMessage());
+                test.fail("Assertion failed: " + cause.getMessage());
+            } else {
+                log.error("Exception in [{}]: {}", result.getName(), cause.getMessage());
+                test.fail("Test failed due to exception: " + cause.getMessage());
+            }
+            test.fail(cause); // attaches full stack trace to Extent report
         }
+
         attachScreenshot(result);
+        log.info("Screenshot attached for failed test: [{}]", result.getName());
     }
 
     private void attachScreenshot(ITestResult result) {
@@ -59,10 +75,10 @@ public class Listeners extends AppiumUtils implements ITestListener {
                     test.addScreenCaptureFromBase64String(base64Screenshot, result.getMethod().getMethodName());
                 }
             } else {
-                LOGGER.log(Level.WARNING, "Driver instance not found for test: {0}", result.getMethod().getMethodName());
+                log.warn("Driver instance not found for test: {}", result.getMethod().getMethodName());
             }
         } catch (Exception e) {
-            LOGGER.log(Level.WARNING, "Could not capture screenshot: {0}", e.getMessage());
+            log.warn("Could not capture screenshot: {}", e.getMessage());
             ExtentTest test = getTest();
             if (test != null) {
                 test.warning("Could not capture screenshot: " + e.getMessage());
@@ -86,7 +102,7 @@ public class Listeners extends AppiumUtils implements ITestListener {
             } catch (NoSuchFieldException nsf) {
                 clazz = clazz.getSuperclass();
             } catch (IllegalAccessException iae) {
-                LOGGER.log(Level.WARNING, "Unable to access driver field: {0}", iae.getMessage());
+                log.warn("Unable to access driver field: {}", iae.getMessage());
                 return Optional.empty();
             }
         }
@@ -100,59 +116,18 @@ public class Listeners extends AppiumUtils implements ITestListener {
     public void onTestFailedButWithinSuccessPercentage(ITestResult result) {}
 
     @Override
-    public void onStart(ITestContext context) {}
+    public void onStart(ITestContext context) {
+        extent = ExtentReporterNG.getReportObject((AndroidDriver) context.getAttribute("driver"));
+    }
 
     @Override
     public void onFinish(ITestContext context) {
+        String endTime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
+
+        extent.setSystemInfo("Execution End Time", endTime);
         extent.flush();
         TEST_THREAD.remove();
     }
 
-//    ExtentTest test;
-//    static ExtentReports extent = getReportObject();
-//    AppiumDriver driver;
-//
-//    @Override
-//    public void onTestStart(ITestResult result) {
-//        test = extent.createTest(result.getMethod().getMethodName());
-//    }
-//
-//    @Override
-//    public void onTestSuccess(ITestResult result) {
-//        test.log(Status.PASS, "Test Passed");
-//        attachScreenshot(result);
-//    }
-//
-//    @Override
-//    public void onTestFailure(ITestResult result) {
-//        test.fail(result.getThrowable());
-//        attachScreenshot(result);
-//    }
-//
-//    private void attachScreenshot(ITestResult result) {
-//        try {
-//            driver = (AppiumDriver) result.getTestClass().getRealClass().getField("driver")
-//                    .get(result.getInstance());
-//            String base64Screenshot = getBase64Screenshot(driver);
-//            test.addScreenCaptureFromBase64String(base64Screenshot, result.getMethod().getMethodName());
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//            test.warning("Could not capture screenshot: " + e.getMessage());
-//        }
-//    }
-//
-//    @Override
-//    public void onTestSkipped(ITestResult result) {}
-//
-//    @Override
-//    public void onTestFailedButWithinSuccessPercentage(ITestResult result) {}
-//
-//    @Override
-//    public void onStart(ITestContext context) {}
-//
-//    @Override
-//    public void onFinish(ITestContext context) {
-//        extent.flush();
-//    }
 }
 
