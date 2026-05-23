@@ -143,6 +143,7 @@ public class CardSettingsTests extends BaseTestsConfig {
         cardPage.clickCardMenuActionButton();
         cardPage.clickCardSettings();
         cardPage.updateLocalDailyCash("1200");
+        attachScreenshot(DriverManager.driver,"Local_Daily_Cash_Updated");
         cardPage.clickUpdate();
         Assert.assertEquals(cardPage.getUpdatedFields("local daily"),"R1 200.00");
         attachScreenshot(DriverManager.driver,"Update_Local_Daily_Cash");
@@ -162,6 +163,7 @@ public class CardSettingsTests extends BaseTestsConfig {
         cardPage.clickCardMenuActionButton();
         cardPage.clickCardSettings();
         cardPage.updateGlobalDailyCash("1200");
+        attachScreenshot(DriverManager.driver,"Global_Daily_Cash_Updated");
         cardPage.clickUpdate();
         Assert.assertEquals(cardPage.getUpdatedFields("global daily"),"R1 200.00");
         attachScreenshot(DriverManager.driver,"Update_Global_Daily_Cash");
@@ -180,6 +182,7 @@ public class CardSettingsTests extends BaseTestsConfig {
         cardPage.clickCardMenuActionButton();
         cardPage.clickCardSettings();
         cardPage.onlineMaxUpdate("1200");
+        attachScreenshot(DriverManager.driver,"Online_Max_Cash_Updated");
         cardPage.clickUpdate();
         Assert.assertEquals(cardPage.getUpdatedFields("online"),"R1 200.00");
         attachScreenshot(DriverManager.driver,"Update_Online_Max_Cash");
