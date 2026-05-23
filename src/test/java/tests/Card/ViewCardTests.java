@@ -1,9 +1,13 @@
 package tests.Card;
 
+import factory.TransferDataFactory;
 import lombok.extern.slf4j.Slf4j;
+import models.CardData;
+import models.User;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.testng.Assert;
-import org.testng.annotations.DataProvider;
-import org.testng.annotations.Test;
+import org.testng.annotations.*;
 import pageObjects.app.accountsActionMenu.AccountMenuActions;
 import pageObjects.app.accountsActionMenu.card.MyCardPage;
 import pageObjects.app.accountsHome.HomePage;
@@ -16,84 +20,66 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 
-@Slf4j
+
+
 public class ViewCardTests extends BaseTestsConfig {
+    private static final Logger log = LoggerFactory.getLogger(ViewCardTests.class);
+    private LoginPage loginPage;
+    private HomePage homePage;
+    private AccountMenuActions accountMenuActions;
+    private MyCardPage cardPage;
+    private User appUser;
+    private CardData cardData;
 
-    @Test(dataProvider = "getMultipleDataSet",priority = 0)
-    public void viewCardTest(HashMap<String, String> input)
+    @BeforeMethod
+    public void preSetUp() {
+        loginPage = new LoginPage(DriverManager.driver);
+        homePage = new HomePage(DriverManager.driver);
+        accountMenuActions = new AccountMenuActions(DriverManager.driver);
+        cardPage = new MyCardPage(DriverManager.driver);
+        appUser = TransferDataFactory.validAppUser();
+        cardData = TransferDataFactory.validCardData();
+
+        log.debug("Page objects and androidActions initialized");
+    }
+
+    @Test(priority = 0)
+    public void viewCardTest()
     {
-        LoginPage loginPage = new LoginPage(DriverManager.driver);
-        MyCardPage cardPage = new MyCardPage(DriverManager.driver);
-        HomePage homePage = new HomePage(DriverManager.driver);
-        AccountMenuActions accountMenuActions = new AccountMenuActions(DriverManager.driver);
-        AndroidActions androidActions = new AndroidActions(DriverManager.driver);
-
-        String name = input.get("profileName");
-        String appPin = input.get("loginPin");
-
-        loginPage.loginWithRetry(name,appPin,2);
+        loginPage.loginWithRetry(
+                appUser.getUser().getProfileName(),
+                appUser.getUser().getLoginPin(),
+                2
+        );
 
         accountMenuActions.clickAccountMenuActionsButtn();
         cardPage.clickCardMenuActionButton();
         cardPage.clickViewCard();
-
-        try {
-            Assert.assertTrue(cardPage.getCardDisplayed());
-            log.info("Card is displayed.");
-        } catch (Exception| AssertionError e) {
-            log.warn("Test failed due to: {}",e);
-            Assert.fail("Test failed");
-            throw new RuntimeException(e);
-        }
-        cardPage.clickFinish2();
-        homePage.clickLogoutButtn();
+        Assert.assertEquals(cardPage.getCardDisplayed(),cardData.getCardNumber());
+        attachScreenshot(DriverManager.driver,"ViewCard");
     }
 
-    @Test(dataProvider = "getMultipleDataSet",priority = 1)
-    public void viewCardPinTest(HashMap<String, String> input)
+    @Test(priority = 1)
+    public void viewCardPinTest()
     {
-        LoginPage loginPage = new LoginPage(DriverManager.driver);
-        MyCardPage cardPage = new MyCardPage(DriverManager.driver);
-        HomePage homePage = new HomePage(DriverManager.driver);
-        AccountMenuActions accountMenuActions = new AccountMenuActions(DriverManager.driver);
-        AndroidActions androidActions = new AndroidActions(DriverManager.driver);
-
-        String name = input.get("profileName");
-        String appPin = input.get("loginPin");
-        String cardPin = input.get("cardPin");
-
-        loginPage.loginWithRetry(name,appPin,2);
+        loginPage.loginWithRetry(
+                appUser.getUser().getProfileName(),
+                appUser.getUser().getLoginPin(),
+                2
+        );
 
         accountMenuActions.clickAccountMenuActionsButtn();
         cardPage.clickCardMenuActionButton();
         cardPage.clickViewCard();
-        String actualTxt = cardPage.getCardPin();
+        Assert.assertEquals(cardPage.getCardPin(),"Your PIN is " + cardData.getCardPin());
+        attachScreenshot(DriverManager.driver,"ViewCardPin");
+    }
 
-        try {
-            Assert.assertEquals(actualTxt,"Your PIN is " + cardPin);
-            log.info("Card is displayed.");
-        } catch (Exception| AssertionError e) {
-            log.warn("Test failed due to: {}",e);
-            Assert.fail("Test failed");
-            throw new RuntimeException(e);
-        }
-
-        cardPage.clickFinish2();
+    @AfterMethod
+    public void postTestCleanUp()
+    {
+        log.info("Post-test cleanup: Resetting card settings to default values.");
+        cardPage.tryClickFinish();
         homePage.clickLogoutButtn();
     }
-//    @AfterMethod
-//    public void cleanUp()
-//    {
-//        MyCardPage cardPage = new MyCardPage(DriverManager.driver);
-//        HomePage homePage = new HomePage(DriverManager.driver);
-//        cardPage.clickFinish2();
-//        homePage.clickLogoutButtn();
-//    }
-    @DataProvider
-    public Object[] [] getMultipleDataSet() throws IOException {
-
-        List<HashMap<String, String>> data = getJsonData(System.getProperty("user.dir") + "//src//test//java//testData//cardData.json");
-        return new Object[][]{{data.getFirst()}};
-    }
-
 }
