@@ -1,26 +1,15 @@
 package factory;
 
-import models.DbUserData;
-import models.ScheduleTransferData;
-import models.TransferData;
-import models.User;
+import models.*;
 
 public class TransferDataFactory {
 
-//    public static TransferData validTransfer() {
-//
-//        User user = new User("Isagi", "33333");
-//
-//        return new TransferData(
-//                user,
-//                "Savings Test",
-//                "30",
-//                "Auto Test"
-//        );
-//    }
-
-    // Based on the @Builder and @Value implementation on the ScheduleTransferData class
-
+    public static CardData validCardData() {
+        return CardData.builder()
+                .cardPin("11111")
+                .cardNumber("2265 0833 8894 8418")
+                .build();
+    }
     public static TransferData validTransfer()
     {
         return TransferData.builder()
@@ -46,6 +35,11 @@ public class TransferDataFactory {
                 .localPort(Integer.parseInt(System.getenv("DB_LOCAL_PORT")))
                 .build();
     }
+
+    public static User validAppUser() {
+        return new User("Isagi", "33333");
+    }
+
     public static ScheduleTransferData onceOffTransfer() {
 
         User user = new User("Isagi", "33333");
