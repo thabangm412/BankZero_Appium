@@ -12,6 +12,7 @@ import pageObjects.app.accountsActionMenu.buy.BuyElectricityPage;
 import pageObjects.app.accountsHome.HomePage;
 import pageObjects.app.login.LoginPage;
 import testConfig.BaseTestsConfig;
+import utils.DriverManager;
 
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -28,9 +29,9 @@ public class ExistingElectricityAccTests extends BaseTestsConfig {
 
     @BeforeMethod
     public void preSetUp() {
-        loginPage = new LoginPage(driver);
-        accountMenuActions = new AccountMenuActions(driver);
-        buyPage = new BuyElectricityPage(driver);
+        loginPage = new LoginPage(DriverManager.driver);
+        accountMenuActions = new AccountMenuActions(DriverManager.driver);
+        buyPage = new BuyElectricityPage(DriverManager.driver);
 
     }
 
@@ -52,7 +53,7 @@ public class ExistingElectricityAccTests extends BaseTestsConfig {
         accountMenuActions.clickAccountMenuActionsButtn();
         buyPage.clickBuyButton();
         buyPage.buyElectricityAgain(input.get("name"),input.get("amount"),input.get("ref"));
-        attachScreenshot(driver,"Confirm Electricity Purchase");
+        attachScreenshot(DriverManager.driver,"Confirm Electricity Purchase");
         buyPage.clickConfrimButton();
         Thread.sleep(5000);
 
@@ -62,7 +63,7 @@ public class ExistingElectricityAccTests extends BaseTestsConfig {
             try {
                 Assert.assertEquals(status, "Success");
                 log.info("Transactional Status: {}",status);
-                attachScreenshot(driver,"Electricity Purchase Success");
+                attachScreenshot(DriverManager.driver,"Electricity Purchase Success");
             } catch (AssertionError e) {
                 log.warn("Transaction failed with status: {}", status);
                 throw e;  // Let TestNG fail the test
@@ -94,7 +95,7 @@ public class ExistingElectricityAccTests extends BaseTestsConfig {
         accountMenuActions.clickAccountMenuActionsButtn();
         buyPage.clickBuyButton();
         buyPage.getExistingRecipient(input.get("name"));
-        attachScreenshot(driver,"Existing Electricity Recipient Retrieved");
+        attachScreenshot(DriverManager.driver,"Existing Electricity Recipient Retrieved");
         buyPage.clickEditButton();
         buyPage.clickDeleteButton();
 
@@ -102,7 +103,7 @@ public class ExistingElectricityAccTests extends BaseTestsConfig {
         try {
             Assert.assertTrue(buyPage.isRecipientDeleted(input.get("name")));
             log.info("Recipient deleted successfully");
-            attachScreenshot(driver,"Electricity Recipient Deletion Success");
+            attachScreenshot(DriverManager.driver,"Electricity Recipient Deletion Success");
 //            Assert.assertEquals(actualTxt,"Item deleted!");
 //            log.info("Recipient deleted");
         } catch (Exception| AssertionError e) {
@@ -110,7 +111,7 @@ public class ExistingElectricityAccTests extends BaseTestsConfig {
             Assert.fail("Test failed");
             throw new RuntimeException(e);
         }
-        driver.navigate().back();
+        DriverManager.driver.navigate().back();
         buyPage.clickBack();
     }
 
@@ -124,7 +125,7 @@ public class ExistingElectricityAccTests extends BaseTestsConfig {
     @AfterMethod
     public void cleanUp() {
         try {
-            HomePage homePage = new HomePage(driver);
+            HomePage homePage = new HomePage(DriverManager.driver);
             homePage.clickLogoutButtn();
         } catch (Exception e) {
             log.error("Cleanup failed: ", e);

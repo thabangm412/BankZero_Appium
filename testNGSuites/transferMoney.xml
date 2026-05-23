@@ -1,0 +1,18 @@
+<!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd" >
+<suite name="Regression" verbose="2" thread-count="1" parallel="false" preserve-order="true">
+    <listeners>
+        <listener class-name="utils.Listeners"/>
+    </listeners>
+    <test name="Transfer Money Tests">
+        <classes>
+            <class name="tests.Transfer.TransferMoneyTests">
+                <methods>
+                    <include name="transferMoney"/>
+                    <include name="scheduleTransferOnceOff"/>
+                    <include name="scheduleTransferWeekly"/>
+                    <include name="scheduleTransferMonthly"/>
+                </methods>
+            </class>
+        </classes>
+    </test>
+</suite>

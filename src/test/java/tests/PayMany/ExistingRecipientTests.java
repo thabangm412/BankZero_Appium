@@ -12,6 +12,7 @@ import pageObjects.app.accountsHome.HomePage;
 import pageObjects.app.login.LoginPage;
 import testConfig.BaseTestsConfig;
 import utils.AndroidActions;
+import utils.DriverManager;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -24,11 +25,11 @@ public class ExistingRecipientTests extends BaseTestsConfig {
     @Test(dataProvider = "getMultipleDataSet", priority = 0)
     public void PayManyRedoTest(HashMap<String, String> input)
     {
-        LoginPage loginPage = new LoginPage(driver);
-        HomePage homePage = new HomePage(driver);
-        PayManyPage payManyPage = new PayManyPage(driver);
-        AccountMenuActions accountMenuActions = new AccountMenuActions(driver);
-        AndroidActions androidActions = new AndroidActions(driver);
+        LoginPage loginPage = new LoginPage(DriverManager.driver);
+        HomePage homePage = new HomePage(DriverManager.driver);
+        PayManyPage payManyPage = new PayManyPage(DriverManager.driver);
+        AccountMenuActions accountMenuActions = new AccountMenuActions(DriverManager.driver);
+        AndroidActions androidActions = new AndroidActions(DriverManager.driver);
 
         androidActions.environmentChange();
         String name = input.get("profileName");

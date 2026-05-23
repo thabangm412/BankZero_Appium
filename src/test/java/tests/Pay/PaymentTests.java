@@ -1,8 +1,5 @@
 package tests.Pay;
 
-import com.aventstack.extentreports.ExtentTest;
-import io.appium.java_client.AppiumDriver;
-import org.openqa.selenium.OutputType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.testng.Assert;
@@ -14,14 +11,11 @@ import pageObjects.app.accountsActionMenu.pay.QuickPayPage;
 import pageObjects.app.accountsHome.HomePage;
 import pageObjects.app.login.LoginPage;
 import testConfig.BaseTestsConfig;
-import utils.AppiumUtils;
+import utils.DriverManager;
 
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
-import java.util.logging.Level;
-
-import static utils.Listeners.TEST_THREAD;
 
 public class PaymentTests extends BaseTestsConfig {
 
@@ -33,10 +27,10 @@ public class PaymentTests extends BaseTestsConfig {
 
     @BeforeMethod
     public void preSetUp() {
-        loginPage = new LoginPage(driver);
-        homePage = new HomePage(driver);
-        accountMenuActions = new AccountMenuActions(driver);
-        quickPayPage = new QuickPayPage(driver);
+        loginPage = new LoginPage(DriverManager.driver);
+        homePage = new HomePage(DriverManager.driver);
+        accountMenuActions = new AccountMenuActions(DriverManager.driver);
+        quickPayPage = new QuickPayPage(DriverManager.driver);
 
         log.debug("Page objects and androidActions initialized");
     }
@@ -69,7 +63,7 @@ public class PaymentTests extends BaseTestsConfig {
 
             Assert.assertEquals(expectedTxt,input.get("recipientName1"));
 
-            attachScreenshot(driver, "Recipient_Added_Success");
+            attachScreenshot(DriverManager.driver, "Recipient_Added_Success");
 
         } catch (AssertionError e) {
             log.warn("Failed to add payment recipient");
@@ -78,7 +72,7 @@ public class PaymentTests extends BaseTestsConfig {
         }
     }
 
-    @Test(dataProvider = "getMultipleDataSet", priority = 1)
+    @Test(dataProvider = "getMultipleDataSet", dependsOnMethods ="AddRecipientTestWithPoP",priority = 1)
     public void PaymentToAddedRecipientWithPoPTest(HashMap<String, String> input) throws InterruptedException {
         validateInput(input,
                 "profileName", "loginPin",
@@ -86,14 +80,14 @@ public class PaymentTests extends BaseTestsConfig {
         );
         quickPayPage.enterPaymentDetails(input.get("amount"),input.get("ref"));
         quickPayPage.clickPay2Buttn();
-        attachScreenshot(driver, "Payment_Confirmation");
+        attachScreenshot(DriverManager.driver, "Payment_Confirmation");
         quickPayPage.clickConfirmButton();
 
         try {
             Assert.assertTrue(quickPayPage.getPaymentStatus());
             log.info("Payment status: {}",quickPayPage.getPaymentStatus());
             // ✅ Screenshot at EXACT success moment
-            attachScreenshot(driver, "Payment_Success");
+            attachScreenshot(DriverManager.driver, "Payment_Success");
 
 
         } catch (AssertionError e) {
@@ -135,7 +129,7 @@ public class PaymentTests extends BaseTestsConfig {
 
             Assert.assertEquals(expectedTxt,input.get("recipientName2"));
 
-            attachScreenshot(driver, "Recipient_Added_Success");
+            attachScreenshot(DriverManager.driver, "Recipient_Added_Success");
 
         } catch (AssertionError e) {
             log.warn("Failed to add payment recipient");
@@ -144,7 +138,7 @@ public class PaymentTests extends BaseTestsConfig {
         }
     }
 
-    @Test(dataProvider = "getMultipleDataSet", priority = 3)
+    @Test(dataProvider = "getMultipleDataSet",dependsOnMethods = "AddRecipientTestWithoutPoP",priority = 3)
     public void PaymentToAddedRecipientWithoutPoPTest(HashMap<String, String> input) throws InterruptedException {
         validateInput(input,
                 "profileName", "loginPin",
@@ -152,14 +146,14 @@ public class PaymentTests extends BaseTestsConfig {
         );
         quickPayPage.enterPaymentDetails(input.get("amount"),input.get("ref"));
         quickPayPage.clickPay2Buttn();
-        attachScreenshot(driver, "Payment_Confirmation");
+        attachScreenshot(DriverManager.driver, "Payment_Confirmation");
         quickPayPage.clickConfirmButton();
 
         try {
             Assert.assertTrue(quickPayPage.getPaymentStatus());
             log.info("Payment status: {}",quickPayPage.getPaymentStatus());
             // ✅ Screenshot at EXACT success moment
-            attachScreenshot(driver, "Payment_Success");
+            attachScreenshot(DriverManager.driver, "Payment_Success");
 
 
         } catch (AssertionError e) {

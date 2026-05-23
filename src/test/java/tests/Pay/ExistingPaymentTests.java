@@ -1,5 +1,7 @@
 package tests.Pay;
 
+import org.openqa.selenium.By;
+import org.openqa.selenium.NoSuchElementException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.testng.Assert;
@@ -13,6 +15,7 @@ import pageObjects.app.accountsHome.HomePage;
 import pageObjects.app.login.LoginPage;
 import testConfig.BaseTestsConfig;
 import utils.AndroidActions;
+import utils.DriverManager;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -30,11 +33,11 @@ public class ExistingPaymentTests extends BaseTestsConfig {
 
     @BeforeMethod
     public void preSetUp() {
-        loginPage = new LoginPage(driver);
-        homePage = new HomePage(driver);
-        accountMenuActions = new AccountMenuActions(driver);
-        quickPayPage = new QuickPayPage(driver);
-        androidActions = new AndroidActions(driver);
+        loginPage = new LoginPage(DriverManager.driver);
+        homePage = new HomePage(DriverManager.driver);
+        accountMenuActions = new AccountMenuActions(DriverManager.driver);
+        quickPayPage = new QuickPayPage(DriverManager.driver);
+        androidActions = new AndroidActions(DriverManager.driver);
 
         log.debug("Page objects and androidActions initialized");
     }
@@ -58,7 +61,7 @@ public class ExistingPaymentTests extends BaseTestsConfig {
         quickPayPage.getExistingRecipient(input.get("recipientName1"));
         quickPayPage.clickRedo();
         quickPayPage.clickPay2Buttn();
-        attachScreenshot(driver, "Payment_Redo_Confirmation");
+        attachScreenshot(DriverManager.driver, "Payment_Redo_Confirmation");
         quickPayPage.clickConfirmButton();
         quickPayPage.possibleDuplicateCheck();
 
@@ -66,7 +69,7 @@ public class ExistingPaymentTests extends BaseTestsConfig {
             Assert.assertTrue(quickPayPage.getPaymentStatus());
             log.info("Payment status: {}",quickPayPage.getPaymentStatus());
 
-            attachScreenshot(driver, "Payment_Redo_Success");
+            attachScreenshot(DriverManager.driver, "Payment_Redo_Success");
         } catch (AssertionError e) {
             log.warn("Failed to do payment transaction");
             Assert.fail("Test failed due to exception: " + e.getMessage());
@@ -96,7 +99,7 @@ public class ExistingPaymentTests extends BaseTestsConfig {
         quickPayPage.getExistingRecipient(input.get("recipientName2"));
         quickPayPage.clickRedo();
         quickPayPage.clickPay2Buttn();
-        attachScreenshot(driver, "Payment_Redo_Confirmation");
+        attachScreenshot(DriverManager.driver, "Payment_Redo_Confirmation");
         quickPayPage.clickConfirmButton();
         quickPayPage.possibleDuplicateCheck();
 
@@ -104,7 +107,7 @@ public class ExistingPaymentTests extends BaseTestsConfig {
             Assert.assertTrue(quickPayPage.getPaymentStatus());
             log.info("Payment status: {}",quickPayPage.getPaymentStatus());
 
-            attachScreenshot(driver, "Payment_Redo_Success");
+            attachScreenshot(DriverManager.driver, "Payment_Redo_Success");
         } catch (AssertionError e) {
             log.warn("Failed to do payment transaction");
             Assert.fail("Test failed due to exception: " + e.getMessage());
@@ -134,7 +137,7 @@ public class ExistingPaymentTests extends BaseTestsConfig {
         quickPayPage.getExistingRecipient(input.get("recipientName1"));
         quickPayPage.enterPaymentDetails(input.get("redoAmount"),input.get("ref"));
         quickPayPage.clickPay2Buttn();
-        attachScreenshot(driver, "Payment_Redo_Confirmation");
+        attachScreenshot(DriverManager.driver, "Payment_Redo_Confirmation");
         quickPayPage.clickConfirmButton();
         quickPayPage.possibleDuplicateCheck();
 
@@ -142,7 +145,7 @@ public class ExistingPaymentTests extends BaseTestsConfig {
             Assert.assertTrue(quickPayPage.getPaymentStatus());
             log.info("Payment status: {}",quickPayPage.getPaymentStatus());
 
-            attachScreenshot(driver, "Payment_ExistingRecipient_Success");
+            attachScreenshot(DriverManager.driver, "Payment_ExistingRecipient_Success");
         } catch (AssertionError e) {
             log.warn("Failed to do payment transaction");
             Assert.fail("Test failed due to exception: " + e.getMessage());
@@ -172,7 +175,7 @@ public class ExistingPaymentTests extends BaseTestsConfig {
         quickPayPage.getExistingRecipient(input.get("recipientName2"));
         quickPayPage.enterPaymentDetails(input.get("redoAmount"),input.get("ref"));
         quickPayPage.clickPay2Buttn();
-        attachScreenshot(driver, "Payment_Redo_Confirmation");
+        attachScreenshot(DriverManager.driver, "Payment_Redo_Confirmation");
         quickPayPage.clickConfirmButton();
         quickPayPage.possibleDuplicateCheck();
 
@@ -180,7 +183,7 @@ public class ExistingPaymentTests extends BaseTestsConfig {
             Assert.assertTrue(quickPayPage.getPaymentStatus());
             log.info("Payment status: {}",quickPayPage.getPaymentStatus());
 
-            attachScreenshot(driver, "Payment_ExistingRecipient_Success");
+            attachScreenshot(DriverManager.driver, "Payment_ExistingRecipient_Success");
         } catch (AssertionError e) {
             log.warn("Failed to do payment transaction");
             Assert.fail("Test failed due to exception: " + e.getMessage());
@@ -211,7 +214,7 @@ public class ExistingPaymentTests extends BaseTestsConfig {
         quickPayPage.getExistingRecipient(input.get("recipientName1"));
         quickPayPage.enterPaymentDetails(input.get("redoAmount"),input.get("ref"));
         quickPayPage.addAttachment();
-        attachScreenshot(driver, "Attachment_Added");
+        attachScreenshot(DriverManager.driver, "Attachment_Added");
         quickPayPage.clickPay2Buttn();
 
         SoftAssert softAssert = new SoftAssert(); // TestNG’s SoftAssert
@@ -219,12 +222,12 @@ public class ExistingPaymentTests extends BaseTestsConfig {
         try {
             softAssert.assertEquals(quickPayPage.getAttachment(), "sample-pdf.pdf");
             log.info("Found attached document: {}",quickPayPage.getAttachment());
-            attachScreenshot(driver, "Payment_With_Attachment");
+            attachScreenshot(DriverManager.driver, "Payment_With_Attachment");
             quickPayPage.clickConfirmButton();
             quickPayPage.possibleDuplicateCheck();
             softAssert.assertTrue(quickPayPage.getPaymentStatus());
             log.info("Payment status: {}",quickPayPage.getPaymentStatus());
-            attachScreenshot(driver, "Payment_With_Attachment_Success");
+            attachScreenshot(DriverManager.driver, "Payment_With_Attachment_Success");
 
         } catch (Exception e) {
             log.error("Unexpected error: ", e);
@@ -255,7 +258,7 @@ public class ExistingPaymentTests extends BaseTestsConfig {
         quickPayPage.getExistingRecipient(input.get("recipientName2"));
         quickPayPage.enterPaymentDetails(input.get("redoAmount"),input.get("ref"));
         quickPayPage.addAttachment();
-        attachScreenshot(driver, "Attachment_Added");
+        attachScreenshot(DriverManager.driver, "Attachment_Added");
         quickPayPage.clickPay2Buttn();
 
         SoftAssert softAssert = new SoftAssert(); // TestNG’s SoftAssert
@@ -263,12 +266,12 @@ public class ExistingPaymentTests extends BaseTestsConfig {
         try {
             softAssert.assertEquals(quickPayPage.getAttachment(), "sample-pdf.pdf");
             log.info("Found attached document: {}",quickPayPage.getAttachment());
-            attachScreenshot(driver, "Payment_With_Attachment");
+            attachScreenshot(DriverManager.driver, "Payment_With_Attachment");
             quickPayPage.clickConfirmButton();
             quickPayPage.possibleDuplicateCheck();
             softAssert.assertTrue(quickPayPage.getPaymentStatus());
             log.info("Payment status: {}",quickPayPage.getPaymentStatus());
-            attachScreenshot(driver, "Payment_With_Attachment_Success");
+            attachScreenshot(DriverManager.driver, "Payment_With_Attachment_Success");
 
         } catch (Exception e) {
             log.error("Unexpected error: ", e);
@@ -280,8 +283,51 @@ public class ExistingPaymentTests extends BaseTestsConfig {
         homePage.clickLogoutButtn();
     }
 
-
     @Test(dataProvider = "getMultipleDataSet", priority = 6)
+    public void addAlreadyExistingRecipientTest(HashMap<String, String> input)
+    {
+
+        validateInput(input,
+                "profileName", "loginPin",
+                "recipientName1", "group", "bank", "account", "accountNo1",
+                "popEmail", "popPhone"
+        );
+
+        String name = input.get("profileName");
+        String appPin = input.get("loginPin");
+
+        loginPage.loginWithRetry(name,appPin,2);
+
+        accountMenuActions.clickAccountMenuActionsButtn();
+        quickPayPage.clickPayButtn();
+        quickPayPage.clickAddRecipientButton();
+
+        quickPayPage.addRecipientDetails(input.get("recipientName1"),input.get("group"),input.get("bank"),input.get("account"),input.get("accountNo1"));
+        quickPayPage.addPoP(input.get("popEmail"),input.get("popPhone"));
+        quickPayPage.clickAddButton();
+
+
+
+        try {
+            String toastMessage = DriverManager.driver.findElement(
+                    By.xpath("//android.widget.Toast")
+            ).getText();
+            Assert.assertEquals(toastMessage, "[79] We're sorry, you cannot add this recipient as it already exists");
+            log.warn("Failed to add recipient, error message: {}", toastMessage);
+            attachScreenshot(DriverManager.driver, "Add_Existing_Recipient_Failed");
+        } catch (NoSuchElementException e) {
+            log.warn("Test failed to validate existing recipient addition");
+            Assert.fail("Element not found: " + e.getMessage());
+        }finally {
+            DriverManager.driver.navigate().back();
+            quickPayPage.clickBack();
+            homePage.clickLogoutButtn();
+
+        }
+    }
+
+
+    @Test(dataProvider = "getMultipleDataSet", priority = 7)
     public void updateExistingRecipient(HashMap<String, String> input)
     {
         validateInput(input,
@@ -307,19 +353,19 @@ public class ExistingPaymentTests extends BaseTestsConfig {
             log.info("Assertion expectation: {}",actualAccNo);
 
             Assert.assertEquals(actualAccNo, "Account"+ " " + input.get("updateAccNo"));
-            attachScreenshot(driver, "Recipient_Updated_Success");
+            attachScreenshot(DriverManager.driver, "Recipient_Updated_Success");
 
         } catch (AssertionError e) {
             log.warn("Failed to add payment recipient");
             Assert.fail("Test failed due to exception: " + e.getMessage());
             throw e;  // Let TestNG fail the test
         }
-        driver.navigate().back();
+        DriverManager.driver.navigate().back();
 //        quickPayPage.clickBack();
         homePage.clickLogoutButtn();
     }
 
-    @Test(dataProvider = "getMultipleDataSet", priority = 7)
+    @Test(dataProvider = "getMultipleDataSet",dependsOnMethods = "updateExistingRecipient", priority = 8)
     public void deleteExistingRecipientTest(HashMap<String, String> input){
 
         validateInput(input,
@@ -343,14 +389,14 @@ public class ExistingPaymentTests extends BaseTestsConfig {
         try {
             Assert.assertTrue(quickPayPage.isRecipientDeleted(input.get("updateRecipientName")));
             log.info("Recipient deletion confirmed: {}", input.get("updateRecipientName"));
-                attachScreenshot(driver, "Recipient_Deleted_Success");
+                attachScreenshot(DriverManager.driver, "Recipient_Deleted_Success");
         } catch (AssertionError e) {
             log.warn("Failed to delete payment recipient");
             Assert.fail("Test failed due to exception: " + e.getMessage());
             log.info("Recipient still exists: {}", input.get("updateRecipientName"));
             throw e;  // Let TestNG fail the test
         }
-        driver.navigate().back();
+        DriverManager.driver.navigate().back();
         quickPayPage.clickBack();
         homePage.clickLogoutButtn();
     }
@@ -362,19 +408,5 @@ public class ExistingPaymentTests extends BaseTestsConfig {
         return new Object[][]{{data.get(0)}};
     }
 
-//    private void validateInput(HashMap<String, String> input, String... required) {
-//        if (input == null) throw new IllegalArgumentException("Input map is null");
-//        StringBuilder missing = new StringBuilder();
-//        for (String k : required) {
-//            if (input.get(k) == null || input.get(k).trim().isEmpty()) {
-//                if (missing.length() > 0) missing.append(", ");
-//                missing.append(k);
-//            }
-//        }
-//        if (missing.length() > 0) {
-//            log.error("Missing required keys: {}", missing.toString());
-//            throw new IllegalArgumentException("Missing required keys: " + missing.toString());
-//        }
-//    }
 
 }

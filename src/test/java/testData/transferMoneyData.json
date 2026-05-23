@@ -7,7 +7,7 @@
     "scheduleTypeWeekly": "Weekly",
     "scheduleTypeMonthly": "Monthly",
     "daysToAdd": "2",
-    "amount": "100",
+    "amount": "30",
     "ref": "Auto Test"
   }
 ]

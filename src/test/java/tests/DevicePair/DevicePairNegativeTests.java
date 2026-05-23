@@ -10,6 +10,7 @@ import pageObjects.app.login.LoginPage;
 import pageObjects.app.login.PairOnDevicePage;
 import testConfig.BaseTestsConfig;
 import utils.AndroidActions;
+import utils.DriverManager;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -22,8 +23,8 @@ public class DevicePairNegativeTests extends BaseTestsConfig {
     @Test(dataProvider = "getSingleDataSet")
     public void InvalidLoginPinTest(HashMap<String, String> input) throws InterruptedException
     {
-        LoginPage loginPage = new LoginPage(driver);
-        AndroidActions androidActions = new AndroidActions(driver);
+        LoginPage loginPage = new LoginPage(DriverManager.driver);
+        AndroidActions androidActions = new AndroidActions(DriverManager.driver);
         androidActions.environmentChange();
 
         String name = input.get("name");
@@ -46,10 +47,10 @@ public class DevicePairNegativeTests extends BaseTestsConfig {
     @Test(dataProvider = "getSingleDataSet")
     public void AlreadyPairedProfileTest(HashMap<String, String> input) throws InterruptedException {
 
-        PairOnDevicePage pairOnDevicePage = new PairOnDevicePage(driver);
-        RegisterOTP registerOTP = new RegisterOTP(driver);
-        LoginPage loginPage = new LoginPage(driver);
-        AndroidActions androidActions = new AndroidActions(driver);
+        PairOnDevicePage pairOnDevicePage = new PairOnDevicePage(DriverManager.driver);
+        RegisterOTP registerOTP = new RegisterOTP(DriverManager.driver);
+        LoginPage loginPage = new LoginPage(DriverManager.driver);
+        AndroidActions androidActions = new AndroidActions(DriverManager.driver);
 
         // Environment check
         androidActions.environmentChange();

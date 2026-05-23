@@ -23,8 +23,12 @@ public class TransferPage {
     protected AndroidDriver driver;
 
     public TransferPage(AndroidDriver driver) {
-        this.driver = driver;
-        PageFactory.initElements(new AppiumFieldDecorator(driver, Duration.ofSeconds(10)), this);
+             if (driver == null) {
+        throw new IllegalStateException("AndroidDriver is NULL. Check DriverManager initialization order.");
+    }
+
+    this.driver = driver;
+    PageFactory.initElements(new AppiumFieldDecorator(driver, Duration.ofSeconds(10)), this);
     }
 
     @AndroidFindBy(xpath = "//android.widget.TextView[@resource-id=\"za.co.neolabs.bankzero:id/menuItemText\" and @text=\"Transfer\"]")
@@ -182,7 +186,19 @@ public class TransferPage {
                 break;
 
             case "ONCE-OFF":
-//                scheduleButton.click();
+//
+                scheduleDropDownButtn.click();
+                log.info("Schedule drop down clicked");
+
+                androidActions.scrollToTextAndClick2("Never",driver);
+                log.info("Updating Scheduling to Never");
+
+                updateButton.click();
+                log.info("Update botton clicked");
+
+                scheduleButton.click();
+                log.info("Schedule button clicked");
+
                 scheduleDropDownButtn.click();
                 log.info("Drop down menu button clicked");
 
@@ -353,10 +369,6 @@ public class TransferPage {
                 driver.findElement(By.id("android:id/button1")).click();
                 log.info("Select button clicked");
 
-                log.info("Attempting to select date: {}", monthlyToDate);
-                driver.findElement(By.xpath("//android.view.View[@content-desc='" + monthlyToDate + "']")).click();
-                driver.findElement(By.id("android:id/button1")).click();
-
 
                 driver.findElement(By.id("za.co.neolabs.bankzero:id/schedule_when_dd_arrow")).click();
                 androidActions.scrollToTextAndClick2("2nd day",driver);
@@ -376,6 +388,8 @@ public class TransferPage {
 
                 break;
         }
+
+        androidActions.attachScreenshot(driver, "Schedule type selected: " + scheduleType);
     }
 
     public boolean isDateVisible(String date, AppiumDriver driver) {

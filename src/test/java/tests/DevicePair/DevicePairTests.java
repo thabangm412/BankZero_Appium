@@ -17,6 +17,7 @@ import pageObjects.app.login.PairOnDevicePage;
 import testConfig.BaseTestsConfig;
 import utils.AndroidActions;
 import utils.AppiumUtils;
+import utils.DriverManager;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -36,15 +37,15 @@ public class DevicePairTests extends BaseTestsConfig {
 
     @BeforeMethod
     public void preSetUp() {
-        androidActions  = new AndroidActions(driver);
+        androidActions  = new AndroidActions(DriverManager.driver);
         //androidActions.environmentChange();
 
         // initialize page objects once per test
-        pairOnDevicePage = new PairOnDevicePage(driver);
-        registerOTP = new RegisterOTP(driver);
-        loginPage = new LoginPage(driver);
-        homePage = new HomePage(driver);
-        addAccountPage = new AddAccountPage(driver);
+        pairOnDevicePage = new PairOnDevicePage(DriverManager.driver);
+        registerOTP = new RegisterOTP(DriverManager.driver);
+        loginPage = new LoginPage(DriverManager.driver);
+        homePage = new HomePage(DriverManager.driver);
+        addAccountPage = new AddAccountPage(DriverManager.driver);
 
         log.debug("Page objects and androidActions initialized");
     }
@@ -60,9 +61,11 @@ public class DevicePairTests extends BaseTestsConfig {
         androidActions.environmentChange();
 
         // Enter user inputs into the app
+        pairOnDevicePage.addProfile();
         pairOnDevicePage.enterCellNumber(input.get("cellNumber"));
         pairOnDevicePage.enterIdNumber(input.get("idNumber"));
         pairOnDevicePage.enterPreferredName(input.get("prefName"));
+        attachScreenshot(DriverManager.driver, "Device_Pairing_Input");
         pairOnDevicePage.clickSubmit();
 
         pairOnDevicePage.enterLoginPin(Integer.parseInt(input.get("loginPin")));
@@ -75,7 +78,7 @@ public class DevicePairTests extends BaseTestsConfig {
         Thread.sleep(3000);
 
         Assert.assertTrue(loginPage.loginPageConfirm());
-        attachScreenshot(driver, "Device_Pairing_Success");
+        attachScreenshot(DriverManager.driver, "Device_Pairing_Login_Page_Displayed");
     }
 
     @Test(dataProvider = "getSingleDataSet", priority = 1)
@@ -90,13 +93,14 @@ public class DevicePairTests extends BaseTestsConfig {
         } catch (Exception e) {
             try {
                 loginPage.loginAccount(input.get("prefName"));
+                attachScreenshot(DriverManager.driver, "Login_Retry");
             } catch (NoSuchElementException ex) {
                 throw new RuntimeException(ex);
             }
         }
 
         Assert.assertEquals(homePage.getHomePageConfirm(), "Accounts");
-        attachScreenshot(driver, "Login_Success");
+        attachScreenshot(DriverManager.driver, "Login_Success");
         log.info("User logged in, Accounts screen displayed");
 
     }
@@ -106,7 +110,7 @@ public class DevicePairTests extends BaseTestsConfig {
     {
         homePage.clickLogoutButtn();
         Assert.assertEquals(loginPage.getLoginPageConfirm(),"Login");
-        attachScreenshot(driver, "Logout_Success");
+        attachScreenshot(DriverManager.driver, "Logout_Success");
         log.info("User logged out, Login screen displayed");
 
     }
@@ -130,7 +134,7 @@ public class DevicePairTests extends BaseTestsConfig {
         addAccountPage.clickAddAccButtn();
         try {
             Assert.assertEquals(loginPage.getSafeModeMsg(), input.get("safeModeMsg"));
-            attachScreenshot(driver, "Safe_Mode_Alert_Displayed");
+            attachScreenshot(DriverManager.driver, "Safe_Mode_Alert_Displayed");
             log.info("Safe mode alert displayed with expected message: {}", input.get("safeModeMsg"));
 
         } catch (TimeoutException te) {
@@ -177,7 +181,7 @@ public class DevicePairTests extends BaseTestsConfig {
     @Test(dataProvider = "getSingleDataSet", priority = 4)
     public void SafeModeLiftTest(HashMap<String, String> input) throws InterruptedException
     {
-        AccountMenuActions accountMenuActions = new AccountMenuActions(driver);
+        AccountMenuActions accountMenuActions = new AccountMenuActions(DriverManager.driver);
         validateInput(input,
                 "prefName", "loginPin","safeModeMsg");
 
@@ -208,7 +212,7 @@ public class DevicePairTests extends BaseTestsConfig {
         addAccountPage.clickAddAccButtn();
         try {
             Assert.assertEquals(addAccountPage.getPageConfirmation(), "Add");
-            attachScreenshot(driver, "Safe_Mode_Lifted_Add_Account_Page");
+            attachScreenshot(DriverManager.driver, "Safe_Mode_Lifted_Add_Account_Page");
             log.info("Assertion passed: Page confirmation is 'Add'");
         } catch (AssertionError ae) {
             log.warn("Assertion failed: Expected page confirmation to be 'Add', but was: "

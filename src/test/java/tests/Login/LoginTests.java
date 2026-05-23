@@ -10,6 +10,7 @@ import pageObjects.app.accountsHome.HomePage;
 import pageObjects.app.login.LoginPage;
 import testConfig.BaseTestsConfig;
 import utils.AndroidActions;
+import utils.DriverManager;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -21,11 +22,11 @@ public class LoginTests extends BaseTestsConfig {
 
     @Test(dataProvider = "getSingleDataSet")
     public void loginPositiveFlow(HashMap<String, String> input) throws InterruptedException, IOException {
-        AndroidActions androidActions = new AndroidActions(driver);
+        AndroidActions androidActions = new AndroidActions(DriverManager.driver);
         androidActions.loginEnvironmentCheck();
 
-        LoginPage loginPage = new LoginPage(driver);
-        HomePage homePage = new HomePage(driver);
+        LoginPage loginPage = new LoginPage(DriverManager.driver);
+        HomePage homePage = new HomePage(DriverManager.driver);
 
         String name = input.get("name");
         String appPin = input.get("appLogin");
@@ -41,8 +42,8 @@ public class LoginTests extends BaseTestsConfig {
     @Test(priority = 1)
     public void logOutPositiveFlow()
     {
-        HomePage homePage = new HomePage(driver);
-        LoginPage loginPage = new LoginPage(driver);
+        HomePage homePage = new HomePage(DriverManager.driver);
+        LoginPage loginPage = new LoginPage(DriverManager.driver);
 
         homePage.clickLogoutButtn();
         Assert.assertEquals(loginPage.getLoginPageConfirm(),"Login");

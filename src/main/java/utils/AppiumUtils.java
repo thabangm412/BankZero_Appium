@@ -15,7 +15,6 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.testng.ITestResult;
 import pageObjects.app.Registration.RegisterOTP;
 
 import java.io.BufferedReader;
@@ -33,13 +32,13 @@ import java.time.Duration;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
-import java.util.logging.Level;
 
 import static utils.Listeners.TEST_THREAD;
 
 public abstract class AppiumUtils {
 
-    protected static AndroidDriver driver;
+    //protected static AndroidDriver driver;
+    public static AndroidDriver driver;
     private static final Logger log = LoggerFactory.getLogger(AppiumUtils.class);
 
     public double getFormattedAmount(String amount) {

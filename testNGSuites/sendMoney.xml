@@ -1,0 +1,28 @@
+<!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd" >
+<suite name="Regression" verbose="2" thread-count="1" parallel="false" preserve-order="true">
+    <listeners>
+        <listener class-name="utils.Listeners"/>
+    </listeners>
+        <test name="Send Money Tests">
+            <classes>
+                <class name="tests.SendMoney.SendMoneyTests">
+                    <methods>
+                        <include name="addNewRecipient"/>
+                        <include name="sendMoneyToNewRecipient"/>
+                    </methods>
+                </class>
+
+
+                <class name="tests.SendMoney.ExistingSendMoneyTests">
+                    <methods>
+                        <include name="sendMoneyToExistingProfile"/>
+                        <include name="sendMoneyWithRedo"/>
+                        <include name="sendMoneyWithAttachment"/>
+                        <include name="addAlreadyExistingRecipient"/>
+                        <include name="updateExistingProfile"/>
+                        <include name="deleteExistingRecipient"/>
+                    </methods>
+                </class>
+            </classes>
+        </test>
+</suite>

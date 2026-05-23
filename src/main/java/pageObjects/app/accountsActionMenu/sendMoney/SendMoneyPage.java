@@ -1,4 +1,4 @@
-package pageObjects.app.accountsActionMenu.sedMoney;
+package pageObjects.app.accountsActionMenu.sendMoney;
 
 import io.appium.java_client.AppiumBy;
 import io.appium.java_client.android.AndroidDriver;
@@ -20,8 +20,12 @@ public class SendMoneyPage {
     protected AndroidDriver driver;
 
     public SendMoneyPage(AndroidDriver driver) {
-        this.driver = driver;
-        PageFactory.initElements(new AppiumFieldDecorator(driver, Duration.ofSeconds(10)), this);
+             if (driver == null) {
+        throw new IllegalStateException("AndroidDriver is NULL. Check DriverManager initialization order.");
+    }
+
+    this.driver = driver;
+    PageFactory.initElements(new AppiumFieldDecorator(driver, Duration.ofSeconds(10)), this);
     }
 
     @AndroidFindBy(xpath = "//android.widget.TextView[@resource-id=\"za.co.neolabs.bankzero:id/menuItemText\" and @text=\"Send Money\"]")
@@ -104,6 +108,7 @@ public class SendMoneyPage {
     public void addRecipient(String name, String phone)
     {
         AppiumUtils.waitForTextToAppear(By.id("za.co.neolabs.bankzero:id/toolbar_title"),"Add recipient", driver);
+        AndroidActions androidActions = new AndroidActions(driver);
 
         recipientInputNameField.clear();
         log.info("Recipient name input field cleared");
@@ -117,6 +122,8 @@ public class SendMoneyPage {
         recipientPhoneInputField.sendKeys(phone);
         log.info("Recipient phone entered: {}",name);
 
+        androidActions.attachScreenshot(driver, "Recipient details entered");
+
         addButton.click();
         log.info("Add button clicked");
 
@@ -124,6 +131,7 @@ public class SendMoneyPage {
 
     public void updateRecipient(String name, String phone)
     {
+        AndroidActions androidActions = new AndroidActions(driver);
         AppiumUtils.waitForTextToAppear(By.id("za.co.neolabs.bankzero:id/toolbar_title"),"Recipient", driver);
 
         recipientInputNameField.clear();
@@ -137,6 +145,8 @@ public class SendMoneyPage {
 
         recipientPhoneInputField.sendKeys(phone);
         log.info("Recipient phone entered: {}",name);
+
+        androidActions.attachScreenshot(driver, "Recipient details updated");
 
         addButton.click();
         log.info("Add button clicked");
@@ -243,11 +253,13 @@ public class SendMoneyPage {
     public void clickDeleteProfile()
     {
         AppiumUtils.waitForTextToAppear(By.id("za.co.neolabs.bankzero:id/toolbar_title"),"Recipient", driver);
+        AndroidActions androidActions = new AndroidActions(driver);
         deleteButton.click();
         log.info("Delete button clicked");
 
         AppiumUtils.waitForElement(By.id("za.co.neolabs.bankzero:id/alertTitle"),driver);
         log.info("Delete recipient alert displayed");
+        androidActions.attachScreenshot(driver, "Delete recipient alert displayed");
         driver.findElement(By.id("android:id/button1")).click();
         log.info("Yes button clicked");
 

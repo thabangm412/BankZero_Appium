@@ -1,5 +1,5 @@
 <!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd" >
-<suite name="Regression" verbose="2" thread-count="2">
+<suite name="Regression" verbose="2" thread-count="1" parallel="false" preserve-order="true">
     <listeners>
         <listener class-name="utils.Listeners"/>
     </listeners>
@@ -21,6 +21,7 @@
                     <include name="paymentToExistingRecipientwithoutPoP"/>
                     <include name="paymentWithAttachmentPlusPoP"/>
                     <include name="paymentWithAttachmentMinusPoP"/>
+                    <include name="addAlreadyExistingRecipientTest"/>
                     <include name="updateExistingRecipient"/>
                     <include name="deleteExistingRecipientTest"/>
                 </methods>
@@ -40,6 +41,7 @@
                     <include name="PaymentRedoTest"/>
                     <include name="paymentToExistingRecipient"/>
                     <include name="paymentWithAttachment"/>
+                    <include name="addAlreadyExistingRtcRecipientTest"/>
                     <include name="updateExistingRtcRecipient"/>
                     <include name="deleteExistingRtcRecipientTest"/>
                 </methods>

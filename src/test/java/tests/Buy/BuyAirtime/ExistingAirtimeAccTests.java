@@ -12,6 +12,7 @@ import pageObjects.app.accountsActionMenu.buy.BuyAirtimePage;
 import pageObjects.app.accountsHome.HomePage;
 import pageObjects.app.login.LoginPage;
 import testConfig.BaseTestsConfig;
+import utils.DriverManager;
 
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -29,9 +30,9 @@ public class ExistingAirtimeAccTests extends BaseTestsConfig {
 
     @BeforeMethod
     public void preSetUp() {
-        loginPage = new LoginPage(driver);
-        accountMenuActions = new AccountMenuActions(driver);
-        buyAirtimePage = new BuyAirtimePage(driver);
+        loginPage = new LoginPage(DriverManager.driver);
+        accountMenuActions = new AccountMenuActions(DriverManager.driver);
+        buyAirtimePage = new BuyAirtimePage(DriverManager.driver);
 
     }
 
@@ -53,10 +54,10 @@ public class ExistingAirtimeAccTests extends BaseTestsConfig {
         accountMenuActions.clickAccountMenuActionsButtn();
         buyAirtimePage.clickBuyButton();
         buyAirtimePage.getExistingProfile(input.get("AirtimeName"));
-        attachScreenshot(driver,"Existing Airtime Profile Retrieved");
+        attachScreenshot(DriverManager.driver,"Existing Airtime Profile Retrieved");
         buyAirtimePage.clickRedo();
         buyAirtimePage.clickHomeBuyButton();
-        attachScreenshot(driver,"Airtime Purchase Page");
+        attachScreenshot(DriverManager.driver,"Airtime Purchase Page");
         buyAirtimePage.clickConfirmButton();
 
         try {
@@ -65,7 +66,7 @@ public class ExistingAirtimeAccTests extends BaseTestsConfig {
             try {
                 Assert.assertEquals(status, "Success");
                 log.info("Transactional Status: {}",status);
-                attachScreenshot(driver,"Airtime Purchase Success");
+                attachScreenshot(DriverManager.driver,"Airtime Purchase Success");
             } catch (AssertionError e) {
                 log.warn("Transaction failed with status: {}", status);
                 throw e;  // Let TestNG fail the test
@@ -95,7 +96,7 @@ public class ExistingAirtimeAccTests extends BaseTestsConfig {
         accountMenuActions.clickAccountMenuActionsButtn();
         buyAirtimePage.clickBuyButton();
         buyAirtimePage.getExistingProfile(input.get("AirtimeName"));
-        attachScreenshot(driver,"Existing Airtime Profile Retrieved for Deletion");
+        attachScreenshot(DriverManager.driver,"Existing Airtime Profile Retrieved for Deletion");
         buyAirtimePage.clickEditButton();
         buyAirtimePage.clickDeleteButton();
         //String actualTxt = buyAirtimePage.getDeleteToastMsg();
@@ -104,13 +105,13 @@ public class ExistingAirtimeAccTests extends BaseTestsConfig {
             log.info("Recipient deletion confirmed: {}",input.get("AirtimeName"));
 //            Assert.assertEquals(actualTxt,"Item deleted!");
 //            log.info("Recipient deleted");
-            attachScreenshot(driver,"Airtime Recipient Deleted");
+            attachScreenshot(DriverManager.driver,"Airtime Recipient Deleted");
         } catch (Exception| AssertionError e) {
             Assert.fail("Test failed");
             log.warn("Test failed due to: {}",e);
             throw new RuntimeException(e);
         }
-        driver.navigate().back();
+        DriverManager.driver.navigate().back();
         buyAirtimePage.clickBack();
     }
 
@@ -124,7 +125,7 @@ public class ExistingAirtimeAccTests extends BaseTestsConfig {
     @AfterMethod
     public void cleanUp() {
         try {
-            HomePage homePage = new HomePage(driver);
+            HomePage homePage = new HomePage(DriverManager.driver);
             homePage.clickLogoutButtn();
         } catch (Exception e) {
             log.error("Cleanup failed: ", e);

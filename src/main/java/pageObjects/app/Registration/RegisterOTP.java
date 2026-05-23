@@ -20,8 +20,12 @@ public class RegisterOTP {
     private static final Logger log = LoggerFactory.getLogger(RegisterOTP.class);
 
     public RegisterOTP(AndroidDriver driver) {
-        this.driver = driver;
-        PageFactory.initElements(new AppiumFieldDecorator(driver, Duration.ofSeconds(10)), this);
+             if (driver == null) {
+        throw new IllegalStateException("AndroidDriver is NULL. Check DriverManager initialization order.");
+    }
+
+    this.driver = driver;
+    PageFactory.initElements(new AppiumFieldDecorator(driver, Duration.ofSeconds(10)), this);
     }
 
     @AndroidFindBy(id = "za.co.neolabs.bankzero:id/otpInput")
@@ -54,6 +58,7 @@ public class RegisterOTP {
             AndroidActions androidActions = new AndroidActions(driver);
             androidActions.sendKeysAction(otpField, otp); // Use string directly
             log.info("OTP entered into the field: {}", otp);
+
 
             try {
                 Thread.sleep(3000);

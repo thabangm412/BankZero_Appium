@@ -12,6 +12,7 @@ import pageObjects.app.addAccount.NewAccPage;
 import pageObjects.app.login.LoginPage;
 import testConfig.BaseTestsConfig;
 import utils.AndroidActions;
+import utils.DriverManager;
 
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -26,11 +27,11 @@ public class CheckAccountRegistrationTest extends BaseTestsConfig {
 
     @Test(dataProvider = "getMultipleDataSet")
     public void newCheckAccountRegistraion(HashMap<String, String> input) throws IOException {
-        LoginPage loginPage = new LoginPage(driver);
-        AndroidActions androidActions = new AndroidActions(driver);
-        HomePage homePage = new HomePage(driver);
-        AddAccountPage addAccountPage = new AddAccountPage(driver);
-        NewAccPage newAccPage = new NewAccPage(driver);
+        LoginPage loginPage = new LoginPage(DriverManager.driver);
+        AndroidActions androidActions = new AndroidActions(DriverManager.driver);
+        HomePage homePage = new HomePage(DriverManager.driver);
+        AddAccountPage addAccountPage = new AddAccountPage(DriverManager.driver);
+        NewAccPage newAccPage = new NewAccPage(DriverManager.driver);
         Properties properties = new Properties();
         FileInputStream fis = new FileInputStream(System.getProperty("user.dir")+"//src//main//java//resources//data.properties");
         properties.load(fis);
@@ -80,8 +81,8 @@ public class CheckAccountRegistrationTest extends BaseTestsConfig {
     @AfterMethod
     public void cleanUp() {
         try {
-            HomePage homePage = new HomePage(driver);
-            NewAccPage newAccPage = new NewAccPage(driver);
+            HomePage homePage = new HomePage(DriverManager.driver);
+            NewAccPage newAccPage = new NewAccPage(DriverManager.driver);
 
             newAccPage.clickFinish();
             homePage.clickLogoutButtn();

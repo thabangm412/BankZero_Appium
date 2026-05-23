@@ -10,10 +10,10 @@ import org.testng.annotations.Test;
 import pageObjects.app.accountsActionMenu.AccountMenuActions;
 import pageObjects.app.accountsActionMenu.buy.BuyAirtimePage;
 import pageObjects.app.accountsActionMenu.buy.BuyElectricityPage;
-import pageObjects.app.accountsActionMenu.pay.QuickPayPage;
 import pageObjects.app.accountsHome.HomePage;
 import pageObjects.app.login.LoginPage;
 import testConfig.BaseTestsConfig;
+import utils.DriverManager;
 
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -31,9 +31,9 @@ public class NewAirtimeAccTests extends BaseTestsConfig {
 
     @BeforeMethod
     public void preSetUp() {
-        loginPage = new LoginPage(driver);
-        accountMenuActions = new AccountMenuActions(driver);
-        buyAirtimePage = new BuyAirtimePage(driver);
+        loginPage = new LoginPage(DriverManager.driver);
+        accountMenuActions = new AccountMenuActions(DriverManager.driver);
+        buyAirtimePage = new BuyAirtimePage(DriverManager.driver);
 
     }
 
@@ -59,7 +59,7 @@ public class NewAirtimeAccTests extends BaseTestsConfig {
         buyAirtimePage.addAccButton();
         buyAirtimePage.addAirtimeItem(input.get("AirtimeName"),input.get("provider"),input.get("recipientNo"));
         buyAirtimePage.buyAirtime(input.get("amount"),input.get("ref"));
-        attachScreenshot(driver, "AirtimePurchaseDetails");
+        attachScreenshot(DriverManager.driver, "AirtimePurchaseDetails");
         buyAirtimePage.clickConfirmButton();
 
 
@@ -68,7 +68,7 @@ public class NewAirtimeAccTests extends BaseTestsConfig {
 
             try {
                 Assert.assertEquals(status, "Success");
-                attachScreenshot(driver, "AirtimePurchaseSuccess");
+                attachScreenshot(DriverManager.driver, "AirtimePurchaseSuccess");
                 log.info("Transactional Status: {}",status);
             } catch (AssertionError e) {
                 log.warn("Transaction failed with status: {}", status);
@@ -91,8 +91,8 @@ public class NewAirtimeAccTests extends BaseTestsConfig {
     @AfterMethod
     public void cleanUp() {
         try {
-            HomePage homePage = new HomePage(driver);
-            BuyElectricityPage buyPage = new BuyElectricityPage(driver);
+            HomePage homePage = new HomePage(DriverManager.driver);
+            BuyElectricityPage buyPage = new BuyElectricityPage(DriverManager.driver);
 
             buyPage.clickFinishButton();
             homePage.clickLogoutButtn();
