@@ -13,6 +13,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import utils.AndroidActions;
 import utils.AppiumUtils;
+import utils.DriverManager;
 
 import java.time.Duration;
 
@@ -97,7 +98,6 @@ public class MyCardPage {
         cardAccountButtn.click();
         log.info("Card button clicked");
     }
-
     public void clickLockCard()
     {
         AppiumUtils.waitForElement(By.xpath("/hierarchy/android.widget.FrameLayout/android.widget.FrameLayout"),driver);
@@ -191,52 +191,12 @@ public class MyCardPage {
 
     }
 
-    public String getToast1Message() {
-        String toastMessage = null;
-        try {
-            WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(15));
+    public String getToastMessage() {
 
-            // Wait until the specific toast appears
-            WebElement toastMsg = wait.until(ExpectedConditions.presenceOfElementLocated(
-                    By.xpath("//android.widget.Toast[@text='Card is now locked']")
-            ));
+        WebElement toastMsg = driver.findElement(By.xpath("//android.widget.TextView[@resource-id=\"za.co.neolabs.bankzero:id/snackbar_text\"]"));
+        log.info("Toast found: '{}'", toastMsg.getText());
+        return  toastMsg.getText();
 
-            toastMessage = toastMsg.getText();
-            log.info("Toast found: '{}'", toastMessage);
-
-        } catch (Exception e) {
-            log.warn("Toast 'Card is now locked' not found within timeout: {}", e.getMessage());
-        }
-
-        return toastMessage; // returns null if toast does not appear
-    }
-
-
-//    public String getToast2Message() {
-//
-//        WebElement toastMsg = driver.findElement(By.xpath("//android.widget.Toast[@text=\"Card is now unlocked\"]"));
-//        String toastMessage = toastMsg.getText();
-//        return toastMessage; // null if only ignored toasts appeared or timeout reached
-//    }
-
-    public String getToast2Message() {
-        String toastMessage = null;
-        try {
-            WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(15));
-
-            // Wait until the specific toast appears
-            WebElement toastMsg = wait.until(ExpectedConditions.presenceOfElementLocated(
-                    By.xpath("//android.widget.Toast[@text='Card is now unlocked']")
-            ));
-
-            toastMessage = toastMsg.getText();
-            log.info("Toast found: '{}'", toastMessage);
-
-        } catch (Exception e) {
-            log.warn("Toast 'Card is now locked' not found within timeout: {}", e.getMessage());
-        }
-
-        return toastMessage; // returns null if toast does not appear
     }
 
     public void clickUpdate()
@@ -249,24 +209,61 @@ public class MyCardPage {
 
     public void enableATM()
     {
-        AppiumUtils.waitForTextToAppear(By.id("za.co.neolabs.bankzero:id/toolbar_title"),"Card Settings", driver);
+        AppiumUtils.waitForTextToAppear(By.id("za.co.neolabs.bankzero:id/toolbar_title"), "Card Settings", driver);
         AndroidActions androidActions = new AndroidActions(driver);
-        atmDropDown.click();
-        log.info("ATM drop down button clicked.");
-        androidActions.scrollToTextAndClick2("Always on",driver);
-        clickUpdate();
+
+        String currentValue = atmDropDown.getText().trim();
+        log.info("Current ATM setting: {}", currentValue);
+
+        if ("Always off".equalsIgnoreCase(currentValue)) {
+            log.info("ATM is 'Always off' — switching to 'Always on'.");
+            atmDropDown.click();
+            androidActions.scrollToTextAndClick2("Always on", driver);
+            clickUpdate();
+            log.info("ATM successfully set to 'Always on'.");
+        } else {
+            log.info("ATM is already '{}' — no change needed.", currentValue);
+        }
 
     }
 
-    public void disableATM()
+    public void atmConfiguration(String desiredState)
     {
-        AppiumUtils.waitForTextToAppear(By.id("za.co.neolabs.bankzero:id/toolbar_title"),"Card Settings", driver);
+        AppiumUtils.waitForTextToAppear(By.id("za.co.neolabs.bankzero:id/toolbar_title"), "Card Settings", driver);
         AndroidActions androidActions = new AndroidActions(driver);
-        atmDropDown.click();
-        log.info("ATM drop down button clicked.");
-        androidActions.scrollToTextAndClick2("Always off",driver);
-        clickUpdate();
 
+        String currentValue = atmDropDown.getText().trim();
+        log.info("Current ATM setting: {}", currentValue);
+
+        if (!desiredState.equalsIgnoreCase(currentValue)) {
+            log.info("ATM is '{}' — switching to '{}'.", currentValue, desiredState);
+            atmDropDown.click();
+            androidActions.scrollToTextAndClick2(desiredState, driver);
+            androidActions.attachScreenshot(DriverManager.driver, "ATM_Configuration_Change");
+            clickUpdate();
+            log.info("ATM successfully set to '{}'.", desiredState);
+        } else {
+            log.info("ATM is already '{}' — no change needed.", currentValue);
+        }
+    }
+
+
+    public void disableATM() {
+        AppiumUtils.waitForTextToAppear(By.id("za.co.neolabs.bankzero:id/toolbar_title"), "Card Settings", driver);
+        AndroidActions androidActions = new AndroidActions(driver);
+
+        String currentValue = atmDropDown.getText().trim();
+        log.info("Current ATM setting: {}", currentValue);
+
+        if ("Always on".equalsIgnoreCase(currentValue)) {
+            log.info("ATM is 'Always on' — switching to 'Always off'.");
+            atmDropDown.click();
+            androidActions.scrollToTextAndClick2("Always off", driver);
+            clickUpdate();
+            log.info("ATM successfully set to 'Always off'.");
+        } else {
+            log.info("ATM is already '{}' — no change needed.", currentValue);
+        }
     }
 
     public void clickFinish()
@@ -322,6 +319,14 @@ public class MyCardPage {
         return status;
     }
 
+    public void tryClickFinish() {
+        try {
+            finishButtn.click();
+        } catch (Exception e) {
+            log.info("Finish button not found. Skipping finish step.");
+        }
+    }
+
     public void updateGlobalDailyCash (String amount)
     {
         AppiumUtils.waitForTextToAppear(By.id("za.co.neolabs.bankzero:id/toolbar_title"), "Card Settings", driver);
@@ -340,10 +345,10 @@ public class MyCardPage {
         log.info("Online cash amount update: {}", amount);
     }
 
-    public boolean getCardDisplayed()
+    public String getCardDisplayed()
     {
         AppiumUtils.waitForTextToAppear(By.id("za.co.neolabs.bankzero:id/toolbar_title"), "Card details", driver);
-        return driver.findElement(By.id("za.co.neolabs.bankzero:id/card_text_front")).isDisplayed();
+        return driver.findElement(By.id("za.co.neolabs.bankzero:id/card_pan")).getText();
     }
 
     public String getCardPin()
