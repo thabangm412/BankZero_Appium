@@ -104,6 +104,7 @@ public class ChildAccountRegistrationTest extends BaseTestsConfig {
         androidActions.wait(3);
 
         pairOnDevicePage.addProfile();
+        pairOnDevicePage.partialRegistrationCheck();
         childAccPage.enterCellNumber(input.get("phoneNumber"));
         childAccPage.enterIdNumber(input.get("id"));
         childAccPage.enterPreferredName(input.get("allNames"));
