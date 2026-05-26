@@ -287,6 +287,21 @@ public abstract class AppiumUtils {
             log.error("Failed to capture screenshot for test: {}", testName, e);
         }
     }
+    public void attachScreenshot(AppiumDriver driver, String screenshotName) {
+        try {
+            ExtentTest test = getTest();
+            if (test != null && driver != null) {
+                String base64Screenshot = getBase64Screenshot(driver);
+                test.addScreenCaptureFromBase64String(base64Screenshot, screenshotName);
+            }
+        } catch (Exception e) {
+            log.warn("Could not capture screenshot: {0}", e.getMessage());
+            ExtentTest test = getTest();
+            if (test != null) {
+                test.warning("Could not capture screenshot: " + e.getMessage());
+            }
+        }
+    }
 
     public String getBase64Screenshot(AppiumDriver driver) {
         return driver.getScreenshotAs(OutputType.BASE64);
@@ -372,22 +387,6 @@ public abstract class AppiumUtils {
         LocalDate date = LocalDate.parse(onceOffDate, inputFormatter);
         return date.format(outputFormatter);
 
-    }
-
-    public void attachScreenshot(AppiumDriver driver, String screenshotName) {
-        try {
-            ExtentTest test = getTest();
-            if (test != null && driver != null) {
-                String base64Screenshot = getBase64Screenshot(driver);
-                test.addScreenCaptureFromBase64String(base64Screenshot, screenshotName);
-            }
-        } catch (Exception e) {
-            log.warn("Could not capture screenshot: {0}", e.getMessage());
-            ExtentTest test = getTest();
-            if (test != null) {
-                test.warning("Could not capture screenshot: " + e.getMessage());
-            }
-        }
     }
 
     private ExtentTest getTest() {

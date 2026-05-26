@@ -57,25 +57,28 @@ public class Listeners extends AppiumUtils implements ITestListener {
                 log.error("Exception in [{}]: {}", result.getName(), cause.getMessage());
                 test.fail("Test failed due to exception: " + cause.getMessage());
             }
-            test.fail(cause); // attaches full stack trace to Extent report
+            test.fail(cause);
         }
 
+        // ✅ Use DriverManager directly — no reflection needed
         attachScreenshot(result);
-        log.info("Screenshot attached for failed test: [{}]", result.getName());
     }
 
     private void attachScreenshot(ITestResult result) {
         try {
-            Optional<AppiumDriver> optDriver = getDriverFromResult(result);
-            if (optDriver.isPresent()) {
-                AppiumDriver driver = optDriver.get();
+            AppiumDriver driver = DriverManager.driver; // ✅ direct reference
+            if (driver != null) {
                 String base64Screenshot = getBase64Screenshot(driver);
                 ExtentTest test = getTest();
                 if (test != null) {
-                    test.addScreenCaptureFromBase64String(base64Screenshot, result.getMethod().getMethodName());
+                    test.addScreenCaptureFromBase64String(
+                            base64Screenshot,
+                            result.getMethod().getMethodName()
+                    );
+                    log.info("Screenshot attached for failed test: [{}]", result.getName());
                 }
             } else {
-                log.warn("Driver instance not found for test: {}", result.getMethod().getMethodName());
+                log.warn("Driver is null — screenshot skipped for: {}", result.getName());
             }
         } catch (Exception e) {
             log.warn("Could not capture screenshot: {}", e.getMessage());

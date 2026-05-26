@@ -36,13 +36,6 @@ import com.aventstack.extentreports.reporter.ExtentSparkReporter;
 import com.aventstack.extentreports.reporter.configuration.Theme;
 import io.appium.java_client.android.AndroidDriver;
 
-import java.io.File;
-import java.net.InetAddress;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-
-import static utils.AppiumUtils.driver;
-
 public class ExtentReporterNG {
 
     public static ExtentReports getReportObject(AndroidDriver driver) {
@@ -61,6 +54,12 @@ public class ExtentReporterNG {
         sparkReporter.config().setReportName("BankZero Mobile Automation Execution Report");
         sparkReporter.config().setDocumentTitle("BankZero Automation Test Results");
         sparkReporter.config().setTheme(Theme.DARK);
+
+        sparkReporter.config().setOfflineMode(true); // Self-contained HTML, no CDN needed
+        sparkReporter.config().setTimelineEnabled(true);
+        sparkReporter.config().setEncoding("UTF-8");
+        sparkReporter.config().setJs("document.querySelector('.brand-logo').innerText = 'BankZero QA';");
+        sparkReporter.config().setCss(".brand-logo { font-weight: bold; color: #f5a623; }");
 
         ExtentReports extent = new ExtentReports();
         extent.attachReporter(sparkReporter);
