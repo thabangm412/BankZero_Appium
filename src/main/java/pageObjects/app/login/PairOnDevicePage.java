@@ -93,6 +93,20 @@ public class PairOnDevicePage {
         log.info("Add profile button clicked");
     }
 
+    public void partialRegistrationCheck()
+    {
+        if (driver.findElements(By.id("android:id/alertTitle")).size() > 0 && driver.findElement(By.id("android:id/alertTitle")).getText().equals("Partial Registration")) {
+            log.warn("Partial registration alert detected. Cancelling partial registration");
+
+            WebElement noButton = driver.findElement(By.xpath("//android.widget.Button[@resource-id=\"android:id/button2\" and @text=\"No\"]"));
+            noButton.click();
+            log.info("'No' button clicked to cancel duplicate payment");
+        } else {
+            log.info("No partial registration alert detected");
+        }
+    }
+
+
     public void enterCellNumber(String cell)
     {
         //AppiumUtils.waitForTextToAppear(By.id("za.co.neolabs.bankzero:id/toolbar_title"),"Pair/Register", driver);
