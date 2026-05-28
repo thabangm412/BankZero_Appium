@@ -100,7 +100,7 @@ public class ExistingSMSTests extends BaseTestsConfig {
         accountMenuActions.clickAccountMenuActionsButtn();
         buySMSPage.clickBuyButton();
         buySMSPage.getExistingProfile(input.get("SMSName"));
-        attachScreenshot(DriverManager.driver,"Existing Airtime Profile Retrieved for Deletion");
+        attachScreenshot(DriverManager.driver,"Existing SMS Profile Retrieved for Deletion");
         buySMSPage.clickEditButton();
         buySMSPage.clickDeleteButton();
 

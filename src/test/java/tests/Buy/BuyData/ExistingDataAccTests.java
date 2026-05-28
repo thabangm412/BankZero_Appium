@@ -36,7 +36,7 @@ public class ExistingDataAccTests extends BaseTestsConfig {
     }
 
 
-    @Test(dataProvider = "getMultipleDataSet")
+    @Test(dataProvider = "getMultipleDataSet", priority = 0)
     public void existingDataAccTest(HashMap<String, String> input) throws IOException {
         validateInput(input,
                 "DataName", "amount", "ref"
@@ -77,7 +77,7 @@ public class ExistingDataAccTests extends BaseTestsConfig {
         buyDataPage.clickFinishButton();
     }
 
-    @Test(dataProvider = "getMultipleDataSet")
+    @Test(dataProvider = "getMultipleDataSet", priority = 1)
     public void deleteExistingDataRecipient(HashMap<String, String> input)  throws InterruptedException, IOException{
 
         validateInput(input,
