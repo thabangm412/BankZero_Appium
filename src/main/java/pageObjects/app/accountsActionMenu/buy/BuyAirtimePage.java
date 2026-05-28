@@ -164,31 +164,19 @@ public class BuyAirtimePage {
 
         try {
             for (WebElement group : groupNames) {
-                if (group.getText().equals("Data")) {
-                    log.info("Group name matching Data found");
+                if (group.getText().equals("Airtime")) {
+                    log.info("Group name matching Airtime found");
                     AndroidActions androidActions = new AndroidActions(driver);
                     androidActions.scrollToTextAndClick2(name, driver);
                     log.info("Scrolled to the account name: {}", name);
                     break; // stop once found
                 } else {
-                    log.warn("Data group name not found!");
+                    log.warn("Airtime group name not found!");
                 }
             }
         } catch (Exception e) {
-            log.error("An error occurred while processing Data group names: {}", e.getMessage(), e);
+            log.error("An error occurred while processing Airtime group names: {}", e.getMessage(), e);
         }
-
-//        amountInputField.clear();
-//        log.info("Amount input field cleared...");
-//        amountInputField.sendKeys(amount);
-//        log.info("Amount entered: {}", amount);
-//
-//        referenceInputField.clear();
-//        log.info("Amount input field cleared...");
-//        referenceInputField.sendKeys(ref);
-//        log.info("Entered reference: {}", ref);
-//        buyOrSubmittButtn.click();
-//        log.info("Buy button clicked.");
 
     }
 
@@ -338,17 +326,6 @@ public class BuyAirtimePage {
 
     }
 
-//    public void clickEdit()
-//    {
-//        AppiumUtils.waitForTextToAppear(By.id("za.co.neolabs.bankzero:id/toolbar_title"),"Quick Buy",driver);
-//
-//    }
-//
-//    public void updateAmount(String amount)
-//    {
-//        AppiumUtils.waitForTextToAppear(By.id("za.co.neolabs.bankzero:id/toolbar_title"),"Edit Airtime item",driver);
-//
-//    }
 
     public boolean isRecipientDeleted(String text)
     {

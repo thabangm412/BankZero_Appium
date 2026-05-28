@@ -36,7 +36,7 @@ public class ExistingAirtimeAccTests extends BaseTestsConfig {
 
     }
 
-    @Test(dataProvider = "getMultipleDataSet")
+    @Test(dataProvider = "getMultipleDataSet", priority = 0)
     public void existingAirtimeAccTest(HashMap<String, String> input) throws IOException {
         validateInput(input,
                     "AirtimeName", "amount", "ref"
@@ -78,7 +78,7 @@ public class ExistingAirtimeAccTests extends BaseTestsConfig {
         buyAirtimePage.clickFinishButton();
     }
 
-    @Test(dataProvider = "getMultipleDataSet")
+    @Test(dataProvider = "getMultipleDataSet", priority = 1)
     public void deleteExistingRecipient(HashMap<String, String> input)  throws InterruptedException, IOException{
 
        validateInput(input,
@@ -99,12 +99,10 @@ public class ExistingAirtimeAccTests extends BaseTestsConfig {
         attachScreenshot(DriverManager.driver,"Existing Airtime Profile Retrieved for Deletion");
         buyAirtimePage.clickEditButton();
         buyAirtimePage.clickDeleteButton();
-        //String actualTxt = buyAirtimePage.getDeleteToastMsg();
+
         try {
             Assert.assertTrue(buyAirtimePage.isRecipientDeleted(input.get("AirtimeName")));
             log.info("Recipient deletion confirmed: {}",input.get("AirtimeName"));
-//            Assert.assertEquals(actualTxt,"Item deleted!");
-//            log.info("Recipient deleted");
             attachScreenshot(DriverManager.driver,"Airtime Recipient Deleted");
         } catch (Exception| AssertionError e) {
             Assert.fail("Test failed");
