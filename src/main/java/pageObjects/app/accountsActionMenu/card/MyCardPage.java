@@ -83,6 +83,11 @@ public class MyCardPage {
     @AndroidFindBy(id = "za.co.neolabs.bankzero:id/onlineperpurchase")
     private WebElement onlineMaxInput;
 
+    @AndroidFindBy(id = "za.co.neolabs.bankzero:id/card_switch")
+    private WebElement lockCardToggle;
+
+
+
     public void confirmingBiometrics()
     {
         AppiumUtils.waitForElement(By.id("za.co.neolabs.bankzero:id/viewFinderTitle"),driver);
@@ -100,16 +105,24 @@ public class MyCardPage {
     }
     public void clickLockCard()
     {
-        AppiumUtils.waitForElement(By.xpath("/hierarchy/android.widget.FrameLayout/android.widget.FrameLayout"),driver);
-        lockCardButtn.click();
-        log.info("Lock card button clicked.");
+        if(cardToggleButtonCheck().equalsIgnoreCase("Lock card"))
+        {
+            lockCardToggle.click();
+            log.info("Lock card button clicked.");
+        }else {
+            log.info("Card is already locked. No action needed.");
+        }
     }
 
     public void clickUnlockCard()
     {
-        AppiumUtils.waitForElement(By.xpath("/hierarchy/android.widget.FrameLayout/android.widget.FrameLayout"),driver);
-        unlockCardButtn.click();
+        if(cardToggleButtonCheck().equalsIgnoreCase("Unlock card"))
+        {
+            lockCardToggle.click();
             log.info("Unlock card button clicked.");
+        }else {
+            log.info("Card is already unlocked. No action needed.");
+        }
     }
 
     public void clickCardSettings()
@@ -296,6 +309,9 @@ public class MyCardPage {
         By locator;
 
         switch (field.toUpperCase()) {
+            case "CARD STATUS":
+                 locator = By.id("za.co.neolabs.bankzero:id/card_status");
+                break;
             case "ON/OFF":
                 locator = By.id("za.co.neolabs.bankzero:id/atmcash_textview");
                 break;
@@ -384,6 +400,15 @@ public class MyCardPage {
         AppiumUtils.waitForTextToAppear(By.id("za.co.neolabs.bankzero:id/toolbar_title"),"Card details", driver);
         finishButtn.click();
         log.info("Finish button clicked.");
+    }
+
+    public String cardToggleButtonCheck()
+    {
+        AppiumUtils.waitForTextToAppear(By.id("za.co.neolabs.bankzero:id/toolbar_title"), "Card Settings", driver);
+        WebElement toggleButton = driver.findElement(By.id("za.co.neolabs.bankzero:id/card_switch"));
+        String currentValue = toggleButton.getText().trim();
+        log.info("Current toggle button value: {}", currentValue);
+        return currentValue;
     }
 
 

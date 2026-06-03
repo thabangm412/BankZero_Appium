@@ -12,6 +12,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import utils.AndroidActions;
 import utils.AppiumUtils;
+import utils.DriverManager;
 
 import java.time.Duration;
 import java.util.List;
@@ -374,7 +375,6 @@ public class BuyElectricityPage {
         log.info("Finish button clicked...");
 
     }
-
     public boolean isRecipientDeleted(String text)
     {
         AndroidActions androidActions = new AndroidActions(driver);
