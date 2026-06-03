@@ -1,5 +1,9 @@
 package tests.Business.Registration;
 
+import DbQueries.DbConfig;
+import com.jcraft.jsch.JSchException;
+import factory.BusinessDataFactory;
+import models.BusinessRegData;
 import org.openqa.selenium.By;
 import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebElement;
@@ -8,6 +12,7 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.testng.Assert;
+import org.testng.SkipException;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.DataProvider;
@@ -18,6 +23,7 @@ import pageObjects.app.business.BusinessPage;
 import pageObjects.app.login.LoginPage;
 import testConfig.BaseTestsConfig;
 import utils.AndroidActions;
+import utils.DriverManager;
 
 import java.io.File;
 import java.io.IOException;
@@ -34,103 +40,70 @@ public class BusinessPtyTest extends BaseTestsConfig {
     private AddAccountPage addAccountPage;
     private BusinessPage businessPage;
     private AndroidActions androidActions;
+    private BusinessRegData businessDataFactory;
 
     @BeforeMethod
-    public void setUpPages() {
+    public void setUpPages() throws JSchException {
         // initialize page objects once per test method
         log.debug("Initializing page objects for test.");
-        loginPage = new LoginPage(driver);
-        addAccountPage = new AddAccountPage(driver);
-        businessPage = new BusinessPage(driver);
-        androidActions = new AndroidActions(driver);
+        loginPage = new LoginPage(DriverManager.driver);
+        addAccountPage = new AddAccountPage(DriverManager.driver);
+        businessPage = new BusinessPage(DriverManager.driver);
+        androidActions = new AndroidActions(DriverManager.driver);
+        businessDataFactory = BusinessDataFactory.validBusinessData();
+//        DbConfig.customerExists(businessDataFactory.getRegistrationNo());
     }
 
-    @Test(dataProvider = "getMultipleDataSet")
-    public void PtyRegistration(HashMap<String, String> input)
-    {
-        log.info("Starting PtyRegistration test");
+    @Test
+    public void PtyRegistration() throws JSchException {
 
-        validateInputKeys(input, "profileName", "loginPin", "businessType",
-                "tradingName", "registeredName", "registrationNo",
-                "sicGroup", "sicIndustry", "notifyEmail","city","street","successMsg","cardPin");
+        boolean customerExists =
+                DbConfig.customerExists(businessDataFactory.getRegistrationNo());
 
-        String profileName = input.get("profileName");
-        String loginPin = input.get("loginPin");
-        log.info("Logging in with profile: {}", profileName);
-        // do not log sensitive values such as PIN
-        loginPage.loginWithRetry(profileName, loginPin, 2);
-        log.debug("Login attempt finished for profile: {}", profileName);
+        if (customerExists) {
+            log.warn("Customer already exists. Skipping test execution.");
 
-        log.info("Starting add account flow");
-        addAccountPage.clickAddAccButtn();
-        addAccountPage.newBusinessButtn();
-        log.debug("Selected new business account");
-
-        log.info("Choosing business type: {}", input.get("businessType"));
-        businessPage.chooseBusiness(input.get("businessType"));
-
-        log.info("Entering PTY business details (trading/registration names and number)");
-        businessPage.ptyBusinessDetails(input.get("tradingName"), input.get("registeredName"), input.get("registrationNo"));
-
-        log.info("Entering SIC details: group={}, industry={}", input.get("sicGroup"), input.get("sicIndustry"));
-        businessPage.sicDetails(input.get("sicGroup"), input.get("sicIndustry"));
-
-        log.info("Selecting source of funds & wealth");
-        businessPage.chooseSourceOfFundsAndWealth();
-
-        log.info("Entering notification email");
-        businessPage.enterNotifyEmail(input.get("notifyEmail"));
-
-        log.info("Selecting from account and proceeding to next step");
-        businessPage.selectFromAccount(input.get("profileName"));
-        businessPage.clickNextButton();
-
-        log.info("Entering registered address details");
-        businessPage.enterRegisteredAddress(input.get("street"), input.get("city"));
-        businessPage.clickNextButton();
-
-        log.info("Selecting card option for business account");
-        businessPage.selectCardOptions(input.get("tradingName"));
-        businessPage.clickNextButton();
-
-        log.info("Adding card delivery and security details");
-        businessPage.enterCardPin(input.get("cardPin"));
-        businessPage.clickNextButton();
-
-        log.info("Adding owners and officials");
-        businessPage.selectOwnersAndOfficials();
-        businessPage.clickNextButton();
-
-        log.info("Finalizing business account registration");
-        businessPage.verifyTermsAndConditions();
-        businessPage.clickNextButton();
-
-        assertTextPresentExact(input.get("successMsg"));
-
-    }
-
-    @DataProvider
-    public Object[] [] getMultipleDataSet() throws IOException {
-
-        String path =
-                System.getProperty("user.dir") + File.separator + "src" + File.separator
-                + "test" + File.separator + "java" + File.separator + "testData" + File.separator + "businessData.json";
-        log.debug("Loading test data from: {}", path);
-
-        List<HashMap<String, String>> data = getJsonData(path);
-        if (data == null || data.isEmpty()) {
-            log.error("No test data found at: {}", path);
-            throw new IllegalStateException("Test data is empty: " + path);
+            throw new SkipException(
+                    "Test skipped because customer already exists in DB: "
+                            + businessDataFactory.getRegistrationNo()
+            );
         }
 
-        log.info("Providing {} data set(s) to test", data.size());
-        return new Object[][]{{data.getFirst()}};
+
+        loginPage.loginWithRetry(
+                businessDataFactory.getUser().getProfileName(),
+                businessDataFactory.getUser().getLoginPin(),
+                2
+        );
+
+        addAccountPage.clickAddAccButtn();
+        addAccountPage.newBusinessButtn();
+        businessPage.chooseBusiness(businessDataFactory.getBusinessType());
+        businessPage.ptyBusinessDetails(businessDataFactory.getTradingName(), businessDataFactory.getRegisteredName(), businessDataFactory.getRegistrationNo());
+        businessPage.sicDetails(businessDataFactory.getSicGroup(), businessDataFactory.getSicIndustry());
+        businessPage.chooseSourceOfFundsAndWealth();
+        businessPage.enterNotifyEmail(businessDataFactory.getNotifyEmail());
+        businessPage.selectFromAccount(businessDataFactory.getFundsAccount());
+        businessPage.clickNextButton();
+        businessPage.enterRegisteredAddress(businessDataFactory.getStreet(), businessDataFactory.getCity(),businessDataFactory.getPostalCode());
+        businessPage.clickNextButton();
+        businessPage.selectCardOptions(businessDataFactory.getTradingName());
+        businessPage.clickNextButton();
+        businessPage.enterCardPin(businessDataFactory.getCardPin());
+        businessPage.clickNextButton();
+        businessPage.selectOwnersAndOfficials();
+        businessPage.clickNextButton();
+        businessPage.verifyTermsAndConditions();
+        businessPage.clickNextButton();
+        attachScreenshot(DriverManager.driver, "Business_Registration_Summary");
+        assertTextPresentExact(businessDataFactory.getSuccessMsg());
+
     }
 
     @AfterMethod
     public void cleanUp() {
         try {
-            HomePage homePage = new HomePage(driver);
+            HomePage homePage = new HomePage(DriverManager.driver);
             homePage.clickLogoutButtn();
             log.info("Logged out successfully during cleanup.");
         } catch (Exception e) {
@@ -160,7 +133,7 @@ public class BusinessPtyTest extends BaseTestsConfig {
 
     private void assertTextPresentExact(String exactText) {
         By xpath = By.xpath("//android.widget.TextView[@text=\"" + exactText + "\"]");
-        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(15));
+        WebDriverWait wait = new WebDriverWait(DriverManager.driver, Duration.ofSeconds(20));
         try {
             WebElement el = wait.until(ExpectedConditions.visibilityOfElementLocated(xpath));
             Assert.assertTrue(el.isDisplayed(), "Expected text not visible: " + exactText);
