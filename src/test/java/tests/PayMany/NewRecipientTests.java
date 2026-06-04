@@ -1,5 +1,9 @@
 package tests.PayMany;
 
+import factory.PaymentDataFactory;
+import factory.TransferDataFactory;
+import models.PayManyData;
+import models.User;
 import org.openqa.selenium.NoSuchElementException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,98 +30,65 @@ public class NewRecipientTests extends BaseTestsConfig {
     private LoginPage loginPage;
     private HomePage homePage;
     private AccountMenuActions accountMenuActions;
-    private QuickPayPage quickPayPage;
-    private AndroidActions androidActions;
+
     private PayManyPage payManyPage;
+    private User appUser;
+    private PayManyData payManyData;
 
     @BeforeMethod
     public void preSetUp() {
         loginPage = new LoginPage(DriverManager.driver);
         homePage = new HomePage(DriverManager.driver);
         accountMenuActions = new AccountMenuActions(DriverManager.driver);
-        quickPayPage = new QuickPayPage(DriverManager.driver);
-        androidActions = new AndroidActions(DriverManager.driver);
         payManyPage = new PayManyPage(DriverManager.driver);
+        appUser = TransferDataFactory.validAppUser();
+        payManyData = PaymentDataFactory.validPayManyData();
 
         log.debug("Page objects and androidActions initialized");
     }
 
-    @Test(dataProvider = "getMultipleDataSet",priority = 0)
-    public void addNewRecipient(HashMap<String, String> input)
+    @Test(priority = 0)
+    public void addNewRecipient()
     {
-        validateInput(input,
-                "profileName", "loginPin",
-                "recipientName", "group", "bank", "account", "accountNo",
-                "popEmail", "popPhone"
+
+        loginPage.loginWithRetry(
+                appUser.getUser().getProfileName(),
+                appUser.getUser().getLoginPin(),
+                2
         );
-
-       // androidActions.environmentChange();
-        String name = input.get("profileName");
-        String appPin = input.get("loginPin");
-
-        loginPage.loginWithRetry(name,appPin,2);
 
         accountMenuActions.clickAccountMenuActionsButtn();
         payManyPage.clickPayManyButton();
         payManyPage.clickAddRecipient();
-        payManyPage.addRecipientDetails(input.get("recipientName"),input.get("group"),input.get("bank"),input.get("account"),input.get("accountNo"));
-        payManyPage.enterPOPDetails(input.get("popEmail"),input.get("popPhone"));
+        payManyPage.addRecipientDetails(payManyData.getRecipientName(),payManyData.getGroup(),payManyData.getBank(),payManyData.getAccount(), payManyData.getAccountNo());
+        payManyPage.enterPOPDetails(payManyData.getPopEmail(),payManyData.getPopPhone());
         payManyPage.clickAddButton();
-        payManyPage.getGroups(input.get("group"));
+        payManyPage.getGroups(payManyData.getGroup());
         attachScreenshot(DriverManager.driver,"RecipientDetails added");
-
-        try {
-            String expectedTxt =  input.get("recipientName");
-            log.info("Assertion expectation: {}",expectedTxt);
-            //String actualTxt = payManyPage.getRecipientName();
-            Assert.assertTrue(payManyPage.getRecipientNames().contains(expectedTxt), "Recipient name does not match expected value");
-            attachScreenshot(DriverManager.driver,"Recipient added successfully");
-
-        } catch (AssertionError e) {
-            log.warn("Failed to add payment recipient");
-            Assert.fail("Test failed due to exception: " + e.getMessage());
-            throw e;  // Let TestNG fail the test
-        }
+        Assert.assertTrue(payManyPage.getRecipientNames().contains(payManyData.getRecipientName()), "Recipient name does not match expected value");
+        attachScreenshot(DriverManager.driver,"Recipient added successfully");
 
     }
 
-    @Test(dataProvider = "getMultipleDataSet",priority = 1)
-    public void makePaymentToRecipient(HashMap<String, String> input)
+    @Test(priority = 1)
+    public void makePaymentToRecipient()
     {
-        validateInput(input,
-                "profileName", "loginPin",
-                "recipientName",
-                "amount"
-        );
 
-        payManyPage.clickNewPayment(input.get("recipientName"));
+        payManyPage.clickNewPayment(payManyData.getRecipientName());
         payManyPage.clickAttachments();
         payManyPage.addAttachments();
-        payManyPage.enterAmount(input.get("amount"));
+        payManyPage.enterAmount(payManyData.getAmount());
         payManyPage.clickFinish();
         attachScreenshot(DriverManager.driver,"Payment details");
         payManyPage.clickConfirmButton();
 
-        try {
-            String actualTxt = payManyPage.transactionStatus();
-            Assert.assertEquals(actualTxt,"Thank you");
-            attachScreenshot(DriverManager.driver,"Payment successful");
-        }catch (AssertionError | NoSuchElementException e)
-        {
-            log.warn("Failed to do payment transaction");
-            Assert.fail("Test failed due to exception: " + e.getMessage());
-            throw e;
-        }
+        String actualTxt = payManyPage.transactionStatus();
+        log.info("Payment transaction status: {}", actualTxt);
+        Assert.assertEquals(actualTxt,"Thank you");
+        attachScreenshot(DriverManager.driver,"Payment successful");
         payManyPage.clickFinish();
         homePage.clickLogoutButtn();
 
-    }
-
-    @DataProvider
-    public Object[] [] getMultipleDataSet() throws IOException {
-
-        List<HashMap<String, String>> data = getJsonData(System.getProperty("user.dir") + "//src//test//java//testData//payManyData.json");
-        return new Object[][]{{data.getFirst()}};
     }
 
 }
