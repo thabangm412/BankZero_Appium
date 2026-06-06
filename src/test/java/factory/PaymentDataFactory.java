@@ -24,7 +24,7 @@ public class PaymentDataFactory {
                 .bank("Om Bank Limited")
                 .account("Current Account")
                 .accountNo("57096931700")
-                .popEmail("Thabang.monoane+1@gmail.com")
+                .popEmail("Thabang.monoane+2@gmail.com")
                 .popPhone("0676336782")
                 .amount("40")
                 .build();
