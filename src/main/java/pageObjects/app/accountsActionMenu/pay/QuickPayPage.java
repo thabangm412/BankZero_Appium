@@ -312,10 +312,28 @@ public class QuickPayPage {
 
     public boolean getPaymentStatus()
     {
-        AppiumUtils.waitForTextToAppear(By.id("za.co.neolabs.bankzero:id/toolbar_title"),"Quick Pay", driver);
-        log.info("Retrieving Payment status");
-        return paymentStatus.isDisplayed();
+        log.info("Retrieving payment status");
 
+        try
+        {
+            AppiumUtils.waitForTextToAppear(
+                    By.id("za.co.neolabs.bankzero:id/toolbar_title"),
+                    "Quick Pay",
+                    driver
+            );
+
+            return paymentStatus.isDisplayed();
+        }
+        catch (Exception e)
+        {
+            AppiumUtils.waitForTextToAppear(
+                    By.id("za.co.neolabs.bankzero:id/toolbar_title"),
+                    "Payment error!",
+                    driver
+            );
+
+            return false;
+        }
     }
 
     public void clickFinish()

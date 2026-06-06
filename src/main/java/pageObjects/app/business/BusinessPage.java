@@ -11,6 +11,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import utils.AndroidActions;
 import utils.AppiumUtils;
+import utils.DriverManager;
 
 import java.time.Duration;
 import java.util.List;
@@ -61,6 +62,9 @@ public class BusinessPage {
     private WebElement streetInput;
     @AndroidFindBy(id = "za.co.neolabs.bankzero:id/selected_registered_address_3")
     private WebElement surbubInput;
+
+    @AndroidFindBy(id = "za.co.neolabs.bankzero:id/selected_registered_address_4")
+    private WebElement postalInput;
     @AndroidFindBy(id = "za.co.neolabs.bankzero:id/cardDeliveryOption_dd_arrow")
     private WebElement cardDropdown;
     @AndroidFindBy(id = "za.co.neolabs.bankzero:id/card_line1_edit")
@@ -409,7 +413,7 @@ public class BusinessPage {
             String cardName =  name.toUpperCase();//AppiumUtils.waitForTextToAppear(By.id("za.co.neolabs.bankzero:id/toolbar_title"), "Bank card", driver);
             log.info("Selecting card delivery option");
             cardDropdown.click();
-            androidActions.scrollToTextAndClick2("Courier to residential address (R119 - R149)", driver);
+            androidActions.scrollToTextAndClick2("Courier to residential address (R125 - R155)",driver);
 
             AppiumUtils.waitForElement(By.id("za.co.neolabs.bankzero:id/card_options"),driver);
             log.info("Entering card customisation details");
@@ -421,7 +425,7 @@ public class BusinessPage {
             throw e;
         }
     }
-    public void enterRegisteredAddress(String street, String suburb) {
+    public void enterRegisteredAddress(String street, String suburb, String postalCode) {
         try {
             //AppiumUtils.waitForTextToAppear(By.id("za.co.neolabs.bankzero:id/toolbar_title"), "Addresses", driver);
             ownershipDropdown.click();
@@ -434,16 +438,20 @@ public class BusinessPage {
             log.info("Entering street address and suburb details");
             safeClear(streetInput,street);
             safeSendKeys(streetInput,"Street name",street,false);
+            safeClear(surbubInput,suburb);
             safeSendKeys(surbubInput,"Surbub name",suburb,false);
+            safeClear(postalInput,"Postal code");
+            safeSendKeys(postalInput,"Postal code",postalCode,false);
+
         } catch (Exception e) {
             log.error("Registered address page did not appear as expected", e);
             throw e;
         }
     }
     public void selectFromAccount(String accountName) {
+        fromAcc.click();
+        log.info("From account dropdown clicked");
         try {
-            fromAcc.click();
-            log.info("From account dropdown clicked");
             String xpath = String.format(
                     "//android.widget.TextView[@resource-id='za.co.neolabs.bankzero:id/accountName' and @text='%s']",
                     accountName

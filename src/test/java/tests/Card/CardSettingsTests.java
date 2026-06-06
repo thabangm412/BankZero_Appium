@@ -1,14 +1,21 @@
 package tests.Card;
 
+import factory.TransferDataFactory;
+import models.User;
 import org.openqa.selenium.NoSuchElementException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.testng.Assert;
-import org.testng.annotations.DataProvider;
-import org.testng.annotations.Test;
+import org.testng.annotations.*;
+import pageObjects.app.Registration.RegisterOTP;
 import pageObjects.app.accountsActionMenu.AccountMenuActions;
 import pageObjects.app.accountsActionMenu.card.MyCardPage;
 import pageObjects.app.accountsHome.HomePage;
+import pageObjects.app.addAccount.AddAccountPage;
 import pageObjects.app.login.LoginPage;
+import pageObjects.app.login.PairOnDevicePage;
 import testConfig.BaseTestsConfig;
+import tests.DevicePair.DevicePairTests;
 import utils.AndroidActions;
 import utils.DriverManager;
 
@@ -17,258 +24,176 @@ import java.util.HashMap;
 import java.util.List;
 
 public class CardSettingsTests extends BaseTestsConfig {
+    private static final Logger log = LoggerFactory.getLogger(CardSettingsTests.class);
 
-    @Test(dataProvider = "getMultipleDataSet")
-    public void lockCardTest(HashMap<String, String> input)
+    private LoginPage loginPage;
+    private HomePage homePage;
+    private AccountMenuActions accountMenuActions;
+    private MyCardPage cardPage;
+    private User appUser;
+
+    @BeforeMethod
+    public void preSetUp() {
+        loginPage = new LoginPage(DriverManager.driver);
+        homePage = new HomePage(DriverManager.driver);
+        accountMenuActions = new AccountMenuActions(DriverManager.driver);
+        cardPage = new MyCardPage(DriverManager.driver);
+        appUser = TransferDataFactory.validAppUser();
+
+        log.debug("Page objects and androidActions initialized");
+    }
+
+
+    @Test(priority = 0)
+    public void lockCardTest()
     {
-        LoginPage loginPage = new LoginPage(DriverManager.driver);
-        MyCardPage cardPage = new MyCardPage(DriverManager.driver);
-        HomePage homePage = new HomePage(DriverManager.driver);
-        AccountMenuActions accountMenuActions = new AccountMenuActions(DriverManager.driver);
-        AndroidActions androidActions = new AndroidActions(DriverManager.driver);
 
-        String name = input.get("profileName");
-        String appPin = input.get("loginPin");
-
-        loginPage.loginWithRetry(name,appPin,2);
+        loginPage.loginWithRetry(
+                appUser.getUser().getProfileName(),
+                appUser.getUser().getLoginPin(),
+                2
+        );
 
         accountMenuActions.clickAccountMenuActionsButtn();
         cardPage.clickCardMenuActionButton();
         cardPage.clickLockCard();
-
-        String expectedTxt = "Card is now locked";
-        String actualTxt = cardPage.getToast1Message();
-
-        try {
-            Assert.assertEquals(actualTxt,expectedTxt);
-        } catch (Exception| AssertionError e) {
-            Assert.fail("Test failed due:{}",e);
-            throw new RuntimeException(e);
-        }
-        homePage.clickLogoutButtn();
+        Assert.assertEquals(cardPage.getToastMessage(),"Card is now locked");
+        attachScreenshot(DriverManager.driver,"LockCard");
 
     }
 
-    @Test(dataProvider = "getMultipleDataSet")
-    public void unlockCardTest(HashMap<String, String> input)
+    @Test(priority = 1)
+    public void unlockCardTest()
     {
-        LoginPage loginPage = new LoginPage(DriverManager.driver);
-        MyCardPage cardPage = new MyCardPage(DriverManager.driver);
-        HomePage homePage = new HomePage(DriverManager.driver);
-        AccountMenuActions accountMenuActions = new AccountMenuActions(DriverManager.driver);
-        AndroidActions androidActions = new AndroidActions(DriverManager.driver);
-
-        String name = input.get("profileName");
-        String appPin = input.get("loginPin");
-
-        loginPage.loginWithRetry(name,appPin,2);
-
+        loginPage.loginWithRetry(
+                appUser.getUser().getProfileName(),
+                appUser.getUser().getLoginPin(),
+                2
+        );
         accountMenuActions.clickAccountMenuActionsButtn();
         cardPage.clickCardMenuActionButton();
         cardPage.clickUnlockCard();
-
-
-        String expectedTxt = "Card is now unlocked";
-        String actualTxt = cardPage.getToast2Message();
-        try {
-            Assert.assertEquals(actualTxt,expectedTxt);
-        } catch (Exception| AssertionError e) {
-            Assert.fail("Test failed due alert msg not displayed");
-            throw new RuntimeException(e);
-        }
-        homePage.clickLogoutButtn();
+        Assert.assertEquals(cardPage.getToastMessage(),"Card is now unlocked");
+        attachScreenshot(DriverManager.driver,"UnlockCard");
 
     }
 
-    @Test(dataProvider = "getMultipleDataSet")
-    public void enableAtmWithdrawals(HashMap<String, String> input)
+    @Test()
+    public void enableAtmWithdrawals()
     {
-        LoginPage loginPage = new LoginPage(DriverManager.driver);
-        MyCardPage cardPage = new MyCardPage(DriverManager.driver);
-        HomePage homePage = new HomePage(DriverManager.driver);
-        AccountMenuActions accountMenuActions = new AccountMenuActions(DriverManager.driver);
-        AndroidActions androidActions = new AndroidActions(DriverManager.driver);
-
-        String applogin = input.get("loginPin");
-
-        try {
-            loginPage.loginAccount(input.get("profileName"));
-            loginPage.enterLoginPin(Integer.parseInt(applogin));
-        } catch (Exception e) {
-            try {
-                loginPage.loginAccount(input.get("profileName"));
-            } catch (NoSuchElementException ex) {
-                throw new RuntimeException(ex);
-            }
-        }
+        loginPage.loginWithRetry(
+                appUser.getUser().getProfileName(),
+                appUser.getUser().getLoginPin(),
+                2
+        );
 
         accountMenuActions.clickAccountMenuActionsButtn();
         cardPage.clickCardMenuActionButton();
         cardPage.clickCardSettings();
-        cardPage.enableATM();
-
-        try {
-            Assert.assertEquals(cardPage.getUpdatedFields("on/off"),"Always on");
-        } catch (Exception| AssertionError e) {
-            Assert.fail("Test failed");
-            throw new RuntimeException(e);
-        }finally {
-            cardPage.clickFinish();
-        }
-
-        homePage.clickLogoutButtn();
+        cardPage.atmConfiguration("Always on");
+        Assert.assertEquals(cardPage.getUpdatedFields("on/off"),"Always on");
+        attachScreenshot(DriverManager.driver,"Enable_ATM_Withdrawals");
     }
 
-    @Test(dataProvider = "getMultipleDataSet")
-    public void disableAtmWithdrawals(HashMap<String, String> input)
+    @Test()
+    public void disableAtmWithdrawals()
     {
-        LoginPage loginPage = new LoginPage(DriverManager.driver);
-        MyCardPage cardPage = new MyCardPage(DriverManager.driver);
-        HomePage homePage = new HomePage(DriverManager.driver);
-        AccountMenuActions accountMenuActions = new AccountMenuActions(DriverManager.driver);
-        AndroidActions androidActions = new AndroidActions(DriverManager.driver);
-
-        String applogin = input.get("loginPin");
-
-        try {
-            loginPage.loginAccount(input.get("profileName"));
-            loginPage.enterLoginPin(Integer.parseInt(applogin));
-        } catch (Exception e) {
-            try {
-                loginPage.loginAccount(input.get("profileName"));
-            } catch (NoSuchElementException ex) {
-                throw new RuntimeException(ex);
-            }
-        }
+        loginPage.loginWithRetry(
+                appUser.getUser().getProfileName(),
+                appUser.getUser().getLoginPin(),
+                2
+        );
 
         accountMenuActions.clickAccountMenuActionsButtn();
         cardPage.clickCardMenuActionButton();
         cardPage.clickCardSettings();
-        cardPage.disableATM();
-
-        try {
-            Assert.assertEquals(cardPage.getUpdatedFields("on/off"),"Always off");
-        } catch (Exception| AssertionError e) {
-            Assert.fail("Test failed");
-            throw new RuntimeException(e);
-        }finally {
-            cardPage.clickFinish();
-        }
-        homePage.clickLogoutButtn();
+        cardPage.atmConfiguration("Always off");
+        Assert.assertEquals(cardPage.getUpdatedFields("on/off"),"Always off");
+        attachScreenshot(DriverManager.driver,"Disable_ATM_Withdrawals");
     }
 
-    @Test(dataProvider = "getMultipleDataSet")
-    public void updateLocalDailyCash(HashMap<String, String> input)
+    @Test()
+    public void set1Cash()
     {
+        loginPage.loginWithRetry(
+                appUser.getUser().getProfileName(),
+                appUser.getUser().getLoginPin(),
+                2
+        );
 
-        LoginPage loginPage = new LoginPage(DriverManager.driver);
-        MyCardPage cardPage = new MyCardPage(DriverManager.driver);
-        HomePage homePage = new HomePage(DriverManager.driver);
-        AccountMenuActions accountMenuActions = new AccountMenuActions(DriverManager.driver);
-        AndroidActions androidActions = new AndroidActions(DriverManager.driver);
+        accountMenuActions.clickAccountMenuActionsButtn();
+        cardPage.clickCardMenuActionButton();
+        cardPage.clickCardSettings();
+        cardPage.atmConfiguration("1 cash");
+        Assert.assertEquals(cardPage.getUpdatedFields("on/off"),"1 cash");
+        attachScreenshot(DriverManager.driver,"Set_1_Cash");
 
-        //String applogin = input.get("loginPin");
+    }
 
-        try {
-            loginPage.loginAccount(input.get("profileName"));
-            loginPage.enterLoginPin(Integer.parseInt(input.get("loginPin")));
-        } catch (Exception e) {
-            try {
-                loginPage.loginAccount(input.get("profileName"));
-                loginPage.enterLoginPin(Integer.parseInt(input.get("loginPin")));
-            } catch (NoSuchElementException ex) {
-                throw new RuntimeException(ex);
-            }
-        }
+    @Test()
+    public void updateLocalDailyCash()
+    {
+        loginPage.loginWithRetry(
+                appUser.getUser().getProfileName(),
+                appUser.getUser().getLoginPin(),
+                2
+        );
 
         accountMenuActions.clickAccountMenuActionsButtn();
         cardPage.clickCardMenuActionButton();
         cardPage.clickCardSettings();
         cardPage.updateLocalDailyCash("1200");
+        attachScreenshot(DriverManager.driver,"Local_Daily_Cash_Updated");
         cardPage.clickUpdate();
-
-        try {
-            Assert.assertEquals(cardPage.getUpdatedFields("local daily"),"R1 200.00");
-        } catch (Exception| AssertionError e) {
-            Assert.fail("Test failed");
-            throw new RuntimeException(e);
-        }finally {
-            cardPage.clickFinish();
-        }
-        homePage.clickLogoutButtn();
+        Assert.assertEquals(cardPage.getUpdatedFields("local daily"),"R1 200.00");
+        attachScreenshot(DriverManager.driver,"Update_Local_Daily_Cash");
 
     }
 
-    @Test(dataProvider = "getMultipleDataSet")
-    public void updateGlobalDailyCash(HashMap<String, String> input)
+    @Test()
+    public void updateGlobalDailyCash()
     {
-
-        LoginPage loginPage = new LoginPage(DriverManager.driver);
-        MyCardPage cardPage = new MyCardPage(DriverManager.driver);
-        HomePage homePage = new HomePage(DriverManager.driver);
-        AccountMenuActions accountMenuActions = new AccountMenuActions(DriverManager.driver);
-        AndroidActions androidActions = new AndroidActions(DriverManager.driver);
-
-        String name = input.get("profileName");
-        String appPin = input.get("loginPin");
-
-        loginPage.loginWithRetry(name,appPin,2);
+        loginPage.loginWithRetry(
+                appUser.getUser().getProfileName(),
+                appUser.getUser().getLoginPin(),
+                2
+        );
 
         accountMenuActions.clickAccountMenuActionsButtn();
         cardPage.clickCardMenuActionButton();
         cardPage.clickCardSettings();
         cardPage.updateGlobalDailyCash("1200");
+        attachScreenshot(DriverManager.driver,"Global_Daily_Cash_Updated");
         cardPage.clickUpdate();
-
-        try {
-            Assert.assertEquals(cardPage.getUpdatedFields("global daily"),"R1 200.00");
-        } catch (Exception| AssertionError e) {
-            Assert.fail("Test failed");
-            throw new RuntimeException(e);
-        }finally {
-            cardPage.clickFinish();
-        }
-        homePage.clickLogoutButtn();
+        Assert.assertEquals(cardPage.getUpdatedFields("global daily"),"R1 200.00");
+        attachScreenshot(DriverManager.driver,"Update_Global_Daily_Cash");
     }
 
-    @Test(dataProvider = "getMultipleDataSet")
-    public void updateOnlineMaxCash(HashMap<String, String> input)
+    @Test()
+    public void updateOnlineMaxCash( )
     {
-
-        LoginPage loginPage = new LoginPage(DriverManager.driver);
-        MyCardPage cardPage = new MyCardPage(DriverManager.driver);
-        HomePage homePage = new HomePage(DriverManager.driver);
-        AccountMenuActions accountMenuActions = new AccountMenuActions(DriverManager.driver);
-        AndroidActions androidActions = new AndroidActions(DriverManager.driver);
-
-        String name = input.get("profileName");
-        String appPin = input.get("loginPin");
-
-        loginPage.loginWithRetry(name,appPin,2);
+        loginPage.loginWithRetry(
+                appUser.getUser().getProfileName(),
+                appUser.getUser().getLoginPin(),
+                2
+        );
 
         accountMenuActions.clickAccountMenuActionsButtn();
         cardPage.clickCardMenuActionButton();
         cardPage.clickCardSettings();
         cardPage.onlineMaxUpdate("1200");
+        attachScreenshot(DriverManager.driver,"Online_Max_Cash_Updated");
         cardPage.clickUpdate();
+        Assert.assertEquals(cardPage.getUpdatedFields("online"),"R1 200.00");
+        attachScreenshot(DriverManager.driver,"Update_Online_Max_Cash");
+    }
 
-        try {
-            Assert.assertEquals(cardPage.getUpdatedFields("online"),"R1 200.00");
-        } catch (Exception| AssertionError e) {
-            Assert.fail("Test failed");
-            throw new RuntimeException(e);
-        }finally {
-            cardPage.clickFinish();
-        }
+    @AfterMethod
+    public void postTestCleanUp()
+    {
+        log.info("Post-test cleanup: Resetting card settings to default values.");
+        cardPage.tryClickFinish();
         homePage.clickLogoutButtn();
     }
 
-
-
-    @DataProvider
-    public Object[] [] getMultipleDataSet() throws IOException {
-
-        List<HashMap<String, String>> data = getJsonData(System.getProperty("user.dir") + "//src//test//java//testData//cardData.json");
-        return new Object[][]{{data.getFirst()}};
-    }
 }

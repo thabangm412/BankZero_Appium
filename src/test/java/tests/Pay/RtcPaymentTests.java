@@ -60,18 +60,21 @@ public class RtcPaymentTests extends BaseTestsConfig {
         quickPayPage.addRecipientDetails(input.get("recipientName"),input.get("group"),input.get("bank"),input.get("account"),input.get("accountNo"));
         quickPayPage.addPoP(input.get("popEmail"),input.get("popPhone"));
         quickPayPage.clickAddButton();
-        try {
-            String expectedTxt =  quickPayPage.getAccName();
-
-            Assert.assertEquals(expectedTxt,input.get("recipientName"));
-            log.info("Recipient added successfully: {}", expectedTxt);
-            attachScreenshot(DriverManager.driver, "Recipient_Added_Success");
-
-        } catch (AssertionError e) {
-            Assert.fail("Test failed due to exception: " + e.getMessage());
-            log.warn("Failed to add payment recipient");
-            throw e;  // Let TestNG fail the test
-        }
+        Assert.assertEquals(quickPayPage.getAccName(),input.get("recipientName"));
+        log.info("Recipient added successfully: {}", quickPayPage.getAccName());
+        attachScreenshot(DriverManager.driver, "Recipient_Added_Success");
+//        try {
+//            String expectedTxt =  quickPayPage.getAccName();
+//
+//            Assert.assertEquals(expectedTxt,input.get("recipientName"));
+//            log.info("Recipient added successfully: {}", expectedTxt);
+//            attachScreenshot(DriverManager.driver, "Recipient_Added_Success");
+//
+//        } catch (AssertionError e) {
+//            Assert.fail("Test failed due to exception: " + e.getMessage());
+//            log.warn("Failed to add payment recipient");
+//            throw e;  // Let TestNG fail the test
+//        }
     }
 
     @Test(dataProvider = "getMultipleDataSet",dependsOnMethods = "AddRtcRecipientTestWithPoP", priority = 1)
@@ -86,19 +89,29 @@ public class RtcPaymentTests extends BaseTestsConfig {
         quickPayPage.clickPay2Buttn();
         attachScreenshot(DriverManager.driver, "RTC_Payment_Processing");
         quickPayPage.clickConfirmButton();
-
+        Assert.assertTrue(quickPayPage.getPaymentStatus());
+        log.info("Payment status: {}",quickPayPage.getPaymentStatus());
+        attachScreenshot(DriverManager.driver, "RTC_Payment_Success");
         try {
-            Assert.assertTrue(quickPayPage.getPaymentStatus());
-            log.info("Payment status: {}",quickPayPage.getPaymentStatus());
-            attachScreenshot(DriverManager.driver, "RTC_Payment_Success");
-        } catch (AssertionError e) {
-            Assert.fail("Test failed due to exception: " + e.getMessage());
-            log.warn("Failed to do payment transaction");
-            throw e;  // Let TestNG fail the test
-        }finally {
             quickPayPage.clickFinish();
+            homePage.clickLogoutButtn();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
         }
-        homePage.clickLogoutButtn();
+
+//
+//        try {
+//            Assert.assertTrue(quickPayPage.getPaymentStatus());
+//            log.info("Payment status: {}",quickPayPage.getPaymentStatus());
+//            attachScreenshot(DriverManager.driver, "RTC_Payment_Success");
+//        } catch (AssertionError e) {
+//            Assert.fail("Test failed due to exception: " + e.getMessage());
+//            log.warn("Failed to do payment transaction");
+//            throw e;  // Let TestNG fail the test
+//        }finally {
+//            quickPayPage.clickFinish();
+//        }
+//        homePage.clickLogoutButtn();
     }
 
     @DataProvider
@@ -107,18 +120,5 @@ public class RtcPaymentTests extends BaseTestsConfig {
         List<HashMap<String, String>> data = getJsonData(System.getProperty("user.dir") + "//src//test//java//testData//payData.json");
         return new Object[][]{{data.get(1)}};
     }
-//    private void validateInput(HashMap<String, String> input, String... required) {
-//        if (input == null) throw new IllegalArgumentException("Input map is null");
-//        StringBuilder missing = new StringBuilder();
-//        for (String k : required) {
-//            if (input.get(k) == null || input.get(k).trim().isEmpty()) {
-//                if (missing.length() > 0) missing.append(", ");
-//                missing.append(k);
-//            }
-//        }
-//        if (missing.length() > 0) {
-//            log.error("Missing required keys: {}", missing.toString());
-//            throw new IllegalArgumentException("Missing required keys: " + missing.toString());
-//        }
-//    }
+
 }

@@ -119,31 +119,20 @@ public class BuySMSPage {
 
         try {
             for (WebElement group : groupNames) {
-                if (group.getText().equals("Data")) {
-                    log.info("Group name matching Data found");
+                if (group.getText().equals("SMS")) {
+                    log.info("Group name matching SMS found");
                     AndroidActions androidActions = new AndroidActions(driver);
                     androidActions.scrollToTextAndClick2(name, driver);
                     log.info("Scrolled to the account name: {}", name);
                     break; // stop once found
                 } else {
-                    log.warn("Data group name not found!");
+                    log.warn("SMS group name not found!");
                 }
             }
         } catch (Exception e) {
-            log.error("An error occurred while processing Data group names: {}", e.getMessage(), e);
+            log.error("An error occurred while processing SMS group names: {}", e.getMessage(), e);
         }
 
-//        amountInputField.clear();
-//        log.info("Amount input field cleared...");
-//        amountInputField.sendKeys(amount);
-//        log.info("Amount entered: {}", amount);
-//
-//        referenceInputField.clear();
-//        log.info("Amount input field cleared...");
-//        referenceInputField.sendKeys(ref);
-//        log.info("Entered reference: {}", ref);
-//        buyOrSubmittButtn.click();
-//        log.info("Buy button clicked.");
 
     }
 

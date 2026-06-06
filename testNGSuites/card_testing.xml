@@ -1,0 +1,30 @@
+<!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd" >
+<suite name="Regression" verbose="2" thread-count="1" parallel="false" preserve-order="true">
+    <listeners>
+        <listener class-name="utils.Listeners"/>
+    </listeners>
+
+    <test name="Card Tests">
+        <classes>
+            <class name="tests.Card.CardSettingsTests">
+                <methods>
+                    <include name="lockCardTest"/>
+                    <include name="unlockCardTest"/>
+                    <include name="enableAtmWithdrawals"/>
+                    <include name="disableAtmWithdrawals"/>
+                    <include name="set1Cash"/>
+                    <include name="updateLocalDailyCash"/>
+                    <include name="updateGlobalDailyCash"/>
+                    <include name="updateOnlineMaxCash"/>
+                </methods>
+            </class>
+            
+            <class name="tests.Card.ViewCardTests">
+                <methods>
+                    <include name="viewCardTest"/>
+                    <include name="viewCardPinTest"/>
+                </methods>
+            </class>
+        </classes>
+    </test>
+</suite>

@@ -12,6 +12,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import utils.AndroidActions;
 import utils.AppiumUtils;
+import utils.DriverManager;
 
 import java.time.Duration;
 import java.util.List;
@@ -125,13 +126,13 @@ public class BuyElectricityPage {
         try {
             for (WebElement group : groupNames) {
                 if (group.getText().equals("Electricity")) {
-                    log.info("Group name matching Data found");
+                    log.info("Group name matching Electricity found");
                     AndroidActions androidActions = new AndroidActions(driver);
                     androidActions.scrollToTextAndClick2(name, driver);
                     log.info("Scrolled to the account name: {}", name);
                     break; // stop once found
                 } else {
-                    log.warn("Data group name not found!");
+                    log.warn("Electricity group name not found!");
                 }
             }
         } catch (Exception e) {
@@ -374,7 +375,6 @@ public class BuyElectricityPage {
         log.info("Finish button clicked...");
 
     }
-
     public boolean isRecipientDeleted(String text)
     {
         AndroidActions androidActions = new AndroidActions(driver);

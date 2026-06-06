@@ -83,7 +83,8 @@ public class NewElectricityAccTest extends BaseTestsConfig {
     public Object[] [] getMultipleDataSet() throws IOException {
 
         List<HashMap<String, String>> data = getJsonData(System.getProperty("user.dir") + "//src//test//java//testData//buyElectricityData.json");
-        return new Object[][]{{data.get(0)},{data.get(1)}};
+        return new Object[][]{{data.get(0)}, {data.get(1)}};
+
     }
 
     @AfterMethod

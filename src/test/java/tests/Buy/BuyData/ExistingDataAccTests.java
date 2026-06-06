@@ -1,5 +1,7 @@
 package tests.Buy.BuyData;
 
+import org.openqa.selenium.By;
+import org.openqa.selenium.NoSuchElementException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.testng.Assert;
@@ -36,7 +38,7 @@ public class ExistingDataAccTests extends BaseTestsConfig {
     }
 
 
-    @Test(dataProvider = "getMultipleDataSet")
+    @Test(dataProvider = "getMultipleDataSet", priority = 0)
     public void existingDataAccTest(HashMap<String, String> input) throws IOException {
         validateInput(input,
                 "DataName", "amount", "ref"
@@ -77,7 +79,45 @@ public class ExistingDataAccTests extends BaseTestsConfig {
         buyDataPage.clickFinishButton();
     }
 
-    @Test(dataProvider = "getMultipleDataSet")
+//    @Test
+//    public void alreadyExistingRecipientTest(HashMap<String, String> input) throws InterruptedException, IOException {
+//        validateInput(input,
+//                "DataName", "provider", "productData", "recipientNo", "amount", "ref"
+//        );
+//        Properties properties = new Properties();
+//        FileInputStream fis = new FileInputStream(System.getProperty("user.dir")+"//src//main//java//resources//data.properties");
+//        properties.load(fis);
+//
+//        String appLogin = properties.getProperty("appLogin");
+//        String profileName = properties.getProperty("profileName");
+//
+//        loginPage.loginWithRetry(profileName,appLogin,2);
+//
+//        accountMenuActions.clickAccountMenuActionsButtn();
+//        buyDataPage.clickBuyButton();
+//        buyDataPage.addAccButton();
+//        buyDataPage.addDataItem(input.get("DataName"),input.get("provider"),input.get("productData"),input.get("recipientNo"));
+//
+//
+//        try {
+//            String toastMessage = DriverManager.driver.findElement(
+//                    By.xpath("//android.widget.Toast")
+//            ).getText();
+//            Assert.assertEquals(toastMessage, "[79] We're sorry, you cannot add this recipient as it already exists");
+//            log.warn("Failed to add recipient, error message: {}", toastMessage);
+//            attachScreenshot(DriverManager.driver, "Add_Existing_Recipient_Failed");
+//        } catch (NoSuchElementException e) {
+//            log.warn("Test failed to validate existing recipient addition");
+//            Assert.fail("Element not found: " + e.getMessage());
+//        }finally {
+//            DriverManager.driver.navigate().back();
+//            buyDataPage.clickBack();
+//
+//        }
+//
+//    }
+
+    @Test(dataProvider = "getMultipleDataSet", priority = 1)
     public void deleteExistingDataRecipient(HashMap<String, String> input)  throws InterruptedException, IOException{
 
         validateInput(input,

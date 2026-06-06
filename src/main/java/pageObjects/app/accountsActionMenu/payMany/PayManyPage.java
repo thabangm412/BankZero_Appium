@@ -1,9 +1,14 @@
 package pageObjects.app.accountsActionMenu.payMany;
 
+import freemarker.ext.beans.BeansWrapperBuilder;
 import io.appium.java_client.AppiumBy;
 import io.appium.java_client.android.AndroidDriver;
 import io.appium.java_client.pagefactory.AndroidFindBy;
 import io.appium.java_client.pagefactory.AppiumFieldDecorator;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.usermodel.WorkbookFactory;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.PageFactory;
@@ -12,9 +17,12 @@ import org.slf4j.LoggerFactory;
 import utils.AndroidActions;
 import utils.AppiumUtils;
 
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
+
 
 public class PayManyPage {
 
@@ -97,6 +105,15 @@ public class PayManyPage {
     @AndroidFindBy(id = "za.co.neolabs.bankzero:id/btnConfirm")
     private WebElement confirmDocsButtn;
 
+    @AndroidFindBy(id = "za.co.neolabs.bankzero:id/mnu_top_3")
+    private WebElement deleteButtn;
+
+    @AndroidFindBy(id = "za.co.neolabs.bankzero:id/mnu_import_excel")
+    private WebElement importButtn;;
+
+    @AndroidFindBy(id = "za.co.neolabs.bankzero:id/mnu_tools")
+    private WebElement exportToolButtn;
+
     public void clickPayManyButton()
     {
         payManyAccountButtn.click();
@@ -121,6 +138,38 @@ public class PayManyPage {
     {
         AndroidActions androidActions = new AndroidActions(driver);
         AppiumUtils.waitForTextToAppear(By.id("za.co.neolabs.bankzero:id/toolbar_title"),"Add recipient", driver);
+
+        recipientInputNameField.clear();
+        log.info("Recipient name input field cleared");
+
+        driver.findElement(By.id("za.co.neolabs.bankzero:id/_inputText"))
+                .sendKeys(name);
+//        recipientInputNameField.sendKeys(name);
+        log.info("Recipient name entered: {}",name);
+
+        groupDropDownButtn.click();
+        androidActions.scrollToTextAndClick2(group,driver);
+        log.info("Group selected: {}", group);
+
+        bankDropDownButtn.click();
+        androidActions.scrollToTextAndClick2(bank,driver);
+        log.info("Bank selected: {}",bank);
+
+        accountDropDownButtn.click();
+        androidActions.scrollToTextAndClick2(account,driver);
+        log.info("Account selected: {}",account);
+
+        accountNo.clear();
+        log.info("Account number input field cleared");
+        accountNo.sendKeys(accNo);
+        log.info("Account number entered: {}",accNo);
+
+    }
+
+    public void updateRecipientDetails(String name, String group,String bank,String account,String accNo)
+    {
+        AndroidActions androidActions = new AndroidActions(driver);
+        AppiumUtils.waitForTextToAppear(By.id("za.co.neolabs.bankzero:id/toolbar_title"),"Recipient", driver);
 
         recipientInputNameField.clear();
         log.info("Recipient name input field cleared");
@@ -174,18 +223,6 @@ public class PayManyPage {
         log.info("Matched group name clicked:{}",group);
     }
 
-//    public Boolean getRecipientName(String name)
-//    {
-//        AppiumUtils.waitForTextToAppear(By.id("za.co.neolabs.bankzero:id/toolbar_title"),"Pay Many", driver);
-////        WebElement recipient = driver.findElement(
-////                AppiumBy.androidUIAutomator("new UiSelector().resourceId(\"za.co.neolabs.bankzero:id/recipientName\")")
-////        );
-//        WebElement recipient = driver.findElement(
-//                By.xpath("//android.widget.TextView[@resource-id=\"za.co.neolabs.bankzero:id/recipientName\" and @text=\"Reo\"]")
-//        );
-//        //return recipient.getText();
-//        return recipient.getText().equalsIgnoreCase(name);
-//    }
     public List<String> getRecipientNames()
     {
         AppiumUtils.waitForTextToAppear(
@@ -334,180 +371,158 @@ public class PayManyPage {
         log.info("Finish button clicked");
     }
 
+    public void clickEditRecipient(String name)
+    {
+        AppiumUtils.waitForTextToAppear(By.id("za.co.neolabs.bankzero:id/toolbar_title"),"Pay Many", driver);
+        List<WebElement> rows = driver.findElements(
+                AppiumBy.androidUIAutomator("new UiSelector().resourceId(\"za.co.neolabs.bankzero:id/mainLayout\")")
+        );
+        log.info("Found rows:{}",rows);
 
-//    public void schedulePayment(String scheduleType)
-//    {
-//
-//        tapSchedule.click();
-//        log.info("Schedule tab clicked");
-//
-//        AppiumUtils.waitForElementToAppear(scheduleConfirmPage,"dislayed","true",driver);
-//
-//        AndroidActions androidActions = new AndroidActions(driver);
-//        log.info("Selecting scheduling type: {}", scheduleType);
-//
-//        LocalDate currentDate = LocalDate.now();
-//        int todayDayOfMonth = currentDate.getDayOfMonth();
-//        int lastDayOfCurrentMonth = currentDate.lengthOfMonth();
-//        boolean isTodayLastDayOfMonth = todayDayOfMonth == lastDayOfCurrentMonth;
-//
-//        log.info("Current date: {}", currentDate);
-//        log.info("Today's day of month: {}, Last day of current month: {}", todayDayOfMonth, lastDayOfCurrentMonth);
-//        log.info("Is today the last day of the month? {}", isTodayLastDayOfMonth);
-//
-//        log.info("Selecting scheduling type: {}", scheduleType);
-//
-//        switch (scheduleType.toUpperCase()) {
-//            case "WEEKLY":
-//
-//                scheduleDropDownButtn.click();
-//                log.info("Schedule drop down clicked");
-//
-//                androidActions.scrollToTextAndClick2("Never",driver);
-//                log.info("Updating Scheduling to Never");
-//
-//                updateButton.click();
-//                log.info("Update botton clicked");
-//
-//                scheduleButton.click();
-//
-//                scheduleDropDownButtn.click();
-//                log.info("Drop down menu button clicked");
-//
-//                androidActions.scrollToTextAndClick2(scheduleType,driver);
-//                log.info("Scheduled type once-off selected");
-//
-//                String fromDate = AppiumUtils.getFutureDateFormatted(daysToAdd);
-//                log.info("From Date to select: {}", fromDate);
-//
-//                String toDate = AppiumUtils.getFutureDateFormatted(daysToAdd + 7);
-//                log.info("To Date to select: {}", toDate);
-//
-//                driver.findElement(By.id("za.co.neolabs.bankzero:id/fromdate")).click();
-//                AppiumUtils.waitForElement(By.xpath("//android.widget.LinearLayout[@resource-id=\"android:id/date_picker_header\"]/android.widget.LinearLayout"), driver);
-//
-//                if (isTodayLastDayOfMonth) {
-//                    log.info("Today is the last day of the month — clicking 'Next' button in calendar");
-//                    driver.findElement(By.id("android:id/next")).click();
-//                } else {
-//                    log.info("Today is not the last day of the month — skipping 'Next' button click");
-//                }
-//
-//// Now select the future date
-//                log.info("Attempting to select date: {}", fromDate);
-//                driver.findElement(By.xpath("//android.view.View[@content-desc='" + fromDate + "']")).click();
-//                driver.findElement(By.id("android:id/button1")).click();
-//
-//                driver.findElement(By.id("za.co.neolabs.bankzero:id/todate")).click();
-//                AppiumUtils.waitForElement(By.xpath("//android.widget.LinearLayout[@resource-id=\"android:id/date_picker_header\"]/android.widget.LinearLayout"), driver);
-//
-//                if (isTodayLastDayOfMonth) {
-//                    log.info("Today is the last day of the month — clicking 'Next' button in calendar");
-//                    driver.findElement(By.id("android:id/next")).click();
-//                } else {
-//                    log.info("Today is not the last day of the month — skipping 'Next' button click");
-//                }
-//
-//                log.info("Attempting to select date: {}", toDate);
-//                driver.findElement(By.xpath("//android.view.View[@content-desc='" + toDate + "']")).click();
-//                driver.findElement(By.id("android:id/button1")).click();
-//
-//                //Select a day
-//                driver.findElement(By.id("za.co.neolabs.bankzero:id/schedule_when_dd_arrow")).click();
-//                androidActions.scrollToTextAndClick2("Monday",driver);
-//                log.info("Day selected");
-//
-//                refInputField.clear();
-//                log.info("Reference input field cleared");
-//                refInputField.sendKeys(ref);
-//
-//                amountInputField.clear();
-//                log.info("Amount input field cleared");
-//                amountInputField.sendKeys(amount);
-//                log.info("Amount entered");
-//
-//                addButtn.click();
-//                log.info("Add schedule button clicked");
-//
-//                break;
-//
-//            case "MONTHLY":
-//
-//                scheduleDropDownButtn.click();
-//                log.info("Schedule drop down clicked");
-//
-//                androidActions.scrollToTextAndClick2("Never",driver);
-//                log.info("Updating Scheduling to Never");
-//
-//                updateButton.click();
-//                log.info("Update botton clicked");
-//
-//                scheduleButton.click();
-//
-//                scheduleDropDownButtn.click();
-//                log.info("Drop down menu button clicked");
-//
-//                androidActions.scrollToTextAndClick2(scheduleType,driver);
-//                log.info("Scheduled type once-off selected");
-//
-//                String monthlyFromDate = AppiumUtils.getFutureDateFormatted(daysToAdd);
-//                log.info("From Date to select: {}", monthlyFromDate);
-//
-//                String monthlyToDate = AppiumUtils.getFutureDateFormatted(daysToAdd + 35);
-//                log.info("To Date to select: {}", monthlyToDate);
-//
-//                driver.findElement(By.id("za.co.neolabs.bankzero:id/fromdate")).click();
-//                AppiumUtils.waitForElement(By.xpath("/hierarchy/android.widget.FrameLayout"), driver);
-//
-////                boolean isMonthlyFromDateVisible = !driver.findElements(By.xpath("//*[contains(@text, '" + monthlyFromDate + "')]")).isEmpty();
-////
-////                if (!isMonthlyFromDateVisible) {
-////                    log.info("{} is not visible — clicking 'Next' button in calendar", monthlyFromDate);
-////                    driver.findElement(By.id("android:id/next")).click();
-////                } else {
-////                    log.info("{} is already visible — no need to click 'Next'", monthlyFromDate);
-////                }
-//
-//                log.info("Attempting to select date: {}", monthlyFromDate);
-//                androidActions.clickWithRetry((By.xpath("//android.view.View[@content-desc='" + monthlyFromDate + "']")),2);
-//                //driver.findElement(By.xpath("//android.view.View[@content-desc='" + monthlyFromDate + "']")).click();
-//                driver.findElement(By.id("android:id/button1")).click();
-//
-//                driver.findElement(By.id("za.co.neolabs.bankzero:id/todate")).click();
-//                AppiumUtils.waitForElement(By.xpath("//android.widget.LinearLayout[@resource-id=\"android:id/date_picker_header\"]/android.widget.LinearLayout"), driver);
-//
-//                boolean isMonthlyToDateVisible = !driver.findElements(By.xpath("//*[contains(@text, '" + monthlyToDate + "')]")).isEmpty();
-//
-//                if (!isMonthlyToDateVisible) {
-//                    log.info("{} is not visible — clicking 'Next' button in calendar", monthlyToDate);
-//                    driver.findElement(By.id("android:id/next")).click();
-//                } else {
-//                    log.info("{} is already visible — no need to click 'Next'", monthlyToDate);
-//                }
-//
-//                log.info("Attempting to select date: {}", monthlyToDate);
-//                driver.findElement(By.xpath("//android.view.View[@content-desc='" + monthlyToDate + "']")).click();
-//                driver.findElement(By.id("android:id/button1")).click();
-//
-//
-//                driver.findElement(By.id("za.co.neolabs.bankzero:id/schedule_when_dd_arrow")).click();
-//                androidActions.scrollToTextAndClick2("2nd day",driver);
-//                log.info("Day selected");
-//
-//                refInputField.clear();
-//                log.info("Reference input field cleared");
-//                refInputField.sendKeys(ref);
-//
-//                amountInputField.clear();
-//                log.info("Amount input field cleared");
-//                amountInputField.sendKeys(amount);
-//                log.info("Amount entered");
-//
-//                addButtn.click();
-//                log.info("Add schedule button clicked");
-//
-//                break;
-//        }
-   // }
+        for (WebElement row : rows) {
+            // find the recipient inside this row
+            WebElement recipient = row.findElement(
+                    AppiumBy.androidUIAutomator("new UiSelector().resourceId(\"za.co.neolabs.bankzero:id/recipientName\")")
+            );
+
+            if (recipient.getText().equalsIgnoreCase(name)) {
+                // find the edit button in the same row
+                WebElement edit = row.findElement(
+                        AppiumBy.androidUIAutomator(
+                                String.format("new UiSelector().text(\"%s\")", name)
+                        )
+                );
+                edit.click();
+                log.info("Matching edit button clicked");
+                break;
+            }
+        }
+    }
+
+    public void clickDelete()
+    {
+        AndroidActions androidActions = new AndroidActions(driver);
+        deleteButtn.click();
+        log.info("Delete button clicked");
+
+        AppiumUtils.waitForElement(By.id("android:id/message"),driver);
+        WebElement confirmDelete = driver.findElement(By.xpath(" //android.widget.Button[@resource-id=\"android:id/button1\" and @text=\"Yes\"]"));
+        androidActions.attachScreenshot(driver,"Delete_Recipient_Confirmation");
+        confirmDelete.click();
+        log.info("Confirm delete button clicked");
+    }
+
+    public void clickExportButton() {
+        AppiumUtils.waitForTextToAppear(By.id("za.co.neolabs.bankzero:id/toolbar_title"),"Pay Many", driver);
+        exportToolButtn.click();
+        log.info("Export tool button clicked");
+        WebElement exportButton = driver.findElement(By.id("za.co.neolabs.bankzero:id/export"));
+        exportButton.click();
+        log.info("Export button clicked");
+
+    }
+
+    public void confirmFileExport()
+    {
+        WebElement saveExport = driver.findElement(By.id("android:id/button1"));
+        saveExport.click();
+        log.info("Save export button clicked");
+    }
+
+    public boolean isFileDownloaded() {
+
+        //AppiumUtils.waitForTextToAppear(By.id("za.co.neolabs.bankzero:id/alertTitle"),"File saved!", driver);
+        WebElement fileSavedMessage = driver.findElement(By.id("android:id/message"));
+        String messageText = fileSavedMessage.getText();
+        log.info("File export confirmation message: {}", messageText);
+
+        if(messageText.contains("Successfully created and exported data to /")) {
+            log.info("File export confirmed with message: {}", messageText);
+            return true;
+        } else {
+            log.warn("File export confirmation message did not match expected text. Actual message: {}", messageText);
+            return false;
+        }
+    }
+
+    public void clickOkAfterExport()
+    {
+        //AppiumUtils.waitForTextToAppear(By.id("za.co.neolabs.bankzero:id/toolbar_title"),"File saved!", driver);
+        WebElement okButton = driver.findElement(By.id("android:id/button3"));
+        okButton.click();
+        log.info("OK button clicked after export confirmation");
+    }
+
+    public void clickImportButton() {
+
+        AppiumUtils.waitForTextToAppear(By.id("za.co.neolabs.bankzero:id/toolbar_title"),"Pay Many", driver);
+        importButtn.click();
+        log.info("Import button clicked");
+
+
+        AppiumUtils.waitForElementToAppear(driver.findElement(By.id("za.co.neolabs.bankzero:id/toolbar_title")), "text", "Import CSV", driver);
+        WebElement nextImportButton = driver.findElement(By.id("za.co.neolabs.bankzero:id/btnConfirm"));
+        nextImportButton.click();
+        log.info("Next import button clicked");
+    }
+
+    public void uploadImportFile() {
+
+        AndroidActions androidActions = new AndroidActions(driver);
+        openFrom.click();
+        log.info("Clicked 'Open from' for import file");
+
+        WebElement documentsOption = driver.findElement(By.xpath("//android.widget.TextView[@resource-id=\"android:id/title\" and @text=\"Galaxy A56 5G\"]"));
+        documentsOption.click();
+        log.info("Clicked 'Documents' for import file");
+
+        WebElement downloadsOption = driver.findElement(By.xpath("//android.widget.TextView[@resource-id=\"android:id/title\" and @text=\"Download\"]"));
+        downloadsOption.click();
+        log.info("Clicked 'Downloads' for import file");
+
+        androidActions.scrollToTextAndClick2("export_recipients (1) 1.csv",driver);
+        log.info("Selected export_recipients (1) 1.csv for upload");
+    }
+
+    public String getFileUploaded()
+    {
+        AppiumUtils.waitForTextToAppear(By.id("za.co.neolabs.bankzero:id/toolbar_title"),"Import CSV", driver);
+        WebElement fileNameElement = driver.findElement(By.id("za.co.neolabs.bankzero:id/selected_file"));
+        String fileName = fileNameElement.getText();
+        log.info("File uploaded for import: {}", fileName);
+        return fileName;
+    }
+
+    public void clickConfirmImport()
+    {
+        AppiumUtils.waitForTextToAppear(By.id("za.co.neolabs.bankzero:id/toolbar_title"),"Import CSV", driver);
+        WebElement confirmImportButton = driver.findElement(By.id("za.co.neolabs.bankzero:id/btnConfirm"));
+        confirmImportButton.click();
+        log.info("Confirm import button clicked");
+    }
+
+    public static List<String> getRecipientNamesFromExcel(String filePath)
+            throws IOException {
+
+        List<String> recipients = new ArrayList<>();
+
+        try (FileInputStream fis = new FileInputStream(filePath);
+             Workbook workbook = WorkbookFactory.create(fis)) {
+
+            Sheet sheet = workbook.getSheetAt(0);
+
+            for (int i = 1; i <= sheet.getLastRowNum(); i++) { // skip header row
+                Row row = sheet.getRow(i);
+
+                if (row != null && row.getCell(0) != null) {
+                    recipients.add(
+                            row.getCell(0).toString().trim()
+                    );
+                }
+            }
+        }
+
+        return recipients;
+    }
 
 }

@@ -69,6 +69,7 @@ public class GreenBookRegistrationTest extends BaseTestsConfig {
 
         // Enter user inputs into the app
         pairOnDevicePage.addProfile();
+        pairOnDevicePage.partialRegistrationCheck();
         pairOnDevicePage.enterCellNumber(input.get("phoneNumber"));
         pairOnDevicePage.enterIdNumber(input.get("idNumber"));
         pairOnDevicePage.enterPreferredName(input.get("name"));
@@ -76,6 +77,7 @@ public class GreenBookRegistrationTest extends BaseTestsConfig {
 
         registerOTP.enterOTP(input.get("phoneNumber"),null);
         myCardPage.confirmingBiometrics();
+        //registerOTP.clickSubmitButton();
 
         myCardPage.getCard1stLineField(input.get("name"));
         myCardPage.enterCardPin(appPin);

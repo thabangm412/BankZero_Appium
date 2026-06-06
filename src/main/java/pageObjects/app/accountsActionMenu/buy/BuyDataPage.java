@@ -310,6 +310,8 @@ public class BuyDataPage {
         return isDeleted;
 
     }
+
+
     public void clickBack()
     {
         AppiumUtils.waitForTextToAppear(By.id("za.co.neolabs.bankzero:id/toolbar_title"),"Quick Buy",driver);

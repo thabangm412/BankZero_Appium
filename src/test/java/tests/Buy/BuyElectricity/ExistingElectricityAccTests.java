@@ -1,5 +1,7 @@
 package tests.Buy.BuyElectricity;
 
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebElement;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.testng.Assert;
@@ -78,34 +80,29 @@ public class ExistingElectricityAccTests extends BaseTestsConfig {
     }
 
     @Test(dataProvider = "getMultipleDataSet", priority = 1)
-    public void deleteExistingElectricityRecipient(HashMap<String, String> input)  throws InterruptedException, IOException{
+    public void deleteExistingElectricityRecipient(HashMap<String, String> input) throws InterruptedException, IOException {
 
-        validateInput(input,
-                "name", "amount", "ref"
-        );
+        validateInput(input, "name", "amount", "ref");
 
         Properties properties = new Properties();
-        FileInputStream fis = new FileInputStream(System.getProperty("user.dir")+"//src//main//java//resources//data.properties");
+        FileInputStream fis = new FileInputStream(System.getProperty("user.dir") + "//src//main//java//resources//data.properties");
         properties.load(fis);
 
         String appLogin = properties.getProperty("appLogin");
         String profileName = properties.getProperty("profileName");
 
-        loginPage.loginWithRetry(profileName,appLogin,2);
+        loginPage.loginWithRetry(profileName, appLogin, 2);
         accountMenuActions.clickAccountMenuActionsButtn();
         buyPage.clickBuyButton();
         buyPage.getExistingRecipient(input.get("name"));
-        attachScreenshot(DriverManager.driver,"Existing Electricity Recipient Retrieved");
+        attachScreenshot(DriverManager.driver, "Existing Electricity Recipient Retrieved");
         buyPage.clickEditButton();
         buyPage.clickDeleteButton();
 
-        //String actualTxt = buyPage.getDeleteToastMsg();
         try {
             Assert.assertTrue(buyPage.isRecipientDeleted(input.get("name")));
             log.info("Recipient deleted successfully");
             attachScreenshot(DriverManager.driver,"Electricity Recipient Deletion Success");
-//            Assert.assertEquals(actualTxt,"Item deleted!");
-//            log.info("Recipient deleted");
         } catch (Exception| AssertionError e) {
             log.warn("Test failed due to: {}",e);
             Assert.fail("Test failed");
@@ -114,6 +111,7 @@ public class ExistingElectricityAccTests extends BaseTestsConfig {
         DriverManager.driver.navigate().back();
         buyPage.clickBack();
     }
+
 
     @DataProvider
     public Object[] [] getMultipleDataSet() throws IOException {
