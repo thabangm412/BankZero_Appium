@@ -1,0 +1,92 @@
+package tests.NewAccounts.ThirtyTwoDaysNotice;
+
+import DbQueries.EmailsConfig;
+import com.jcraft.jsch.JSchException;
+import factory.TransferDataFactory;
+import models.TransferData;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.testng.Assert;
+import org.testng.annotations.AfterClass;
+import org.testng.annotations.AfterMethod;
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.Test;
+import pageObjects.app.accountsActionMenu.AccountMenuActions;
+import pageObjects.app.accountsActionMenu.statements.StatementsAndLettersPage;
+import pageObjects.app.accountsHome.HomePage;
+import pageObjects.app.login.LoginPage;
+import testConfig.BaseTestsConfig;
+import tests.NewAccounts.FourtyFiveDaysNotice.StatementsAndLettersFrom45DaysNoticeTests;
+import utils.DriverManager;
+
+public class StatementsAndLettersFrom32DaysNoticeTests extends BaseTestsConfig {
+
+    private static final Logger log = LoggerFactory.getLogger(StatementsAndLettersFrom32DaysNoticeTests.class);
+    private LoginPage loginPage;
+    private HomePage homePage;
+    private AccountMenuActions accountMenuActions;
+    private TransferData data;
+    private StatementsAndLettersPage statementsAndLettersPage;
+
+    @BeforeMethod
+    public void preSetUp() throws JSchException {
+        loginPage = new LoginPage(DriverManager.driver);
+        homePage = new HomePage(DriverManager.driver);
+        accountMenuActions = new AccountMenuActions(DriverManager.driver);
+        data = TransferDataFactory.validTransfer();
+        statementsAndLettersPage = new StatementsAndLettersPage(DriverManager.driver);
+
+        EmailsConfig.enableEmails();
+
+        log.debug("Page objects and androidActions initialized");
+    }
+
+    @Test
+    public void downloadAccountStatementsFromSavings() {
+        loginPage.loginWithRetry(
+                data.getUser().getProfileName(),
+                data.getUser().getLoginPin(),
+                2
+        );
+
+        accountMenuActions.clickAccountMenuActionsOption("32 Days Notice");
+        statementsAndLettersPage.clickAccountStatements();
+        statementsAndLettersPage.getAccountStatements(2);
+        statementsAndLettersPage.clickEmailButton();
+        Assert.assertEquals(statementsAndLettersPage.getDocumentRequestStatus(),"Email sent successful. Please check your inbox");
+        attachScreenshot(DriverManager.driver,"Account Statements Email Sent");
+        log.info("Account Statements letter email sent successfully and verified the success message.");
+
+    }
+
+    @Test
+    public void downloadIt3bFromSavings() {
+        loginPage.loginWithRetry(
+                data.getUser().getProfileName(),
+                data.getUser().getLoginPin(),
+                2
+        );
+
+        accountMenuActions.clickAccountMenuActionsOption("32 Days Notice");
+        statementsAndLettersPage.clickAccountStatements();
+        statementsAndLettersPage.getIt3bLetter(1);
+        statementsAndLettersPage.clickEmailButton();
+        Assert.assertEquals(statementsAndLettersPage.getDocumentRequestStatus(),"Email sent successful. Please check your inbox");
+        attachScreenshot(DriverManager.driver,"Account Statements Email Sent");
+        log.info("Account Statements letter email sent successfully and verified the success message.");
+
+    }
+
+    @AfterMethod
+    public void finshProcess() {
+        statementsAndLettersPage.clickOkButton();
+        statementsAndLettersPage.clickFinishButton();
+        homePage.clickLogoutButtn();
+    }
+
+    @AfterClass
+    public void tearDown() throws JSchException {
+        EmailsConfig.disableEmails();
+    }
+
+}

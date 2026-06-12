@@ -77,6 +77,11 @@ public class StatementsAndLettersPage {
                 driver.findElement(By.xpath("//android.widget.TextView[@resource-id=\"android:id/text1\" and @text=\"Download Payments Recipients\"]"))
                         .click();
                 break;
+
+            case "it3(b)":
+                driver.findElement(By.xpath("//android.widget.TextView[@resource-id=\"android:id/text1\" and @text=\"It3(b)\"]"))
+                        .click();
+                break;
             default:
                 log.error("Invalid document type provided: {}", documentType);
                 throw new IllegalArgumentException("Invalid document type: " + documentType);
@@ -112,6 +117,18 @@ public class StatementsAndLettersPage {
     public void getSalarySwitchLetter()
     {
         getDocumentType("Salary Switch Letter");
+    }
+
+    public void getIt3bLetter(Integer index)
+    {
+        AndroidActions androidActions = new AndroidActions(driver);
+        getDocumentType("It3(b)");
+        forPeriodDropDown.click();
+        driver.findElements(
+                By.xpath("//android.widget.TextView[@resource-id='android:id/text1']")
+        ).get(index).click();
+        log.info("Selected it3(b) period index: {}", index);
+        androidActions.attachScreenshot(driver, "Selected it3(b) period index: " + index);
     }
 
     public void getWelcomeLetter()
