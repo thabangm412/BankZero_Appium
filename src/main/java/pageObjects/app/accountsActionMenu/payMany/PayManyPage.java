@@ -274,7 +274,7 @@ public class PayManyPage {
 
     public void enterAmount(String amount)
     {
-        AppiumUtils.waitForTextToAppear(By.id("za.co.neolabs.bankzero:id/pay_amount"),"Amount", driver);
+        //AppiumUtils.waitForTextToAppear(By.id("za.co.neolabs.bankzero:id/pay_amount"),"Amount", driver);
         amountInput.clear();
         log.info("Amount input cleared");
         amountInput.sendKeys(amount);
@@ -310,6 +310,7 @@ public class PayManyPage {
         log.info("Selected sample-pdf.pdf for upload");
         androidActions.attachScreenshot(driver,"Attachment added");
         clickUpdate();
+        log.info("Attachment added and update clicked");
     }
 
     public void clickRedoButton(String name)

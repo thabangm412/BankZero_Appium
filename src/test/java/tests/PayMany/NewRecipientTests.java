@@ -48,8 +48,7 @@ public class NewRecipientTests extends BaseTestsConfig {
     }
 
     @Test(priority = 0)
-    public void addNewRecipient()
-    {
+    public void addNewRecipient() throws InterruptedException {
 
         loginPage.loginWithRetry(
                 appUser.getUser().getProfileName(),
@@ -63,6 +62,7 @@ public class NewRecipientTests extends BaseTestsConfig {
         payManyPage.addRecipientDetails(payManyData.getRecipientName(),payManyData.getGroup(),payManyData.getBank(),payManyData.getAccount(), payManyData.getAccountNo());
         payManyPage.enterPOPDetails(payManyData.getPopEmail(),payManyData.getPopPhone());
         payManyPage.clickAddButton();
+        Thread.sleep(3000);
         payManyPage.getGroups(payManyData.getGroup());
         attachScreenshot(DriverManager.driver,"RecipientDetails added");
         Assert.assertTrue(payManyPage.getRecipientNames().contains(payManyData.getRecipientName()), "Recipient name does not match expected value");

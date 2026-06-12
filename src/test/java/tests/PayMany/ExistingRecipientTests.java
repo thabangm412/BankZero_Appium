@@ -70,7 +70,7 @@ public class ExistingRecipientTests extends BaseTestsConfig {
 
     }
 
-    @Test
+    @Test(priority = 1)
     public void updateExistingRecipient()
     {
         loginPage.loginWithRetry(
@@ -99,7 +99,7 @@ public class ExistingRecipientTests extends BaseTestsConfig {
 
     }
 
-    @Test(priority = 2)
+    @Test(priority = 3)
     public void paymentToUpdatedRecipient()
     {
         loginPage.loginWithRetry(
@@ -110,8 +110,9 @@ public class ExistingRecipientTests extends BaseTestsConfig {
 
         accountMenuActions.clickAccountMenuActionsButtn();
         payManyPage.clickPayManyButton();
-        payManyPage.getGroups(payManyData2  .getGroup());
+        payManyPage.getGroups(payManyData2.getGroup());
         payManyPage.clickNewPayment(payManyData2.getRecipientName());
+        payManyPage.enterAmount("50");
         payManyPage.clickPayButton();
         payManyPage.clickConfirmButton();
         Assert.assertEquals(payManyPage.transactionStatus(),"Thank you");
@@ -119,7 +120,7 @@ public class ExistingRecipientTests extends BaseTestsConfig {
         homePage.clickLogoutButtn();
     }
 
-    @Test(priority = 3)
+    @Test(priority = 4)
     public void deleteExistingRecipient() {
         loginPage.loginWithRetry(
                 appUser.getUser().getProfileName(),
@@ -145,7 +146,7 @@ public class ExistingRecipientTests extends BaseTestsConfig {
         homePage.clickLogoutButtn();
     }
 
-    @Test
+    @Test(priority = 5)
     public void exportFileDownloadTest() {
 
         loginPage.loginWithRetry(
@@ -165,7 +166,7 @@ public class ExistingRecipientTests extends BaseTestsConfig {
         homePage.clickLogoutButtn();
     }
 
-    @Test
+    @Test(priority = 6)
     public void importFileUploadTest() throws IOException {
 
         loginPage.loginWithRetry(
