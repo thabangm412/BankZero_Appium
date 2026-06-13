@@ -42,7 +42,7 @@ public class StatementsAndLettersFrom45DaysNoticeTests extends BaseTestsConfig {
     }
 
     @Test
-    public void downloadAccountStatementsFromSavings() {
+    public void downloadAccountStatementsFrom45DaysNotice() {
         loginPage.loginWithRetry(
                 data.getUser().getProfileName(),
                 data.getUser().getLoginPin(),
@@ -60,7 +60,7 @@ public class StatementsAndLettersFrom45DaysNoticeTests extends BaseTestsConfig {
     }
 
     @Test
-    public void downloadIt3bFromSavings() {
+    public void downloadIt3bFrom45DaysNotice() {
         loginPage.loginWithRetry(
                 data.getUser().getProfileName(),
                 data.getUser().getLoginPin(),

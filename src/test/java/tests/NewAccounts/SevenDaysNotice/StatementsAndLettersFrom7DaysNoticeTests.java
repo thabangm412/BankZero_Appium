@@ -1,4 +1,4 @@
-package tests.NewAccounts.SevenDayNotice;
+package tests.NewAccounts.SevenDaysNotice;
 
 import DbQueries.EmailsConfig;
 import com.jcraft.jsch.JSchException;
@@ -16,7 +16,6 @@ import pageObjects.app.accountsActionMenu.statements.StatementsAndLettersPage;
 import pageObjects.app.accountsHome.HomePage;
 import pageObjects.app.login.LoginPage;
 import testConfig.BaseTestsConfig;
-import tests.NewAccounts.ThirtyTwoDaysNotice.StatementsAndLettersFrom32DaysNoticeTests;
 import utils.DriverManager;
 
 public class StatementsAndLettersFrom7DaysNoticeTests extends BaseTestsConfig {
@@ -42,7 +41,7 @@ public class StatementsAndLettersFrom7DaysNoticeTests extends BaseTestsConfig {
     }
 
     @Test(priority = 0)
-    public void downloadAccountStatementsFromSavings() {
+    public void downloadAccountStatementsFrom7DaysNotice() {
         loginPage.loginWithRetry(
                 data.getUser().getProfileName(),
                 data.getUser().getLoginPin(),
@@ -60,7 +59,7 @@ public class StatementsAndLettersFrom7DaysNoticeTests extends BaseTestsConfig {
     }
 
     @Test(priority = 1)
-    public void downloadIt3bFromSavings() {
+    public void downloadIt3bFrom7DaysNotice() {
         loginPage.loginWithRetry(
                 data.getUser().getProfileName(),
                 data.getUser().getLoginPin(),

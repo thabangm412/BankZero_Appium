@@ -1,0 +1,48 @@
+<!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd" >
+<suite name="Regression" verbose="2" thread-count="1" parallel="false" preserve-order="true">
+    <listeners>
+        <listener class-name="utils.Listeners"/>
+    </listeners>
+    <test name="New Account Tests">
+        <classes>
+            <class name="tests.NewAccounts.SevenDaysNotice.WithdrawalFrom7DaysNoticeTests">
+                <methods>
+                    <include name="withdrawalFrom7DaysNotice"/>
+                    <include name="immediateWithdrawalFrom7DaysNotice"/>
+                </methods>
+            </class>
+            <class name="tests.NewAccounts.SevenDaysNotice.StatementsAndLettersFrom7DaysNoticeTests">
+                <methods>
+                    <include name="downloadAccountStatementsFrom7DaysNotice"/>
+                    <include name="downloadIt3bFrom7DaysNotice"/>
+                </methods>
+            </class>
+
+            <class name="tests.NewAccounts.ThirtyTwoDaysNotice.WithdrawalFrom32DaysNoticeTests">
+                <methods>
+                    <include name="withdrawalFrom32DaysNotice"/>
+                    <include name="immediateWithdrawalFrom32DaysNotice"/>
+                </methods>
+            </class>
+            <class name="tests.NewAccounts.ThirtyTwoDaysNotice.StatementsAndLettersFrom32DaysNoticeTests">
+                <methods>
+                    <include name="downloadAccountStatementsFrom32DaysNotice"/>
+                    <include name="downloadIt3bFrom32DaysNotice"/>
+                </methods>
+            </class>
+
+            <class name="tests.NewAccounts.FourtyFiveDaysNotice.WithdrawalFrom45DaysNoticeTests">
+                <methods>
+                    <include name="withdrawalFrom45DaysNotice"/>
+                    <include name="immediateWithdrawalFrom45DaysNotice"/>
+                </methods>
+            </class>
+            <class name="tests.NewAccounts.FourtyFiveDaysNotice.StatementsAndLettersFrom45DaysNoticeTests">
+                <methods>
+                    <include name="downloadAccountStatementsFrom45DaysNotice"/>
+                    <include name="downloadIt3bFrom45DaysNotice"/>
+                </methods>
+            </class>
+        </classes>
+    </test>
+</suite>
