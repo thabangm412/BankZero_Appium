@@ -56,10 +56,10 @@ public class CardSettingsTests extends BaseTestsConfig {
 
         accountMenuActions.clickAccountMenuActionsButtn();
         cardPage.clickCardMenuActionButton();
+        cardPage.clickCardSettings();
         cardPage.clickLockCard();
-        Assert.assertEquals(cardPage.getToastMessage(),"Card is now locked");
+        Assert.assertEquals(cardPage.getToastMessage(),"Card is now locked!");
         attachScreenshot(DriverManager.driver,"LockCard");
-
     }
 
     @Test(priority = 1)
@@ -72,13 +72,14 @@ public class CardSettingsTests extends BaseTestsConfig {
         );
         accountMenuActions.clickAccountMenuActionsButtn();
         cardPage.clickCardMenuActionButton();
+        cardPage.clickCardSettings();
         cardPage.clickUnlockCard();
-        Assert.assertEquals(cardPage.getToastMessage(),"Card is now unlocked");
+        cardPage.clickUpdate();
+        Assert.assertEquals(cardPage.getUpdatedFields("card status"),"Active");
         attachScreenshot(DriverManager.driver,"UnlockCard");
-
     }
 
-    @Test()
+    @Test(priority = 2)
     public void enableAtmWithdrawals()
     {
         loginPage.loginWithRetry(
@@ -95,7 +96,7 @@ public class CardSettingsTests extends BaseTestsConfig {
         attachScreenshot(DriverManager.driver,"Enable_ATM_Withdrawals");
     }
 
-    @Test()
+    @Test(priority = 3)
     public void disableAtmWithdrawals()
     {
         loginPage.loginWithRetry(
@@ -112,7 +113,7 @@ public class CardSettingsTests extends BaseTestsConfig {
         attachScreenshot(DriverManager.driver,"Disable_ATM_Withdrawals");
     }
 
-    @Test()
+    @Test(priority = 4)
     public void set1Cash()
     {
         loginPage.loginWithRetry(
@@ -130,7 +131,7 @@ public class CardSettingsTests extends BaseTestsConfig {
 
     }
 
-    @Test()
+    @Test(priority = 5)
     public void updateLocalDailyCash()
     {
         loginPage.loginWithRetry(
@@ -150,7 +151,7 @@ public class CardSettingsTests extends BaseTestsConfig {
 
     }
 
-    @Test()
+    @Test(priority = 6)
     public void updateGlobalDailyCash()
     {
         loginPage.loginWithRetry(
@@ -169,7 +170,7 @@ public class CardSettingsTests extends BaseTestsConfig {
         attachScreenshot(DriverManager.driver,"Update_Global_Daily_Cash");
     }
 
-    @Test()
+    @Test(priority = 7)
     public void updateOnlineMaxCash( )
     {
         loginPage.loginWithRetry(
