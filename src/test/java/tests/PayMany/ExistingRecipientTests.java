@@ -64,6 +64,7 @@ public class ExistingRecipientTests extends BaseTestsConfig {
         payManyPage.clickRedoButton(payManyData.getRecipientName());
         payManyPage.clickPayButton();
         payManyPage.clickConfirmButton();
+        payManyPage.duplicatePaymentCheck();
         Assert.assertEquals(payManyPage.transactionStatus(),"Thank you");
         payManyPage.clickFinish();
         homePage.clickLogoutButtn();

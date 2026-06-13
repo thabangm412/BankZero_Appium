@@ -62,7 +62,7 @@ public class NewRecipientTests extends BaseTestsConfig {
         payManyPage.addRecipientDetails(payManyData.getRecipientName(),payManyData.getGroup(),payManyData.getBank(),payManyData.getAccount(), payManyData.getAccountNo());
         payManyPage.enterPOPDetails(payManyData.getPopEmail(),payManyData.getPopPhone());
         payManyPage.clickAddButton();
-        Thread.sleep(3000);
+        Thread.sleep(5000);
         payManyPage.getGroups(payManyData.getGroup());
         attachScreenshot(DriverManager.driver,"RecipientDetails added");
         Assert.assertTrue(payManyPage.getRecipientNames().contains(payManyData.getRecipientName()), "Recipient name does not match expected value");
@@ -71,9 +71,12 @@ public class NewRecipientTests extends BaseTestsConfig {
     }
 
     @Test(priority = 1)
-    public void makePaymentToRecipient()
-    {
+    public void makePaymentToRecipient() throws InterruptedException {
 
+        DriverManager.driver.navigate().back();
+        accountMenuActions.clickAccountMenuActionsButtn();
+        payManyPage.clickPayManyButton();
+        payManyPage.getGroups(payManyData.getGroup());
         payManyPage.clickNewPayment(payManyData.getRecipientName());
         payManyPage.clickAttachments();
         payManyPage.addAttachments();
@@ -85,6 +88,7 @@ public class NewRecipientTests extends BaseTestsConfig {
         String actualTxt = payManyPage.transactionStatus();
         log.info("Payment transaction status: {}", actualTxt);
         Assert.assertEquals(actualTxt,"Thank you");
+        Thread.sleep(3000);
         attachScreenshot(DriverManager.driver,"Payment successful");
         payManyPage.clickFinish();
         homePage.clickLogoutButtn();

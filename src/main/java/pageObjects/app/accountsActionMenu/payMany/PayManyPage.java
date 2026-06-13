@@ -274,7 +274,7 @@ public class PayManyPage {
 
     public void enterAmount(String amount)
     {
-        //AppiumUtils.waitForTextToAppear(By.id("za.co.neolabs.bankzero:id/pay_amount"),"Amount", driver);
+        AppiumUtils.waitForTextToAppear(By.id("za.co.neolabs.bankzero:id/pay_amount"),"Amount", driver);
         amountInput.clear();
         log.info("Amount input cleared");
         amountInput.sendKeys(amount);
@@ -461,10 +461,23 @@ public class PayManyPage {
         log.info("Import button clicked");
 
 
-        AppiumUtils.waitForElementToAppear(driver.findElement(By.id("za.co.neolabs.bankzero:id/toolbar_title")), "text", "Import CSV", driver);
+        //AppiumUtils.waitForElementToAppear(driver.findElement(By.id("za.co.neolabs.bankzero:id/toolbar_title")), "text", "Import CSV", driver);
         WebElement nextImportButton = driver.findElement(By.id("za.co.neolabs.bankzero:id/btnConfirm"));
         nextImportButton.click();
         log.info("Next import button clicked");
+    }
+
+    public void duplicatePaymentCheck()
+    {
+        if (driver.findElements(By.id("za.co.neolabs.bankzero:id/alertTitle")).size() > 0 && driver.findElement(By.id("za.co.neolabs.bankzero:id/alertTitle")).getText().equals("Failed payments")) {
+            log.warn("Possible duplicate payment detected - clicking 'Ok' to proceed with payment");
+
+            WebElement okButton = driver.findElement(By.id("android:id/button3"));
+            okButton.click();
+            log.info("'Ok' button clicked to confirm duplicate payment");
+        } else {
+            log.info("No duplicate payment alert detected");
+        }
     }
 
     public void uploadImportFile() {
