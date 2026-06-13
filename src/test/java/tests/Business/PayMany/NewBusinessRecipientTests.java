@@ -1,31 +1,27 @@
-package tests.PayMany;
+package tests.Business.PayMany;
 
+import factory.BusinessDataFactory;
 import factory.PaymentDataFactory;
 import factory.TransferDataFactory;
+import models.BusinessData;
 import models.PayManyData;
 import models.User;
-import org.openqa.selenium.NoSuchElementException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 import pageObjects.app.accountsActionMenu.AccountMenuActions;
-import pageObjects.app.accountsActionMenu.pay.QuickPayPage;
 import pageObjects.app.accountsActionMenu.payMany.PayManyPage;
 import pageObjects.app.accountsHome.HomePage;
 import pageObjects.app.login.LoginPage;
 import testConfig.BaseTestsConfig;
-import utils.AndroidActions;
+import tests.PayMany.NewRecipientTests;
 import utils.DriverManager;
 
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.List;
+public class NewBusinessRecipientTests extends BaseTestsConfig {
 
-public class NewRecipientTests extends BaseTestsConfig {
-    private static final Logger log = LoggerFactory.getLogger(NewRecipientTests.class);
+    private static final Logger log = LoggerFactory.getLogger(NewBusinessRecipientTests.class);
 
     private LoginPage loginPage;
     private HomePage homePage;
@@ -33,7 +29,7 @@ public class NewRecipientTests extends BaseTestsConfig {
 
     private PayManyPage payManyPage;
     private User appUser;
-    private PayManyData payManyData;
+    private BusinessData payManyData;
 
     @BeforeMethod
     public void preSetUp() {
@@ -42,13 +38,13 @@ public class NewRecipientTests extends BaseTestsConfig {
         accountMenuActions = new AccountMenuActions(DriverManager.driver);
         payManyPage = new PayManyPage(DriverManager.driver);
         appUser = TransferDataFactory.validAppUser();
-        payManyData = PaymentDataFactory.validPayManyData();
+        payManyData = BusinessDataFactory.validPayBusinessData();
 
         log.debug("Page objects and androidActions initialized");
     }
 
     @Test(priority = 0)
-    public void addNewRecipient() throws InterruptedException {
+    public void addNewRecipientForBusiness() throws InterruptedException {
 
         loginPage.loginWithRetry(
                 appUser.getUser().getProfileName(),
@@ -56,42 +52,47 @@ public class NewRecipientTests extends BaseTestsConfig {
                 2
         );
 
-        accountMenuActions.clickAccountMenuActionsButtn();
+        accountMenuActions.clickAccountMenuActionsOption("Business");
         payManyPage.clickPayManyButton();
         payManyPage.clickAddRecipient();
-        payManyPage.addRecipientDetails(payManyData.getRecipientName(),payManyData.getGroup(),payManyData.getBank(),payManyData.getAccount(), payManyData.getAccountNo());
+        payManyPage.addRecipientDetails(payManyData.getRecipientName1(),payManyData.getGroup(),payManyData.getBank(),payManyData.getAccount(), payManyData.getAccountNo1());
         payManyPage.enterPOPDetails(payManyData.getPopEmail(),payManyData.getPopPhone());
         payManyPage.clickAddButton();
         DriverManager.driver.navigate().back();
-        accountMenuActions.clickAccountMenuActionsButtn();
+        accountMenuActions.clickAccountMenuActionsOption("Business");
         payManyPage.clickPayManyButton();
         payManyPage.getGroups(payManyData.getGroup());
         attachScreenshot(DriverManager.driver,"RecipientDetails added");
-        Assert.assertTrue(payManyPage.getRecipientNames().contains(payManyData.getRecipientName()), "Recipient name does not match expected value");
+        Assert.assertTrue(payManyPage.getRecipientNames().contains(payManyData.getRecipientName1()), "Recipient name does not match expected value");
         attachScreenshot(DriverManager.driver,"Recipient added successfully");
 
     }
 
     @Test(priority = 1)
-    public void makePaymentToRecipient() throws InterruptedException {
+    public void makePaymentToRecipientForBusiness() throws InterruptedException {
 
         DriverManager.driver.navigate().back();
-        accountMenuActions.clickAccountMenuActionsButtn();
+        accountMenuActions.clickAccountMenuActionsOption("Business");
         payManyPage.clickPayManyButton();
         payManyPage.getGroups(payManyData.getGroup());
-        payManyPage.clickNewPayment(payManyData.getRecipientName());
+        payManyPage.clickNewPayment(payManyData.getRecipientName1());
         payManyPage.clickAttachments();
         payManyPage.addAttachments();
         payManyPage.enterAmount(payManyData.getAmount());
         payManyPage.clickFinish();
         attachScreenshot(DriverManager.driver,"Payment details");
         payManyPage.clickConfirmButton();
-
-        Assert.assertEquals(payManyPage.transactionStatus(),"Thank you");
-        Thread.sleep(3000);
-        attachScreenshot(DriverManager.driver,"Payment successful");
-        payManyPage.clickFinish();
-        homePage.clickLogoutButtn();
+        payManyPage.duplicatePaymentCheck();
+        try {
+            Assert.assertEquals(payManyPage.transactionStatus(),"Thank you");
+            attachScreenshot(DriverManager.driver,"Payment successful");
+        } catch (AssertionError e) {
+            log.error("Payment failed: {}", e.getMessage());
+            throw e; // Rethrow the exception to fail the test
+        }finally {
+            payManyPage.clickFinish();
+            homePage.clickLogoutButtn();
+        }
 
     }
 
