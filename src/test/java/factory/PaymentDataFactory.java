@@ -13,7 +13,7 @@ public class PaymentDataFactory {
                 .accountNo("82000086197")
                 .popEmail("Thabang.monoane@gmail.com")
                 .popPhone("0676336781")
-                .amount("30")
+                .amount("40")
                 .build();
     }
 

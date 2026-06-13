@@ -189,7 +189,7 @@ public class ExistingRtcPaymentsTests extends BaseTestsConfig {
 
         try {
             String toastMessage = DriverManager.driver.findElement(
-                    By.xpath("//android.widget.Toast")
+                    By.xpath("za.co.neolabs.bankzero:id/snackbar_text")
             ).getText();
             Assert.assertEquals(toastMessage, "[79] We're sorry, you cannot add this recipient as it already exists");
             log.warn("Failed to add recipient, error message: {}", toastMessage);

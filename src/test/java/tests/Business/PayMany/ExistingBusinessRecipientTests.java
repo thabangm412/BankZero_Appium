@@ -1,15 +1,15 @@
-package tests.PayMany;
+package tests.Business.PayMany;
 
+import factory.BusinessDataFactory;
 import factory.PaymentDataFactory;
 import factory.TransferDataFactory;
+import models.BusinessData;
 import models.PayManyData;
 import models.User;
-import org.openqa.selenium.NoSuchElementException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 import org.testng.asserts.SoftAssert;
 import pageObjects.app.accountsActionMenu.AccountMenuActions;
@@ -17,24 +17,22 @@ import pageObjects.app.accountsActionMenu.payMany.PayManyPage;
 import pageObjects.app.accountsHome.HomePage;
 import pageObjects.app.login.LoginPage;
 import testConfig.BaseTestsConfig;
-import utils.AndroidActions;
+import tests.PayMany.ExistingRecipientTests;
 import utils.DriverManager;
 
 import java.io.IOException;
-import java.util.HashMap;
 import java.util.List;
 
-public class ExistingRecipientTests extends BaseTestsConfig {
+public class ExistingBusinessRecipientTests extends BaseTestsConfig {
 
-    private static final Logger log = LoggerFactory.getLogger(ExistingRecipientTests.class);
+    private static final Logger log = LoggerFactory.getLogger(ExistingBusinessRecipientTests.class);
 
     private LoginPage loginPage;
     private HomePage homePage;
     private AccountMenuActions accountMenuActions;
     private PayManyPage payManyPage;
     private User appUser;
-    private PayManyData payManyData;
-    private PayManyData payManyData2;
+    private BusinessData payManyData;
 
     @BeforeMethod
     public void preSetUp() {
@@ -43,8 +41,7 @@ public class ExistingRecipientTests extends BaseTestsConfig {
         accountMenuActions = new AccountMenuActions(DriverManager.driver);
         payManyPage = new PayManyPage(DriverManager.driver);
         appUser = TransferDataFactory.validAppUser();
-        payManyData = PaymentDataFactory.validPayManyData();
-        payManyData2 = PaymentDataFactory.validPayManyData2();
+        payManyData = BusinessDataFactory.validPayBusinessData();
 
         log.debug("Page objects and androidActions initialized");
     }
@@ -58,10 +55,10 @@ public class ExistingRecipientTests extends BaseTestsConfig {
                 2
         );
 
-        accountMenuActions.clickAccountMenuActionsButtn();
+        accountMenuActions.clickAccountMenuActionsOption("Business");
         payManyPage.clickPayManyButton();
         payManyPage.getGroups(payManyData.getGroup());
-        payManyPage.clickRedoButton(payManyData.getRecipientName());
+        payManyPage.clickRedoButton(payManyData.getRecipientName1());
         payManyPage.clickPayButton();
         payManyPage.clickConfirmButton();
         payManyPage.duplicatePaymentCheck();
@@ -75,87 +72,33 @@ public class ExistingRecipientTests extends BaseTestsConfig {
             payManyPage.clickFinish();
             homePage.clickLogoutButtn();
         }
-
     }
 
     @Test(priority = 1)
-    public void updateExistingRecipient()
-    {
+    public void deleteExistingRecipientForBusiness() {
         loginPage.loginWithRetry(
                 appUser.getUser().getProfileName(),
                 appUser.getUser().getLoginPin(),
                 2
         );
 
-        accountMenuActions.clickAccountMenuActionsButtn();
+        accountMenuActions.clickAccountMenuActionsOption("Business");
         payManyPage.clickPayManyButton();
         payManyPage.getGroups(payManyData.getGroup());
-        payManyPage.clickEditRecipient(payManyData.getRecipientName());
-        payManyPage.updateRecipientDetails(payManyData2.getRecipientName(),payManyData2.getGroup(),payManyData2.getBank(),payManyData2.getAccount(), payManyData2.getAccountNo());
-        payManyPage.enterPOPDetails(payManyData2.getPopEmail(),payManyData2.getPopPhone());
-        attachScreenshot(DriverManager.driver,"Updated POP details");
-        payManyPage.clickAddButton();
-        DriverManager.driver.navigate().back();
-
-        accountMenuActions.clickAccountMenuActionsButtn();
-        payManyPage.clickPayManyButton();
-        payManyPage.getGroups(payManyData2.getGroup());
-        Assert.assertTrue(payManyPage.getRecipientNames().contains(payManyData2.getRecipientName()), "Recipient name does not match expected value");
-        attachScreenshot(DriverManager.driver,"Recipient added successfully");
-        DriverManager.driver.navigate().back();
-        homePage.clickLogoutButtn();
-
-    }
-
-    @Test(priority = 3)
-    public void paymentToUpdatedRecipient()
-    {
-        loginPage.loginWithRetry(
-                appUser.getUser().getProfileName(),
-                appUser.getUser().getLoginPin(),
-                2
-        );
-
-        accountMenuActions.clickAccountMenuActionsButtn();
-        payManyPage.clickPayManyButton();
-        payManyPage.getGroups(payManyData2.getGroup());
-        payManyPage.clickNewPayment(payManyData2.getRecipientName());
-        payManyPage.enterAmount("50");
-        payManyPage.clickPayButton();
-        payManyPage.clickConfirmButton();
-        Assert.assertEquals(payManyPage.transactionStatus(),"Thank you");
-        payManyPage.clickFinish();
-        homePage.clickLogoutButtn();
-    }
-
-    @Test(priority = 4)
-    public void deleteExistingRecipient() {
-        loginPage.loginWithRetry(
-                appUser.getUser().getProfileName(),
-                appUser.getUser().getLoginPin(),
-                2
-        );
-
-        accountMenuActions.clickAccountMenuActionsButtn();
-        payManyPage.clickPayManyButton();
-        payManyPage.getGroups(payManyData2.getGroup());
-        payManyPage.clickEditRecipient(payManyData2.getRecipientName());
+        payManyPage.clickEditRecipient(payManyData.getRecipientName1());
         payManyPage.clickDelete();
-
         DriverManager.driver.navigate().back();
-
-        accountMenuActions.clickAccountMenuActionsButtn();
+        accountMenuActions.clickAccountMenuActionsOption("Business");
         payManyPage.clickPayManyButton();
-        payManyPage.getGroups(payManyData2.getGroup());
-        Assert.assertFalse(payManyPage.getRecipientNames().contains(payManyData2.getRecipientName()), "Recipient name still exists after deletion");
+        payManyPage.getGroups(payManyData.getGroup());
+        Assert.assertFalse(payManyPage.getRecipientNames().contains(payManyData.getRecipientName1()), "Recipient name still exists after deletion");
         attachScreenshot(DriverManager.driver, "Recipient deleted successfully");
-
         DriverManager.driver.navigate().back();
         homePage.clickLogoutButtn();
     }
 
-    @Test(priority = 5)
-    public void exportFileTest() {
+    @Test(priority = 2)
+    public void exportBusinessFileTest() {
 
         loginPage.loginWithRetry(
                 appUser.getUser().getProfileName(),
@@ -163,7 +106,7 @@ public class ExistingRecipientTests extends BaseTestsConfig {
                 2
         );
 
-        accountMenuActions.clickAccountMenuActionsButtn();
+        accountMenuActions.clickAccountMenuActionsOption("Business");
         payManyPage.clickPayManyButton();
         payManyPage.clickExportButton();
         payManyPage.confirmFileExport();
@@ -174,8 +117,9 @@ public class ExistingRecipientTests extends BaseTestsConfig {
         homePage.clickLogoutButtn();
     }
 
-    @Test(priority = 6)
-    public void importFileUploadTest() throws IOException {
+
+    @Test(priority = 3)
+    public void importFileUploadBusinessTest() throws IOException {
 
         loginPage.loginWithRetry(
                 appUser.getUser().getProfileName(),
@@ -183,7 +127,7 @@ public class ExistingRecipientTests extends BaseTestsConfig {
                 2
         );
 
-        accountMenuActions.clickAccountMenuActionsButtn();
+        accountMenuActions.clickAccountMenuActionsOption("Business");
         payManyPage.clickPayManyButton();
         payManyPage.clickImportButton();
         payManyPage.uploadImportFile();
@@ -192,7 +136,7 @@ public class ExistingRecipientTests extends BaseTestsConfig {
         softAssert.assertEquals(payManyPage.getFileUploaded(), "/document/primary:Download/export_recipients (1) 1.csv", "Selected file name does not match expected value");
 
         payManyPage.clickConfirmImport();
-        Assert.assertTrue(payManyPage.getRecipientNames().contains(payManyData2.getRecipientName()), "Recipient name not found after import");
+        Assert.assertTrue(payManyPage.getRecipientNames().contains(payManyData.getRecipientName()), "Recipient name not found after import");
         attachScreenshot(DriverManager.driver, "Recipient imported successfully");
 
         List<String> actualRecipients = payManyPage.getRecipientNames();
