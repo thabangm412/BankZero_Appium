@@ -51,7 +51,7 @@ public class StatementsAndLettersFrom32DaysNoticeTests extends BaseTestsConfig {
 
         accountMenuActions.clickAccountMenuActionsOption("32 Days Notice");
         statementsAndLettersPage.clickAccountStatements();
-        statementsAndLettersPage.getAccountStatements(2);
+        statementsAndLettersPage.getAccountStatements(1);
         statementsAndLettersPage.clickEmailButton();
         Assert.assertEquals(statementsAndLettersPage.getDocumentRequestStatus(),"Email sent successful. Please check your inbox");
         attachScreenshot(DriverManager.driver,"Account Statements Email Sent");
