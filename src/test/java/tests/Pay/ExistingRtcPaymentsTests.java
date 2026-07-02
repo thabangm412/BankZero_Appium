@@ -189,13 +189,14 @@ public class ExistingRtcPaymentsTests extends BaseTestsConfig {
 
         try {
             String toastMessage = DriverManager.driver.findElement(
-                    By.xpath("za.co.neolabs.bankzero:id/snackbar_text")
+                    By.id("za.co.neolabs.bankzero:id/snackbar_text")
             ).getText();
             Assert.assertEquals(toastMessage, "[79] We're sorry, you cannot add this recipient as it already exists");
             log.warn("Failed to add recipient, error message: {}", toastMessage);
-            attachScreenshot(DriverManager.driver, "Add_Existing_Recipient_Failed");
-        } catch (NoSuchElementException e) {
+            attachScreenshot(DriverManager.driver, "Add_Existing_Recipient_Passed");
+        } catch (NoSuchElementException| AssertionError e) {
             log.warn("Test failed to validate existing recipient addition");
+            attachScreenshot(DriverManager.driver, "Add_Existing_Recipient_Failed");
             Assert.fail("Element not found: " + e.getMessage());
         }finally {
             DriverManager.driver.navigate().back();
