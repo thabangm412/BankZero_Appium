@@ -1,9 +1,11 @@
 package pageObjects.app.accountsActionMenu;
 
+import io.appium.java_client.AppiumBy;
 import io.appium.java_client.android.AndroidDriver;
 import io.appium.java_client.pagefactory.AndroidFindBy;
 import io.appium.java_client.pagefactory.AppiumFieldDecorator;
 import org.openqa.selenium.By;
+import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.PageFactory;
 import org.slf4j.Logger;
@@ -13,6 +15,7 @@ import utils.AppiumUtils;
 import utils.DriverManager;
 
 import java.time.Duration;
+import java.util.List;
 
 public class AccountMenuActions {
 
@@ -97,6 +100,34 @@ public class AccountMenuActions {
         log.info("Account action menu button clicked.");
     }
 
+    public void clickAccountMenuActionsOption(String accountName) {
+        AppiumUtils.waitForElementToAppear(homePageConfimation, "text", "Accounts", driver);
+
+        List<WebElement> accountNames = driver.findElements(
+                AppiumBy.xpath("//android.widget.TextView[@resource-id='za.co.neolabs.bankzero:id/title']")
+        );
+
+        List<WebElement> accountMenuButtons = driver.findElements(
+                AppiumBy.xpath("//android.widget.ImageView[@resource-id='za.co.neolabs.bankzero:id/tileMenu']")
+        );
+
+        log.info("Number of accounts found: {}", accountNames.size());
+
+        for (int i = 0; i < accountNames.size(); i++) {
+
+            if (accountNames.get(i).getText().equalsIgnoreCase(accountName)) {
+
+                accountMenuButtons.get(i).click();
+
+                log.info("Clicked menu button for account: {} at index {}", accountName, i);
+                return;
+            }
+        }
+
+        throw new NoSuchElementException(
+                "Account not found: " + accountName
+        );
+    }
     public void clickCardButton()
     {
         cardAccountButtn.click();
