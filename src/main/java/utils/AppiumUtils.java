@@ -15,6 +15,7 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.testng.Assert;
 import pageObjects.app.Registration.RegisterOTP;
 
 import java.io.BufferedReader;
@@ -408,5 +409,17 @@ public abstract class AppiumUtils {
         }
     }
 
+    public final List<String> softFailures = new ArrayList<>();
+    public void softVerifyEquals(String actual, String expected, String stepName) {
+        AndroidActions androidActions = new AndroidActions(driver);
+        try {
+            Assert.assertEquals(actual, expected);
+            androidActions.attachScreenshot(driver,stepName);
+        } catch (AssertionError e) {
+            androidActions.attachScreenshot(driver,stepName);
+            log.error("Soft assertion failed: {}", e.getMessage());
+            softFailures.add(stepName + " -> " + e.getMessage());
+        }
+    }
 
 }
