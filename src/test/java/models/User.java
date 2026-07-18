@@ -17,4 +17,9 @@ public class User {
     public String getLoginPin() {
         return loginPin;
     }
+
+    public User getUser() {
+        return this;
+    }
+
 }
