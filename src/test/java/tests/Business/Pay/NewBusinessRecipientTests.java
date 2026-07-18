@@ -72,7 +72,7 @@ public class NewBusinessRecipientTests extends BaseTestsConfig {
         Assert.assertTrue(quickPayPage.getPaymentStatus());
         log.info("Payment status: {}",quickPayPage.getPaymentStatus());
         attachScreenshot(DriverManager.driver, "Payment_Success");
-        Thread.sleep(3000); // Wait for 3 seconds before clicking finish
+        Thread.sleep(2000);
         quickPayPage.clickFinish();
         homePage.clickLogoutButtn();
 
