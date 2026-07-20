@@ -112,6 +112,11 @@ public abstract class AppiumUtils {
         wait.until(ExpectedConditions.visibilityOfElementLocated(locator));
     }
 
+    public static WebElement waitForElementToBeClickable(WebElement element, AppiumDriver driver) {
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+        return wait.until(ExpectedConditions.elementToBeClickable(element));
+    }
+
     public static String getOTP(String cellNumber, String altNumber) {
         log.info("🔄 Starting OTP retrieval process...");
 
