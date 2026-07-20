@@ -14,6 +14,7 @@ import utils.AppiumUtils;
 import utils.DriverManager;
 
 import java.time.Duration;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
@@ -207,12 +208,13 @@ public class BusinessPage {
 
 
         WebElement updateButtn= driver.findElement(By.xpath("//android.widget.Button[@resource-id=\"za.co.neolabs.bankzero:id/submit_btn\"]"));
-        WebElement confirmButtn= driver.findElement(By.xpath("//android.widget.Button[@resource-id=\"za.co.neolabs.bankzero:id/submit_btn\"]"));
+        //WebElement confirmButtn= driver.findElement(By.xpath("//android.widget.Button[@resource-id=\"za.co.neolabs.bankzero:id/submit_btn\"]"));
 
         updateButtn.click();
         log.info("Update button clicked");
-        confirmButtn.click();
-        log.info("Confirm button clicked");
+        androidActions.attachScreenshot(driver,"Added owner/officials");
+//        confirmButtn.click();
+//        log.info("Confirm button clicked");
 
     }
 
@@ -221,6 +223,19 @@ public class BusinessPage {
         WebElement finishButtn= driver.findElement(By.xpath("//android.widget.Button[@resource-id=\"za.co.neolabs.bankzero:id/submit_btn\"]"));
         finishButtn.click();
         log.info("Finish button clicked");
+    }
+
+    public void clickConfirm()
+    {
+        WebElement confirmButtn= driver.findElement(By.xpath("//android.widget.Button[@resource-id=\"za.co.neolabs.bankzero:id/submit_btn\"]"));
+        confirmButtn.click();
+        log.info("Confirm button clicked");
+    }
+    public void clickUpdate()
+    {
+        WebElement updateButtn= driver.findElement(By.xpath("//android.widget.Button[@resource-id=\"za.co.neolabs.bankzero:id/submit_btn\"]"));
+        updateButtn.click();
+        log.info("Update button clicked");
     }
 
     public void clickBusinessMenuActionButtn()
@@ -233,6 +248,45 @@ public class BusinessPage {
             log.error("Account menu page did not appear as expected", e);
             throw e;
         }
+    }
+
+    public List<String> getOwnersAndOfficialsNames()
+    {
+        AppiumUtils.waitForTextToAppear(By.xpath("//android.widget.TextView[@resource-id=\"za.co.neolabs.bankzero:id/toolbarTitle\"]"), "Owners & Auth chain", driver);
+
+        List<WebElement> ownersAndOfficials = driver.findElements(
+                By.xpath("//android.widget.LinearLayout[@resource-id='za.co.neolabs.bankzero:id/status_and_result']/android.widget.LinearLayout/android.view.ViewGroup")
+        );
+
+        List<String> ownerNames = new ArrayList<>();
+
+        for (WebElement owner : ownersAndOfficials) {
+            List<WebElement> textViews = owner.findElements(By.className("android.widget.TextView"));
+
+            if (textViews.size() > 1) {
+                ownerNames.add(textViews.get(1).getAttribute("text")); // second TextView
+            }
+        }
+        log.info("Owner/authoriser names found: {}", ownerNames);
+
+        return ownerNames;
+    }
+
+    public List<String> getFinalOwnersAndOfficialsNames()
+    {
+
+        List<WebElement> owners = driver.findElements(
+                By.xpath("//android.widget.TextView[@resource-id=\"za.co.neolabs.bankzero:id/tile_title\"]")
+        );
+
+        List<String> ownerNames = new ArrayList<>();
+
+        for (WebElement owner : owners) {
+            ownerNames.add(owner.getText());
+        }
+        log.info("Owner names found: {}", ownerNames);
+
+        return ownerNames;
     }
 
     public  void clickOwnersAndAuthorisers()
