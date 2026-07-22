@@ -17,10 +17,6 @@
                     <include name="deleteExistingRecipient"/>
                 </methods>
             </class>
-        </classes>
-    </test>
-    <test name="Buy SMS Tests">
-    <classes>
         <class name="tests.Buy.BuySMS.NewSMSAccTests">
             <methods>
                 <include name="newSMSAccTest"/>
@@ -32,10 +28,7 @@
                 <include name="deleteSmsExistingRecipient"/>
             </methods>
         </class>
-    </classes>
-    </test>
-    <test name="Buy Data Tests">
-    <classes>
+
         <class name="tests.Buy.BuyData.NewDataAccTests">
             <methods>
                 <include name="newDataAccTest"/>
@@ -47,10 +40,7 @@
                 <include name="deleteExistingDataRecipient"/>
             </methods>
         </class>
-    </classes>
-    </test>
-    <test name="Buy Electricity Tests">
-    <classes>
+
         <class name="tests.Buy.BuyElectricity.NewElectricityAccTest">
             <methods>
                 <include name="newElectricityAccTest"/>
