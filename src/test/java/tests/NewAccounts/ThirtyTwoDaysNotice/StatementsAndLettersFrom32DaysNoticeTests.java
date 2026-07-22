@@ -41,7 +41,7 @@ public class StatementsAndLettersFrom32DaysNoticeTests extends BaseTestsConfig {
         log.debug("Page objects and androidActions initialized");
     }
 
-    @Test
+    @Test(priority = 0)
     public void downloadAccountStatementsFrom32DaysNotice() {
         loginPage.loginWithRetry(
                 data.getUser().getProfileName(),
@@ -59,7 +59,7 @@ public class StatementsAndLettersFrom32DaysNoticeTests extends BaseTestsConfig {
 
     }
 
-    @Test
+    @Test(priority = 1)
     public void downloadIt3bFrom32DaysNotice() {
         loginPage.loginWithRetry(
                 data.getUser().getProfileName(),
