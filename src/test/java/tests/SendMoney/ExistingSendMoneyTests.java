@@ -193,7 +193,7 @@ public class ExistingSendMoneyTests extends BaseTestsConfig {
             String toastMessage = DriverManager.driver.findElement(
                     By.id("za.co.neolabs.bankzero:id/snackbar_text")
             ).getText();
-            Assert.assertEquals(toastMessage, " 79 - We're sorry, you cannot add this recipient as it already exists");
+            Assert.assertEquals(toastMessage, "[79] We're sorry, you cannot add this recipient as it already exists");
             log.info("Failed to add recipient, error message: {}", toastMessage);
             androidActions.attachScreenshot(DriverManager.driver, "Add_Existing_Recipient_passed");
         } catch (NoSuchElementException| AssertionError e) {
