@@ -118,13 +118,21 @@ public class WithdrawalPage {
          }
      }
 
+//    public String getExpectedAvailabilityMessage(int daysToAdd) {
+//        LocalDate expectedDate = LocalDate.now().plusDays(daysToAdd);
+//
+//        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd MMM-yy");
+//        String formattedDate = expectedDate.format(formatter);
+//
+//        return "Your money will be available on " + formattedDate + " in your Isagi account";
+//    }
+
     public String getExpectedAvailabilityMessage(int daysToAdd) {
         LocalDate expectedDate = LocalDate.now().plusDays(daysToAdd);
 
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd MMM-yy");
-        String formattedDate = expectedDate.format(formatter);
-
-        return "Your money will be available on " + formattedDate + " in your Isagi account";
+        return "Your money will be available on "
+                + AppiumUtils.formatDate(expectedDate)
+                + " in your Isagi account";
     }
 
 //    public String getTransactionMessage()
