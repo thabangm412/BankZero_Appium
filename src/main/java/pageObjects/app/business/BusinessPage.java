@@ -99,6 +99,9 @@ public class BusinessPage {
     @AndroidFindBy(xpath = "//android.widget.TextView[@resource-id=\"za.co.neolabs.bankzero:id/menuItemText\" and @text=\"Owners/Officials\"]")
     private WebElement menuActionOwnersAndAuthorisersButtn;
 
+    @AndroidFindBy(id = "za.co.neolabs.bankzero:id/toolbarTitle")
+    private WebElement pageTile;
+
 
 
 
@@ -393,33 +396,28 @@ public class BusinessPage {
 
     public void verifyTermsAndConditions()
     {
-        try {
-            //AppiumUtils.waitForTextToAppear(By.id("za.co.neolabs.bankzero:id/toolbar_title"), "Happy?", driver);
-            log.info("Verifying terms and conditions");
-            termsAndConditionsButtn.click();
-            log.info("Terms and conditions accepted");
-        } catch (Exception e) {
-            log.error("Terms & Conditions page did not appear as expected", e);
-            throw e;
-        }
+
+        AppiumUtils.waitForElementToAppear(pageTile, "text","Happy?", driver);
+        log.info("Verifying terms and conditions");
+        termsAndConditionsButtn.click();
+        log.info("Terms and conditions accepted");
+
     }
 
     public void selectOwnersAndOfficials()
     {
-        try {
-            //AppiumUtils.waitForTextToAppear(By.id("za.co.neolabs.bankzero:id/toolbar_title"), "Owners & Officials", driver);
-            log.info("Selecting owners and officials options");
-            directorButtn.click();
-            log.info("Director option selected");
-            shareholderButtn.click();
-            log.info("Shareholder option selected");
-            BOButtn.click();
-            log.info("BO option selected");
-//   e
-        } catch (Exception e) {
-            log.error("Owners & officials page did not appear as expected", e);
-            throw e;
-        }
+
+        AppiumUtils.waitForElementToAppear(pageTile, "text","Owners & Officials", driver);
+        log.info("Selecting owners and officials options");
+        AppiumUtils.waitForElementToBeClickable(directorButtn, driver);
+        directorButtn.click();
+        log.info("Director option selected");
+        AppiumUtils.waitForElementToBeClickable(shareholderButtn, driver);
+        shareholderButtn.click();
+        log.info("Shareholder option selected");
+        AppiumUtils.waitForElementToBeClickable(BOButtn, driver);
+        BOButtn.click();
+        log.info("BO option selected");
     }
 
 

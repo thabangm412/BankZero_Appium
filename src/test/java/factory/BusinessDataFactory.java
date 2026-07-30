@@ -12,16 +12,16 @@ public class BusinessDataFactory {
                 .businessType("Pty (Ltd)")
                 .tradingName("Business Test")
                 .registeredName("Business (Pty) Ltd")
-                .registrationNo("2025/074592/07")
+                .registrationNo("2026/160207/07")
                 .sicGroup("Construction")
                 .sicIndustry("Civil engineering")
                 .notifyEmail("testBusiness0@bankzero.co.za")
                 .street("4 Georgian Crescent West")
                 .city("Bryanston, Sandton")
                 .postalCode("2191")
-                .successMsg("Account and card successfully added.  You can access this account from your canvas.")
+                .successMsg("Account and card successfully added. You can access this account from your canvas.")
                 .cardPin("11111")
-                .fundsAccount("Card CHEQUE")
+                .fundsAccount("Business")
                 .build();
     }
 
