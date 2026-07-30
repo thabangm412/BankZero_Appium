@@ -247,7 +247,7 @@ public class ExistingRtcPaymentsTests extends BaseTestsConfig {
     }
 
     @Test(dataProvider = "getMultipleDataSet", dependsOnMethods = "updateExistingRtcRecipient", priority = 5)
-    public void deleteExistingRtcRecipientTest(HashMap<String, String> input){
+    public void deleteExistingRtcRecipientTest(HashMap<String, String> input) throws InterruptedException {
 
         validateInput(input,
                 "profileName", "loginPin",
@@ -265,6 +265,7 @@ public class ExistingRtcPaymentsTests extends BaseTestsConfig {
         quickPayPage.clickPayButtn();
         quickPayPage.getExistingRecipient(input.get("updateRecipientName"));
         quickPayPage.editProfile();
+        Thread.sleep(2000);
         quickPayPage.clickDelete();
 
 

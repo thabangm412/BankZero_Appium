@@ -372,7 +372,7 @@ public class ExistingPaymentTests extends BaseTestsConfig {
     }
 
     @Test(dataProvider = "getMultipleDataSet",dependsOnMethods = "updateExistingRecipient", priority = 8)
-    public void deleteExistingRecipientTest(HashMap<String, String> input){
+    public void deleteExistingRecipientTest(HashMap<String, String> input) throws InterruptedException {
 
         validateInput(input,
                 "profileName", "loginPin",
@@ -389,6 +389,7 @@ public class ExistingPaymentTests extends BaseTestsConfig {
         quickPayPage.clickPayButtn();
         quickPayPage.getExistingRecipient(input.get("updateRecipientName"));
         quickPayPage.editProfile();
+        Thread.sleep(2000);
         quickPayPage.clickDelete();
 
 

@@ -241,8 +241,7 @@ public class ExistingSendMoneyTests extends BaseTestsConfig {
     }
 
     @Test(dataProvider = "getMultipleDataSet",dependsOnMethods = "updateExistingProfile", priority = 4)
-    public void deleteExistingRecipient(HashMap<String, String> input)
-    {
+    public void deleteExistingRecipient(HashMap<String, String> input) throws InterruptedException {
         validateInput(input,
                 "profileName", "loginPin",
                 "updateRecipientName"
@@ -260,6 +259,7 @@ public class ExistingSendMoneyTests extends BaseTestsConfig {
         attachScreenshot(DriverManager.driver, "Profile_Before_Deletion");
 
         sendMoneyPage.editProfile();
+        Thread.sleep(2000); // Wait for 2 seconds to ensure the edit profile page is fully loaded
         sendMoneyPage.clickDeleteProfile();
 
         try {
