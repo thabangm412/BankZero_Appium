@@ -381,18 +381,32 @@ public abstract class AppiumUtils {
         return futureDate.format(formatter);
     }
 
-    public static String getFutureDate(int daysToAdd)
-    {
+//    public static String getFutureDate(int daysToAdd)
+//    {
+//        String onceOffDate = getFutureDateFormatted(daysToAdd);
+//
+//
+//        DateTimeFormatter inputFormatter = DateTimeFormatter.ofPattern("dd MMMM yyyy", Locale.ENGLISH);
+//        DateTimeFormatter outputFormatter = DateTimeFormatter.ofPattern("dd MMM-yy", Locale.ENGLISH);
+//
+//        LocalDate date = LocalDate.parse(onceOffDate, inputFormatter);
+//        return date.format(outputFormatter);
+//
+//    }
+    public static String getFutureDate(int daysToAdd) {
         String onceOffDate = getFutureDateFormatted(daysToAdd);
 
-        // Parse it using the original formatter
-        DateTimeFormatter inputFormatter = DateTimeFormatter.ofPattern("dd MMMM yyyy", Locale.ENGLISH);
-        DateTimeFormatter outputFormatter = DateTimeFormatter.ofPattern("dd MMM-yy", Locale.ENGLISH);
+        DateTimeFormatter inputFormatter =
+                DateTimeFormatter.ofPattern("dd MMMM yyyy", Locale.ENGLISH);
 
-// Convert to LocalDate and then reformat
         LocalDate date = LocalDate.parse(onceOffDate, inputFormatter);
-        return date.format(outputFormatter);
 
+        return AppiumUtils.formatDate(date);
+    }
+
+    public static String formatDate(LocalDate date) {
+        return date.format(DateTimeFormatter.ofPattern("dd MMM-yy", Locale.ENGLISH))
+                .replace("Sep", "Sept");
     }
 
     private ExtentTest getTest() {
