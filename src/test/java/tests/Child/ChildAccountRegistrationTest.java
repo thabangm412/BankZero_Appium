@@ -54,7 +54,7 @@ public class ChildAccountRegistrationTest extends BaseTestsConfig {
     }
 
     @Test(dataProvider = "getMultipleDataSet", priority = 0)
-    public void childInviteTest(HashMap<String, String> input) throws IOException {
+    public void childInviteTest(HashMap<String, String> input) throws IOException, InterruptedException {
 
         validateInput(input,
                 "name", "profileName", "loginPin",
@@ -72,6 +72,7 @@ public class ChildAccountRegistrationTest extends BaseTestsConfig {
         childAccPage.addProofOfId(input.get("idType"));
         childAccPage.clickConfirm();
         childAccPage.clickSubmit();
+        Thread.sleep(3000);
 
         try {
             String status = childAccPage.getConfirmationText();

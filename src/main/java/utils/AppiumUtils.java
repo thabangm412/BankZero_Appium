@@ -15,6 +15,7 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.testng.Assert;
 import pageObjects.app.Registration.RegisterOTP;
 
 import java.io.BufferedReader;
@@ -109,6 +110,11 @@ public abstract class AppiumUtils {
     public static void waitForElement(By locator, AppiumDriver driver) {
         WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
         wait.until(ExpectedConditions.visibilityOfElementLocated(locator));
+    }
+
+    public static WebElement waitForElementToBeClickable(WebElement element, AppiumDriver driver) {
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+        return wait.until(ExpectedConditions.elementToBeClickable(element));
     }
 
     public static String getOTP(String cellNumber, String altNumber) {
@@ -375,18 +381,32 @@ public abstract class AppiumUtils {
         return futureDate.format(formatter);
     }
 
-    public static String getFutureDate(int daysToAdd)
-    {
+//    public static String getFutureDate(int daysToAdd)
+//    {
+//        String onceOffDate = getFutureDateFormatted(daysToAdd);
+//
+//
+//        DateTimeFormatter inputFormatter = DateTimeFormatter.ofPattern("dd MMMM yyyy", Locale.ENGLISH);
+//        DateTimeFormatter outputFormatter = DateTimeFormatter.ofPattern("dd MMM-yy", Locale.ENGLISH);
+//
+//        LocalDate date = LocalDate.parse(onceOffDate, inputFormatter);
+//        return date.format(outputFormatter);
+//
+//    }
+    public static String getFutureDate(int daysToAdd) {
         String onceOffDate = getFutureDateFormatted(daysToAdd);
 
-        // Parse it using the original formatter
-        DateTimeFormatter inputFormatter = DateTimeFormatter.ofPattern("dd MMMM yyyy", Locale.ENGLISH);
-        DateTimeFormatter outputFormatter = DateTimeFormatter.ofPattern("dd MMM-yy", Locale.ENGLISH);
+        DateTimeFormatter inputFormatter =
+                DateTimeFormatter.ofPattern("dd MMMM yyyy", Locale.ENGLISH);
 
-// Convert to LocalDate and then reformat
         LocalDate date = LocalDate.parse(onceOffDate, inputFormatter);
-        return date.format(outputFormatter);
 
+        return AppiumUtils.formatDate(date);
+    }
+
+    public static String formatDate(LocalDate date) {
+        return date.format(DateTimeFormatter.ofPattern("dd MMM-yy", Locale.ENGLISH))
+                .replace("Sep", "Sept");
     }
 
     private ExtentTest getTest() {
@@ -408,5 +428,17 @@ public abstract class AppiumUtils {
         }
     }
 
+    public final List<String> softFailures = new ArrayList<>();
+    public void softVerifyEquals(String actual, String expected, String stepName) {
+        AndroidActions androidActions = new AndroidActions(driver);
+        try {
+            Assert.assertEquals(actual, expected);
+            androidActions.attachScreenshot(driver,stepName);
+        } catch (AssertionError e) {
+            androidActions.attachScreenshot(driver,stepName);
+            log.error("Soft assertion failed: {}", e.getMessage());
+            softFailures.add(stepName + " -> " + e.getMessage());
+        }
+    }
 
 }

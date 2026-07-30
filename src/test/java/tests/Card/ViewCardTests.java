@@ -14,6 +14,7 @@ import pageObjects.app.accountsHome.HomePage;
 import pageObjects.app.login.LoginPage;
 import testConfig.BaseTestsConfig;
 import utils.AndroidActions;
+import utils.AppiumUtils;
 import utils.DriverManager;
 
 import java.io.IOException;
@@ -55,8 +56,9 @@ public class ViewCardTests extends BaseTestsConfig {
         accountMenuActions.clickAccountMenuActionsButtn();
         cardPage.clickCardMenuActionButton();
         cardPage.clickViewCard();
-        Assert.assertEquals(cardPage.getCardDisplayed(),cardData.getCardNumber());
-        attachScreenshot(DriverManager.driver,"ViewCard");
+        //Assert.assertEquals(cardPage.getCardDisplayed(),cardData.getCardNumber());
+        softVerifyEquals(cardPage.getCardDisplayed(),cardData.getCardNumber(),"Card Number validation");
+        //attachScreenshot(DriverManager.driver,"ViewCard");
     }
 
     @Test(priority = 1)

@@ -62,6 +62,7 @@ public class DevicePairTests extends BaseTestsConfig {
 
         // Enter user inputs into the app
         pairOnDevicePage.addProfile();
+        pairOnDevicePage.partialRegistrationCheck();
         pairOnDevicePage.enterCellNumber(input.get("cellNumber"));
         pairOnDevicePage.enterIdNumber(input.get("idNumber"));
         pairOnDevicePage.enterPreferredName(input.get("prefName"));

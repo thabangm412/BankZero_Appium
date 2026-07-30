@@ -41,7 +41,7 @@ public class StatementsAndLettersFrom32DaysNoticeTests extends BaseTestsConfig {
         log.debug("Page objects and androidActions initialized");
     }
 
-    @Test
+    @Test(priority = 0)
     public void downloadAccountStatementsFrom32DaysNotice() {
         loginPage.loginWithRetry(
                 data.getUser().getProfileName(),
@@ -51,7 +51,7 @@ public class StatementsAndLettersFrom32DaysNoticeTests extends BaseTestsConfig {
 
         accountMenuActions.clickAccountMenuActionsOption("32 Days Notice");
         statementsAndLettersPage.clickAccountStatements();
-        statementsAndLettersPage.getAccountStatements(2);
+        statementsAndLettersPage.getAccountStatements(1);
         statementsAndLettersPage.clickEmailButton();
         Assert.assertEquals(statementsAndLettersPage.getDocumentRequestStatus(),"Email sent successful. Please check your inbox");
         attachScreenshot(DriverManager.driver,"Account Statements Email Sent");
@@ -59,7 +59,7 @@ public class StatementsAndLettersFrom32DaysNoticeTests extends BaseTestsConfig {
 
     }
 
-    @Test
+    @Test(priority = 1)
     public void downloadIt3bFrom32DaysNotice() {
         loginPage.loginWithRetry(
                 data.getUser().getProfileName(),

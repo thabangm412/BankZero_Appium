@@ -41,21 +41,23 @@ public class BusinessPtyTest extends BaseTestsConfig {
     private BusinessPage businessPage;
     private AndroidActions androidActions;
     private BusinessRegData businessDataFactory;
+    private HomePage homePage;
 
     @BeforeMethod
     public void setUpPages() throws JSchException {
         // initialize page objects once per test method
         log.debug("Initializing page objects for test.");
         loginPage = new LoginPage(DriverManager.driver);
+        homePage = new HomePage(DriverManager.driver);
         addAccountPage = new AddAccountPage(DriverManager.driver);
         businessPage = new BusinessPage(DriverManager.driver);
         androidActions = new AndroidActions(DriverManager.driver);
-        businessDataFactory = BusinessDataFactory.validBusinessData();
+        businessDataFactory = BusinessDataFactory.validBusinessRegData();
 //        DbConfig.customerExists(businessDataFactory.getRegistrationNo());
     }
 
     @Test
-    public void PtyRegistration() throws JSchException {
+    public void PtyRegistration() throws JSchException, InterruptedException {
 
         boolean customerExists =
                 DbConfig.customerExists(businessDataFactory.getRegistrationNo());
@@ -95,15 +97,15 @@ public class BusinessPtyTest extends BaseTestsConfig {
         businessPage.clickNextButton();
         businessPage.verifyTermsAndConditions();
         businessPage.clickNextButton();
-        attachScreenshot(DriverManager.driver, "Business_Registration_Summary");
         assertTextPresentExact(businessDataFactory.getSuccessMsg());
+        attachScreenshot(DriverManager.driver,"Business_Registration Completed");
 
     }
 
     @AfterMethod
     public void cleanUp() {
         try {
-            HomePage homePage = new HomePage(DriverManager.driver);
+            businessPage.clickFinish();
             homePage.clickLogoutButtn();
             log.info("Logged out successfully during cleanup.");
         } catch (Exception e) {
@@ -133,7 +135,7 @@ public class BusinessPtyTest extends BaseTestsConfig {
 
     private void assertTextPresentExact(String exactText) {
         By xpath = By.xpath("//android.widget.TextView[@text=\"" + exactText + "\"]");
-        WebDriverWait wait = new WebDriverWait(DriverManager.driver, Duration.ofSeconds(20));
+        WebDriverWait wait = new WebDriverWait(DriverManager.driver, Duration.ofSeconds(15));
         try {
             WebElement el = wait.until(ExpectedConditions.visibilityOfElementLocated(xpath));
             Assert.assertTrue(el.isDisplayed(), "Expected text not visible: " + exactText);

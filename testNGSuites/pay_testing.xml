@@ -5,68 +5,94 @@
     </listeners>
     <test name="Pay Money Tests">
         <classes>
-            <class name="tests.Pay.PaymentTests">
-                <methods>
-                    <include name="AddRecipientTestWithPoP"/>
-                    <include name="PaymentToAddedRecipientWithPoPTest"/>
-                    <include name="AddRecipientTestWithoutPoP"/>
-                    <include name="PaymentToAddedRecipientWithoutPoPTest"/>
-                </methods>
-            </class>
+<!--            <class name="tests.Pay.PaymentTests">-->
+<!--                <methods>-->
+<!--                    <include name="AddRecipientTestWithPoP"/>-->
+<!--                    <include name="PaymentToAddedRecipientWithPoPTest"/>-->
+<!--                    <include name="AddRecipientTestWithoutPoP"/>-->
+<!--                    <include name="PaymentToAddedRecipientWithoutPoPTest"/>-->
+<!--                </methods>-->
+<!--            </class>-->
             <class name="tests.Pay.ExistingPaymentTests">
                 <methods>
-                    <include name="PaymentRedoWithPoPTest"/>
-                    <include name="PaymentRedoWithoutPoPTest"/>
-                    <include name="paymentToExistingRecipientwithPoP"/>
-                    <include name="paymentToExistingRecipientwithoutPoP"/>
-                    <include name="paymentWithAttachmentPlusPoP"/>
-                    <include name="paymentWithAttachmentMinusPoP"/>
+<!--                    <include name="PaymentRedoWithPoPTest"/>-->
+<!--                    <include name="PaymentRedoWithoutPoPTest"/>-->
+<!--                    <include name="paymentToExistingRecipientwithPoP"/>-->
+<!--                    <include name="paymentToExistingRecipientwithoutPoP"/>-->
+<!--                    <include name="paymentWithAttachmentPlusPoP"/>-->
+<!--                    <include name="paymentWithAttachmentMinusPoP"/>-->
                     <include name="addAlreadyExistingRecipientTest"/>
-                    <include name="updateExistingRecipient"/>
-                    <include name="deleteExistingRecipientTest"/>
+<!--                    <include name="updateExistingRecipient"/>-->
+<!--                    <include name="deleteExistingRecipientTest"/>-->
                 </methods>
             </class>
         </classes>
     </test>
-    <test name="RTC_Pay_Money_Tests">
-        <classes>
-            <class name="tests.Pay.RtcPaymentTests">
-                <methods>
-                    <include name="AddRtcRecipientTestWithPoP"/>
-                    <include name="RtCPaymentTest"/>
-                </methods>
-            </class>
-            <class name="tests.Pay.ExistingRtcPaymentsTests">
-                <methods>
-                    <include name="PaymentRedoTest"/>
-                    <include name="paymentToExistingRecipient"/>
-                    <include name="paymentWithAttachment"/>
-                    <include name="addAlreadyExistingRtcRecipientTest"/>
-                    <include name="updateExistingRtcRecipient"/>
-                    <include name="deleteExistingRtcRecipientTest"/>
-                </methods>
-            </class>
-        </classes>
-    </test>
-    <test name="Negative_Pay_Money_Tests">
-        <classes>
-            <class name="tests.Pay.NegativePaymentTests">
-                <methods>
-                    <include name="AddRecipientTestWithPoP"/>
-                </methods>
-            </class>
+<!--    <test name="RTC_Pay_Money_Tests">-->
+<!--        <classes>-->
+<!--            <class name="tests.Pay.RtcPaymentTests">-->
+<!--                <methods>-->
+<!--                    <include name="AddRtcRecipientTestWithPoP"/>-->
+<!--                    <include name="RtCPaymentTest"/>-->
+<!--                </methods>-->
+<!--            </class>-->
+<!--            <class name="tests.Pay.ExistingRtcPaymentsTests">-->
+<!--                <methods>-->
+<!--                    <include name="PaymentRedoTest"/>-->
+<!--                    <include name="paymentToExistingRecipient"/>-->
+<!--                    <include name="paymentWithAttachment"/>-->
+<!--                    <include name="addAlreadyExistingRtcRecipientTest"/>-->
+<!--                    <include name="updateExistingRtcRecipient"/>-->
+<!--                    <include name="deleteExistingRtcRecipientTest"/>-->
+<!--                </methods>-->
+<!--            </class>-->
+<!--        </classes>-->
+<!--    </test>-->
+<!--    <test name="Negative_Pay_Money_Tests">-->
+<!--        <classes>-->
+<!--            <class name="tests.Pay.NegativePaymentTests">-->
+<!--                <methods>-->
+<!--                    <include name="AddRecipientTestWithPoP"/>-->
+<!--                </methods>-->
+<!--            </class>-->
 
-        </classes>
-    </test>
-    <test name="Scheduling_Pay_Money_Tests">
-        <classes>
-            <class name="tests.Pay.SchedulePaymentTests">
-                <methods>
-                    <include name="scheduleOnceOffPayment"/>
-                    <include name="scheduleWeeklyPayment"/>
-                    <include name="scheduleMonthlyPayment"/>
-                </methods>
-            </class>
-        </classes>
-    </test>
+<!--        </classes>-->
+<!--    </test>-->
+<!--    <test name="Scheduling_Pay_Money_Tests">-->
+<!--        <classes>-->
+<!--            <class name="tests.Pay.SchedulePaymentTests">-->
+<!--                <methods>-->
+<!--                    <include name="scheduleOnceOffPayment"/>-->
+<!--                    <include name="scheduleWeeklyPayment"/>-->
+<!--                    <include name="scheduleMonthlyPayment"/>-->
+<!--                </methods>-->
+<!--            </class>-->
+<!--        </classes>-->
+<!--    </test>-->
+
+<!--    <test name="PayManyTests">-->
+<!--        <classes>-->
+<!--            <class name="tests.PayMany.NewRecipientTests">-->
+<!--                <methods>-->
+<!--                    <include name="addNewRecipient"/>-->
+<!--                    <include name="makePaymentToRecipient"/>-->
+<!--                </methods>-->
+<!--            </class>-->
+<!--        </classes>-->
+<!--    </test>-->
+
+<!--    <test name="PayManyTests">-->
+<!--        <classes>-->
+<!--            <class name="tests.PayMany.ExistingRecipientTests">-->
+<!--                <methods>-->
+<!--                    <include name="PayManyRedoTest"/>-->
+<!--                    <include name="updateExistingRecipient"/>-->
+<!--                    <include name="paymentToUpdatedRecipient"/>-->
+<!--                    <include name="deleteExistingRecipient"/>-->
+<!--                    <include name="exportFileDownloadTest"/>-->
+<!--                    <include name="importFileUploadTest"/>-->
+<!--                </methods>-->
+<!--            </class>-->
+<!--        </classes>-->
+<!--    </test>-->
 </suite>

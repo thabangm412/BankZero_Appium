@@ -467,12 +467,18 @@ public class QuickPayPage {
                 onDateInputField.click();
                 AppiumUtils.waitForElement(By.xpath("//android.widget.LinearLayout[@resource-id=\"android:id/date_picker_header\"]/android.widget.LinearLayout"), driver);
 
-                if (isTodayLastDayOfMonth) {
-                    log.info("Today is the last day of the month — clicking 'Next' button in calendar");
+                if (!isDateVisible(onceOffDate, driver)) {
+                    log.info("'From' date {} not visible — clicking 'Next'", onceOffDate);
                     driver.findElement(By.id("android:id/next")).click();
                 } else {
-                    log.info("Today is not the last day of the month — skipping 'Next' button click");
+                    log.info("'From' date {} is visible — no need to click 'Next'", onceOffDate);
                 }
+//                if (isTodayLastDayOfMonth) {
+//                    log.info("Today is the last day of the month — clicking 'Next' button in calendar");
+//                    driver.findElement(By.id("android:id/next")).click();
+//                } else {
+//                    log.info("Today is not the last day of the month — skipping 'Next' button click");
+//                }
 
                 log.info("Attempting to select date: {}", onceOffDate);
 

@@ -129,7 +129,7 @@ public class ExistingRecipientTests extends BaseTestsConfig {
     }
 
     @Test(priority = 4)
-    public void deleteExistingRecipient() {
+    public void deleteExistingRecipient() throws InterruptedException {
         loginPage.loginWithRetry(
                 appUser.getUser().getProfileName(),
                 appUser.getUser().getLoginPin(),
@@ -140,6 +140,7 @@ public class ExistingRecipientTests extends BaseTestsConfig {
         payManyPage.clickPayManyButton();
         payManyPage.getGroups(payManyData2.getGroup());
         payManyPage.clickEditRecipient(payManyData2.getRecipientName());
+        Thread.sleep(2000);
         payManyPage.clickDelete();
 
         DriverManager.driver.navigate().back();

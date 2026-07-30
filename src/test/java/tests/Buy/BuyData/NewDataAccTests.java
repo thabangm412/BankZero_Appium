@@ -80,8 +80,7 @@ public class NewDataAccTests extends BaseTestsConfig {
     public Object[] [] getMultipleDataSet() throws IOException {
 
         List<HashMap<String, String>> data = getJsonData(System.getProperty("user.dir") + "//src//test//java//testData//data+sms+bundle_BuyData.json");
-        return new Object[][]{{data.get(0)}, {data.get(1)},
-                {data.get(2)}, {data.get(3)}};
+        return new Object[][]{{data.get(0)},{data.get(1)},{data.get(2)},{data.get(3)}};
     }
 
     @AfterMethod

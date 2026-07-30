@@ -113,6 +113,13 @@ public class AndroidActions extends AppiumUtils {
         return element.getText();
     }
 
+    public void scrollToBottom() {
+
+        driver.findElement(AppiumBy.androidUIAutomator(
+                "new UiScrollable(new UiSelector().scrollable(true)).scrollToEnd(10)"
+        ));
+    }
+
     public void scrollToTextAndClick2(String visibleText, AndroidDriver driver) {
         int maxRetries = 3;
         int attempts = 0;
@@ -579,8 +586,5 @@ public class AndroidActions extends AppiumUtils {
             return null;
         });
     }
-
-
-
 
 }

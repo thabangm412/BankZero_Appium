@@ -11,6 +11,8 @@ import utils.AppiumUtils;
 
 import java.time.Duration;
 
+import static utils.AppiumUtils.waitForElementToBeClickable;
+
 public class HomePage {
 
     private static final Logger log = LoggerFactory.getLogger(HomePage.class);
@@ -42,8 +44,8 @@ public class HomePage {
 
     public void clickLogoutButtn()
     {
-        AppiumUtils.waitForElementToAppear(homePageConfimation, "text", "Accounts", driver);
-        logoutButtn.click();
+//        AppiumUtils.waitForElementToAppear(homePageConfimation, "text", "Accounts", driver);
+        waitForElementToBeClickable(logoutButtn, driver).click();
         log.info("Logout Button clicked.");
     }
 

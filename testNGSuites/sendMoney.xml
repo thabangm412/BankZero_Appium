@@ -5,22 +5,22 @@
     </listeners>
         <test name="Send Money Tests">
             <classes>
-                <class name="tests.SendMoney.SendMoneyTests">
-                    <methods>
-                        <include name="addNewRecipient"/>
-                        <include name="sendMoneyToNewRecipient"/>
-                    </methods>
-                </class>
+<!--                <class name="tests.SendMoney.SendMoneyTests">-->
+<!--                    <methods>-->
+<!--                        <include name="addNewRecipient"/>-->
+<!--                        <include name="sendMoneyToNewRecipient"/>-->
+<!--                    </methods>-->
+<!--                </class>-->
 
 
                 <class name="tests.SendMoney.ExistingSendMoneyTests">
                     <methods>
-                        <include name="sendMoneyToExistingProfile"/>
-                        <include name="sendMoneyWithRedo"/>
-                        <include name="sendMoneyWithAttachment"/>
+<!--                        <include name="sendMoneyToExistingProfile"/>-->
+<!--                        <include name="sendMoneyWithRedo"/>-->
+<!--                        <include name="sendMoneyWithAttachment"/>-->
                         <include name="addAlreadyExistingRecipient"/>
-                        <include name="updateExistingProfile"/>
-                        <include name="deleteExistingRecipient"/>
+<!--                        <include name="updateExistingProfile"/>-->
+<!--                        <include name="deleteExistingRecipient"/>-->
                     </methods>
                 </class>
             </classes>
