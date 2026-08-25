@@ -95,13 +95,13 @@ public class BusinessAuthChainPage {
                 PointerInput.MouseButton.LEFT.asArg()));
 
         // Long press so the delete button appears
-        drag.addAction(new Pause(finger, Duration.ofMillis(1200)));
+        drag.addAction(new Pause(finger, Duration.ofMillis(1500)));
 
         // Execute only the long press
         driver.perform(List.of(drag));
 
         // Wait for delete button
-        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(5));
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
         WebElement delete = wait.until(
                 ExpectedConditions.visibilityOfElementLocated(deleteButton));
 

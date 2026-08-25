@@ -77,7 +77,7 @@ public class AuthChainTests extends BaseTestsConfig {
         softAssert.assertAll();
 
         businessAuthChainPage.clickBackButton();
-        businessAuthChainPage.confirmUnsavedChanges();
+        //businessAuthChainPage.confirmUnsavedChanges();
     }
 
     @Test(priority = 1, description = "Verify that a new OAuth chain owner can be added successfully")
@@ -97,6 +97,8 @@ public class AuthChainTests extends BaseTestsConfig {
         businessPage.clickUpdate();
         businessPage.clickConfirm();
         Thread.sleep(2000);
+        accountMenuActions.clickAccountMenuActionsOption("Business");
+        businessAuthChainPage.clickAuthorisationChain();
         softAssert.assertTrue(businessPage.getFinalOwnersAndOfficialsNames().contains(authChain.getOwnerName()));
         businessPage.clickFinish();
         softAssert.assertAll();
@@ -432,7 +434,7 @@ public class AuthChainTests extends BaseTestsConfig {
 
         accountMenuActions.clickAccountMenuActionsOption("Business");
         businessAuthChainPage.clickAuthorisationChain();
-        androidActions.scrollToBottom();
+        //androidActions.scrollToBottom();
         attachScreenshot(DriverManager.driver, "Auth_Chain_Level_C_Before_Remove");
         businessAuthChainPage.dragOwnerToDelete(
                 BusinessAuthChainPage.AuthLevelSlot.C3
