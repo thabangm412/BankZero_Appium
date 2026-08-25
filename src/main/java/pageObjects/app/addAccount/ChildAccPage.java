@@ -119,6 +119,23 @@ public class ChildAccPage {
     private  WebElement cardDelivery;
 
 
+    public void addAddresss(String street,String city,String postalCode)
+    {
+        AndroidActions androidActions = new AndroidActions(driver);
+        driver.findElement(By.id("za.co.neolabs.bankzero:id/selected_delivery_address_2"))
+                .sendKeys(street);
+        log.info("Street name entered: {}",street);
+        driver.findElement(By.id("za.co.neolabs.bankzero:id/selected_delivery_address_3"))
+                .sendKeys(city);
+        log.info("City name entered: {}",city);
+        driver.findElement(By.id("za.co.neolabs.bankzero:id/delprovince_dd_arrow")).click();
+        androidActions.scrollToTextAndClick("Gauteng");
+        log.info("Province name entered Gauteng");
+        driver.findElement(By.id("za.co.neolabs.bankzero:id/selected_delivery_address_4"))
+                .sendKeys(postalCode);
+        log.info("Postal code entered");
+
+    }
 
     public void enterChildDetails(String id, String surname, String allNames, String nationality)
     {

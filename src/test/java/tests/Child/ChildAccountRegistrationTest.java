@@ -125,6 +125,7 @@ public class ChildAccountRegistrationTest extends BaseTestsConfig {
         childAccPage.clickNext();
 
         childAccPage.cardDelivery();
+        childAccPage.addAddresss(input.get("street"),input.get("city"),input.get("postalCode"));
         attachScreenshot(DriverManager.driver,"Card Delivery Details Entered");
         childAccPage.clickNext();
         whoAmIRegistration.enterIamSavingForDetails("Child Future", "1000.00");
