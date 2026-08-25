@@ -20,6 +20,46 @@ public class TransferDataFactory {
                 .build();
     }
 
+    public static TransferData validBusinessTransfer()
+    {
+        return TransferData.builder()
+                .user(new User("Isagi", "33333"))
+                .accountName("Business")
+                .amount("30")
+                .ref("Auto Test")
+                .build();
+    }
+
+    public static TransferData valid7daysNoticeTransfer()
+    {
+        return TransferData.builder()
+                .user(new User("Isagi", "33333"))
+                .accountName("7 Days Notice")
+                .amount("30")
+                .ref("Auto Test")
+                .build();
+    }
+
+    public static TransferData valid32daysNoticeTransfer()
+    {
+        return TransferData.builder()
+                .user(new User("Isagi", "33333"))
+                .accountName("32 Days Notice")
+                .amount("30")
+                .ref("Auto Test")
+                .build();
+    }
+
+    public static TransferData valid45daysNoticeTransfer()
+    {
+        return TransferData.builder()
+                .user(new User("Isagi", "33333"))
+                .accountName("45 Days Notice")
+                .amount("30")
+                .ref("Auto Test")
+                .build();
+    }
+
     public static DbUserData validDbUserData() {
 
         return DbUserData.builder()
