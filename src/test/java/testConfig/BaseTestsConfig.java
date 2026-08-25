@@ -29,7 +29,7 @@ public class BaseTestsConfig extends AppiumUtils {
         service = new AppiumServiceBuilder()
                 .withAppiumJS(new File("C:\\Users\\ThabangMonoane\\AppData\\Roaming\\npm\\node_modules\\appium\\build\\lib\\main.js"))
                 .withIPAddress("127.0.0.1")
-                .usingPort(4725) // Match this port with driver URL below
+                .usingPort(4723) // Match this port with driver URL below
                 .withTimeout(Duration.ofSeconds(30))
                 .build();
         service.start();
@@ -49,7 +49,7 @@ public class BaseTestsConfig extends AppiumUtils {
         options.setCapability("dontStopAppOnReset", true);
 
 
-        DriverManager.driver = new AndroidDriver(new URL(URI.create("http://127.0.0.1:4725").toString()), options);
+        DriverManager.driver = new AndroidDriver(new URL(URI.create("http://127.0.0.1:4723").toString()), options);
         System.out.println("BASE DRIVER HASH: " + DriverManager.driver.hashCode());
         DriverManager.driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
 
