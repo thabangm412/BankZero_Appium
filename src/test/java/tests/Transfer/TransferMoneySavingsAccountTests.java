@@ -23,9 +23,9 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 
-public class TransferMoneyTests extends BaseTestsConfig {
+public class TransferMoneySavingsAccountTests extends BaseTestsConfig {
 
-    private static final Logger log = LoggerFactory.getLogger(TransferMoneyTests.class);
+    private static final Logger log = LoggerFactory.getLogger(TransferMoneySavingsAccountTests.class);
     private LoginPage loginPage;
     private QuickPayPage quickPayPage;
     private HomePage homePage;
@@ -47,7 +47,7 @@ public class TransferMoneyTests extends BaseTestsConfig {
     }
 
     @Test(dataProvider = "getMultipleDataSet",priority = 0)
-    public void transferMoney(HashMap<String, String> input)
+    public void transferMoneyToSavingsAccount(HashMap<String, String> input)
     {
         validateInput(input,
                 "profileName", "loginPin",

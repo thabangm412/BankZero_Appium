@@ -19,7 +19,7 @@ import utils.DriverManager;
 
 public class TransferTests extends BaseTestsConfig {
 
-    private static final Logger log = LoggerFactory.getLogger(TransferMoneyTests.class);
+    private static final Logger log = LoggerFactory.getLogger(TransferMoneySavingsAccountTests.class);
     private LoginPage loginPage;
     private QuickPayPage quickPayPage;
     private HomePage homePage;
