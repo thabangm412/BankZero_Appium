@@ -42,8 +42,7 @@ public class NewBusinessRecipientTests extends BaseTestsConfig {
     }
 
     @Test(priority = 0)
-    public void AddNewRecipientForBusiness()
-    {
+    public void AddNewRecipientForBusiness() throws InterruptedException {
         loginPage.loginWithRetry(
                 appUser.getUser().getProfileName(),
                 appUser.getUser().getLoginPin(),
@@ -56,6 +55,7 @@ public class NewBusinessRecipientTests extends BaseTestsConfig {
         quickPayPage.addRecipientDetails(businessPayData.getRecipientName1(),businessPayData.getGroup(),businessPayData.getBank(),businessPayData.getAccount(),businessPayData.getAccountNo1());
         quickPayPage.addPoP(businessPayData.getPopEmail(),businessPayData.getPopPhone());
         quickPayPage.clickAddButton();
+        Thread.sleep(2000);
         Assert.assertEquals(quickPayPage.getAccName(),businessPayData.getRecipientName1());
         attachScreenshot(DriverManager.driver, "Recipient_Added_Success");
 

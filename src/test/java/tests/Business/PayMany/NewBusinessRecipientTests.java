@@ -61,6 +61,7 @@ public class NewBusinessRecipientTests extends BaseTestsConfig {
         DriverManager.driver.navigate().back();
         accountMenuActions.clickAccountMenuActionsOption("Business");
         payManyPage.clickPayManyButton();
+        Thread.sleep(2000);
         payManyPage.getGroups(payManyData.getGroup());
         attachScreenshot(DriverManager.driver,"RecipientDetails added");
         Assert.assertTrue(payManyPage.getRecipientNames().contains(payManyData.getRecipientName1()), "Recipient name does not match expected value");
