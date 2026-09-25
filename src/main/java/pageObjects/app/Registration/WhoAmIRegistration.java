@@ -486,7 +486,7 @@ public class WhoAmIRegistration {
     {
         //AppiumUtils.waitForElement(By.id("za.co.neolabs.bankzero:id/termsConditions_label"), driver);
         String xpath = "//android.widget.TextView[@resource-id=\"za.co.neolabs.bankzero:id/termsConditions_label\"]";
-        AndroidActions.waitForElementAttribute(driver,xpath,"displayed","true",20);
+        AndroidActions.waitForElementAttribute(driver,xpath,"displayed","true",25);
         checkbox2.click();
         log.info("Terms and conditions checkbox clicked.");
 

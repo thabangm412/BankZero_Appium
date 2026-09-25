@@ -61,7 +61,6 @@ public class ChildAccountRegistrationTest extends BaseTestsConfig {
                 "id", "allNames", "phoneNumber", "nationality", "idType");
 
         androidActions.clearPhoneData(input.get("phoneNumber"));
-        androidActions.wait(3);
 
         loginPage.loginWithRetry(input.get("profileName"),input.get("loginPin"),2);
 
@@ -72,7 +71,7 @@ public class ChildAccountRegistrationTest extends BaseTestsConfig {
         childAccPage.addProofOfId(input.get("idType"));
         childAccPage.clickConfirm();
         childAccPage.clickSubmit();
-        Thread.sleep(3000);
+        androidActions.wait(3);
 
         try {
             String status = childAccPage.getConfirmationText();
@@ -101,8 +100,8 @@ public class ChildAccountRegistrationTest extends BaseTestsConfig {
                  "recoveryNumber", "recoveryEmail"
         );
 
-        androidActions.clearPhoneData(input.get("phoneNumber"));
-        androidActions.wait(3);
+//        androidActions.clearPhoneData(input.get("phoneNumber"));
+//        androidActions.wait(3);
 
         pairOnDevicePage.addProfile();
         pairOnDevicePage.partialRegistrationCheck();

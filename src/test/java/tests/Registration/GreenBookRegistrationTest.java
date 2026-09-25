@@ -65,7 +65,6 @@ public class GreenBookRegistrationTest extends BaseTestsConfig {
 
         // Clear cell phone data...
         androidActions.clearPhoneData(input.get("phoneNumber"));
-        androidActions.wait(3);
 
         // Enter user inputs into the app
         pairOnDevicePage.addProfile();
@@ -129,7 +128,7 @@ public class GreenBookRegistrationTest extends BaseTestsConfig {
         // Happy page Flow:
         whoAmIRegistration.clickCheckBox2();
         whoAmIRegistration.clickNextButtn();
-        androidActions.wait(3);
+//        androidActions.wait(3);
 
         String status = whoAmIRegistration.getStatus();
         try {
