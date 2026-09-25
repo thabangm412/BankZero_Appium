@@ -86,14 +86,26 @@ public class MyCardPage {
     @AndroidFindBy(id = "za.co.neolabs.bankzero:id/card_switch")
     private WebElement lockCardToggle;
 
+    @AndroidFindBy(id = "za.co.neolabs.bankzero:id/cardDeliveryOption_dd_arrow")
+    private WebElement  cardDeliveryDropButtn;
 
+    @AndroidFindBy(id = "za.co.neolabs.bankzero:id/submit_btn")
+    private WebElement  confirmButton;
+
+
+    public void clickReplaceCard()
+    {
+        AppiumUtils.waitForElementToBeClickable(replaceCardButtn, driver);
+        replaceCardButtn.click();
+        log.info("Replace card button clicked.");
+    }
 
     public void confirmingBiometrics()
     {
         AppiumUtils.waitForElement(By.id("za.co.neolabs.bankzero:id/viewFinderTitle"),driver);
         AndroidActions androidActions = new AndroidActions(driver);
         String xpath = "//android.widget.Button[@resource-id=\"za.co.neolabs.bankzero:id/submit_btn\"]";
-        AndroidActions.waitForElementAttribute(driver,xpath,"enabled","true",5);
+        AndroidActions.waitForElementAttribute(driver,xpath,"enabled","true",3);
         finishButtn.click();
         log.info("Biometrics confirmed.");
     }
@@ -151,11 +163,18 @@ public class MyCardPage {
         log.info("Input field cleared");
         card1stLineField.sendKeys(name);
         log.info("Card name entered:{}",name);
+        card2ndtLineField.clear();
+        log.info("Input field cleared");
+        card2ndtLineField.sendKeys(name);
+        log.info("Card name entered:{}",name);
     }
 
     public  void getCard2ndtLineField(String name)
     {
-        card1stLineField.sendKeys(name);
+        card2ndtLineField.clear();
+        log.info("Input field cleared");
+        card2ndtLineField.sendKeys(name);
+        log.info("Card name entered:{}",name);
     }
 
     public  void clickNextButtn()
@@ -411,5 +430,42 @@ public class MyCardPage {
         return currentValue;
     }
 
+    public void newCardOrder(String firstLine, String secondLine ){
+        getCard1stLineField(firstLine);
+        getCard2ndtLineField(secondLine);
+        clickNextButtn();
+    }
 
+    public void clickCardDelivery()
+    {
+        AndroidActions androidActions = new AndroidActions(driver);
+        cardDeliveryDropButtn.click();
+        log.info("Card delivery dropdown button selected.");
+        androidActions.scrollToTextAndClick2("Courier to residential address (R125 - R155)", DriverManager.driver);
+    }
+
+    public void enterAddressDetails() {
+        AndroidActions androidActions = new AndroidActions(driver);
+        AppiumUtils.waitForTextToAppear(By.id("za.co.neolabs.bankzero:id/deladdresstype_label"), "Address type", driver);
+        androidActions.scrollToTextAndClick2("House", DriverManager.driver);
+        
+    }
+    
+    public void enterCardPinDetails(int pin) {
+        enterCardPin(pin);
+        enterConfirmationPin(pin);
+        clickNextButtn();
+    }
+    public void clickCardOrderConfirmButton() {
+        AppiumUtils.waitForTextToAppear(By.xpath("//android.widget.TextView[@text=\"Confirmation\"]"), "Confirmation", driver);
+        confirmButton.click();
+        log.info("Card order confirm button clicked.");
+    }
+
+    public boolean getCardOrderStatus() {
+        AppiumUtils.waitForTextToAppear(By.id("za.co.neolabs.bankzero:id/toolbar_title"), "Thank you", driver);
+        String status = driver.findElement(By.id("za.co.neolabs.bankzero:id/confirmation_text")).getText();
+        log.info("Card order status: {}", status);
+        return "Thank you".equals(status);
+    }
 }
