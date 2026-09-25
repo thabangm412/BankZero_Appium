@@ -135,6 +135,7 @@ public class ExistingDataAccTests extends BaseTestsConfig {
         accountMenuActions.clickAccountMenuActionsButtn();
         buyDataPage.clickBuyButton();
         buyDataPage.getExistingProfile(input.get("DataName"));
+
         attachScreenshot(DriverManager.driver,"Existing Data Profile Retrieved for Deletion");
         buyDataPage.clickEditButton();
         buyDataPage.clickDeleteButton();
