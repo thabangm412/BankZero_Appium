@@ -19,5 +19,6 @@ public class OwnersAndOfficials {
     String levelA_amount;
     String levelB_amount;
     String levelC_amount;
+    String registrationNo;
 
 }
