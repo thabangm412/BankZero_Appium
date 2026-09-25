@@ -209,8 +209,7 @@ public class BuyDataPage {
         log.info("Buy button clicked");
     }
 
-    public void getExistingProfile(String name)
-    {
+    public void getExistingProfile(String name){
         selectItemDropDownButton.click();
         log.info("Select item dropdown menu button clicked");
         AppiumUtils.waitForElement(By.xpath("/hierarchy/android.widget.FrameLayout"),driver);
@@ -234,7 +233,6 @@ public class BuyDataPage {
         } catch (Exception e) {
             log.error("An error occurred while processing Data group names: {}", e.getMessage(), e);
         }
-
 //        amountInputField.clear();
 //        log.info("Amount input field cleared...");
 //        amountInputField.sendKeys(amount);
